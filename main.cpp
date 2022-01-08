@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+#include <list>
 #include <GL/freeglut.h>
 #include "include/puppet.h"
 #include "include/gunshot.h"
@@ -27,7 +28,7 @@ int animate = 0;
 
 // Components
 Puppet puppet;
-Gunshot *gunshot = NULL;
+std::list<Gunshot *> gunshots;
 
 void renderScene(void)
 {
@@ -36,9 +37,9 @@ void renderScene(void)
 
     puppet.draw();
 
-    if (gunshot)
+    for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end(); ++it)
     {
-        gunshot->draw();
+        (*it)->draw();
     }
 
     glutSwapBuffers(); // Draw the new frame of the game.
@@ -48,8 +49,7 @@ void mouse(int button, int state, int x, int y)
 {
     if (button == GLUT_LEFT_BUTTON)
     {
-        if (!gunshot)
-            gunshot = puppet.shoot();
+        gunshots.push_back(puppet.shoot());
     }
 }
 
@@ -84,10 +84,12 @@ void keyPress(unsigned char key, int x, int y)
     case 'a':
     case 'A':
         keyStatus[(int)('a')] = 1; // Using keyStatus trick
+        puppet.setDirection(-1);
         break;
     case 'd':
     case 'D':
         keyStatus[(int)('d')] = 1; // Using keyStatus trick
+        puppet.setDirection(1);
         break;
     case 27:
         exit(0);
@@ -132,25 +134,27 @@ void idle(void)
     //Treat keyPress
     if (keyStatus[(int)('a')])
     {
-        puppet.walkToLeft(inc);
+        puppet.walk(-inc);
     }
     if (keyStatus[(int)('d')])
     {
-        puppet.walkToRight(inc);
+        puppet.walk(inc);
     }
 
-    if (gunshot)
+    for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end();)
     {
-        gunshot->move();
-
-        if (gunshot && !gunshot->valid())
+        (*it)->move();
+        if (!(*it)->valid())
         {
-            delete gunshot;
-            gunshot = NULL;
+            it = gunshots.erase(it);
+        }
+        else
+        {
+            ++it;
         }
     }
 
-    //Control animation
+    // Control animation
     if (animate)
     {
         static int dir = 1;
@@ -162,14 +166,7 @@ void idle(void)
         {
             dir *= -1;
         }
-        if (dir < 0)
-        {
-            puppet.walkToLeft(dir * INC_KEYIDLE);
-        }
-        else
-        {
-            puppet.walkToRight(dir * INC_KEYIDLE);
-        }
+        puppet.walk(dir * INC_KEYIDLE);
     }
 
     glutPostRedisplay();

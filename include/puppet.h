@@ -24,8 +24,7 @@ private:
     void drawBody(GLfloat x, GLfloat y);
     void drawHead(GLfloat x, GLfloat y);
     void drawPuppet(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaThigh[2], GLfloat thetaArm);
-    void takeStepToRight(GLfloat x, GLfloat y, GLfloat dx);
-    void takeStepToLeft(GLfloat x, GLfloat y, GLfloat dx);
+    void takeStep(GLfloat x, GLfloat y, GLfloat dx);
 
 public:
     Puppet()
@@ -47,13 +46,9 @@ public:
     {
         return gY;
     };
-    void walkToRight(GLfloat dx)
+    void walk(GLfloat dx)
     {
-        takeStepToRight(gX, gY, dx);
-    };
-    void walkToLeft(GLfloat dx)
-    {
-        takeStepToLeft(gX, gY, dx);
+        takeStep(gX, gY, dx);
     };
     void setDirection(int x)
     {

@@ -11,7 +11,7 @@ void Gunshot::drawGunshot(GLfloat x, GLfloat y)
     glPushMatrix();
 
     glTranslatef(x, y, 0.0);
-    Geometries::drawCircle(radiusGunshot, rand() % 255, rand() % 255, rand() % 255);
+    Geometries::drawCircle(radiusGunshot, ((double) rand() / (RAND_MAX)) , ((double) rand() / (RAND_MAX)), ((double) rand() / (RAND_MAX)));
 
     glPopMatrix();
 }
