@@ -1,13 +1,14 @@
 #ifndef GEOMETRIES_H
-#define	GEOMETRIES_H
+#define GEOMETRIES_H
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-namespace Geometries {
+namespace Geometries
+{
     float toRad(float theta);
     void drawRect(GLfloat height, GLfloat width, GLfloat R, GLfloat G, GLfloat B);
     void drawCircle(GLfloat radius, GLfloat R, GLfloat G, GLfloat B);
+    void movePoint(GLfloat &x, GLfloat &y, GLfloat angle, GLfloat step);
 }
 
-#endif	/* GEOMETRIES_H */
-
+#endif /* GEOMETRIES_H */

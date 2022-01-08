@@ -2,6 +2,7 @@
 #define PUPPET_H
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include "gunshot.h"
 
 class Puppet
 {
@@ -37,6 +38,7 @@ public:
         drawPuppet(gX, gY, thetaLeg, thetaThigh, gThetaArm);
     };
     void rotateArm(GLfloat inc);
+    Gunshot *shoot();
     GLfloat getX()
     {
         return gX;

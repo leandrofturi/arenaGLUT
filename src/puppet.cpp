@@ -86,6 +86,7 @@ void Puppet::drawHead(GLfloat x, GLfloat y)
 void Puppet::drawPuppet(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaThigh[2], GLfloat thetaArm)
 {
     glPushMatrix();
+    glTranslatef(x, y, 0.0);
 
     drawLegs(x, y, thetaLeg, thetaThigh);
     glTranslatef(0.0, Puppet::gLegHeight + Puppet::gThighHeight, 0.0);
@@ -204,4 +205,14 @@ int sgn(GLfloat x)
 void Puppet::rotateArm(GLfloat inc)
 {
     gThetaArm = fabs(gThetaArm) > 45 ? 45 * sgn(gThetaArm) : gThetaArm + inc * walkDirection;
+}
+
+Gunshot *Puppet::shoot()
+{
+    GLfloat posShotX = gX + gArmTranslation, posShotY = gY + gLegHeight + gThighHeight + bodyHeight / 2 + armHeight / 2 + gArmElevation;
+    GLfloat directionAng = gThetaArm;
+    Geometries::movePoint(posShotX, posShotY, directionAng, armWidth);
+
+    Gunshot *shot = new Gunshot(posShotX, posShotY, directionAng);
+    return shot;
 }

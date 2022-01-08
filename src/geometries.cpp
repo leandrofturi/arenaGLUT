@@ -35,3 +35,10 @@ void Geometries::drawCircle(GLfloat radius, GLfloat R, GLfloat G, GLfloat B)
     }
     glEnd();
 }
+
+void Geometries::movePoint(GLfloat &x, GLfloat &y, GLfloat angle, GLfloat step)
+{
+    float theta = toRad(angle);
+    x += step * cos(theta);
+    y += step * sin(theta);
+}

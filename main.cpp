@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include <GL/freeglut.h>
 #include "include/puppet.h"
-#include <unistd.h>
+#include "include/gunshot.h"
+
 #define INC_KEY 1
 #define INC_KEYIDLE 0.01
 
@@ -26,6 +27,7 @@ int animate = 0;
 
 // Components
 Puppet puppet;
+Gunshot *gunshot = NULL;
 
 void renderScene(void)
 {
@@ -34,20 +36,25 @@ void renderScene(void)
 
     puppet.draw();
 
+    if (gunshot)
+    {
+        gunshot->draw();
+    }
+
     glutSwapBuffers(); // Draw the new frame of the game.
 }
 
-/*
 void mouse(int button, int state, int x, int y)
 {
-    printf("%d\t%d\n", x, Height - y);
+    if (button == GLUT_LEFT_BUTTON)
+    {
+        if (!gunshot)
+            gunshot = puppet.shoot();
+    }
 }
-*/
 
 void passiveMouseMotion(int x, int y)
 {
-    printf("%d %d\n", x, y);
-
     if (y < ViewingHeight / 2)
     {
         puppet.rotateArm(2);
@@ -108,14 +115,14 @@ void init(void)
     // The color the windows will redraw. Its done to erase the previous frame.
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black, no opacity(alpha).
 
-    glMatrixMode(GL_PROJECTION); // Select the projection matrix
-    glOrtho(-(ViewingWidth / 2), // X coordinate of left edge
-            (ViewingWidth / 2),  // X coordinate of right edge
-            0.0,                 // Y coordinate of bottom edge
-            ViewingHeight,       // Y coordinate of top edge
-            -100,                // Z coordinate of the “near” plane
-            100);                // Z coordinate of the “far” plane
-    glMatrixMode(GL_MODELVIEW);  // Select the projection matrix
+    glMatrixMode(GL_PROJECTION);  // Select the projection matrix
+    glOrtho(-(ViewingWidth / 2),  // X coordinate of left edge
+            (ViewingWidth / 2),   // X coordinate of right edge
+            -(ViewingHeight / 2), // Y coordinate of bottom edge
+            (ViewingHeight / 2),  // Y coordinate of top edge
+            -100,                 // Z coordinate of the “near” plane
+            100);                 // Z coordinate of the “far” plane
+    glMatrixMode(GL_MODELVIEW);   // Select the projection matrix
     glLoadIdentity();
 }
 
@@ -130,6 +137,17 @@ void idle(void)
     if (keyStatus[(int)('d')])
     {
         puppet.walkToRight(inc);
+    }
+
+    if (gunshot)
+    {
+        gunshot->move();
+
+        if (gunshot && !gunshot->valid())
+        {
+            delete gunshot;
+            gunshot = NULL;
+        }
     }
 
     //Control animation
@@ -174,8 +192,8 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(keyPress);
     glutIdleFunc(idle);
     glutKeyboardUpFunc(keyup);
+    glutMouseFunc(mouse);
     glutPassiveMotionFunc(passiveMouseMotion);
-    // glutMouseFunc(mouse);
 
     init();
 
