@@ -10,8 +10,8 @@
 CPP=g++
 CFLAGS=-I. -Wall -g -lm
 GLUTFLAGS=-lGL -lGLU -lglut
-DEPS = alvo.h boneco.h tiro.h
-OBJ = src/alvo.o src/boneco.o src/tiro.o main.o
+DEPS = geometries.h puppet.h
+OBJ = src/geometries.o src/puppet.o main.o
 
 all: trabalhocg clean
 
