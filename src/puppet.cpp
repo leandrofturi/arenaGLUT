@@ -153,6 +153,46 @@ void Puppet::takeStep(GLfloat x, GLfloat y, GLfloat dx)
     gX = gX + 10 * dx;
 }
 
+GLfloat totalHeight()
+{
+    return legHeight + bodyHeight + 2 * radiusHead;
+}
+
+void Puppet::takeFly(GLfloat x, GLfloat y, GLfloat dy)
+{
+    thetaThigh[0] = 15.0;
+    thetaThigh[1] = 15.0;
+    thetaLeg[0] = 0.0;
+    thetaLeg[1] = 0.0;
+
+    static int dir = 1;
+
+    switch (flying)
+    {
+    case -1: // no
+        break;
+    case 0: // land
+        dir = -1;
+    case 1: // yes
+        GLfloat h = dir * 10 * dy;
+        if (gY + h > (3 * totalHeight()))
+        {
+            gY -= h;
+            flying = 0;
+        }
+        else if (gY + h < 0)
+        {
+            flying = -1;
+        }
+        else
+        {
+            gY += h;
+        }
+        dir = 1;
+        break;
+    }
+}
+
 int sgn(GLfloat x)
 {
     return (x > 0) - (x < 0);

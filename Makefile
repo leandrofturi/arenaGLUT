@@ -21,6 +21,9 @@ all: trabalhocg clean
 trabalhocg: $(OBJ)
 	$(CPP) -o $@ $^ $(CFLAGS) $(GLUTFLAGS)
 
+run: all
+	./trabalhocg
+
 clean:
 	rm -f *.o
 	rm -f src/*.o

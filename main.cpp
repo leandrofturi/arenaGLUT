@@ -14,6 +14,7 @@
 
 // Key status
 int keyStatus[256];
+int mouseStatus[3];
 
 // Window dimensions
 const GLint Width = 500;
@@ -45,12 +46,25 @@ void renderScene(void)
     glutSwapBuffers(); // Draw the new frame of the game.
 }
 
+#define MB_PRESSED(state, button) (1 << (button))
+
 void mouse(int button, int state, int x, int y)
 {
-    if (button == GLUT_LEFT_BUTTON)
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
         gunshots.push_back(puppet.shoot());
     }
+    if ((button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !puppet.landing()) || animate)
+    {
+        mouseStatus[2] = 1;
+        puppet.liftOff();
+    }
+    if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
+    {
+        mouseStatus[2] = 0;
+        puppet.land();
+    }
+    glutPostRedisplay();
 }
 
 void passiveMouseMotion(int x, int y)
@@ -106,9 +120,14 @@ void keyup(unsigned char key, int x, int y)
 void ResetKeyStatus()
 {
     int i;
-    //Initialize keyStatus
+    // Initialize keyStatus
     for (i = 0; i < 256; i++)
         keyStatus[i] = 0;
+
+    // Mouse
+    mouseStatus[0] = 0;
+    mouseStatus[1] = 0;
+    mouseStatus[2] = 0;
 }
 
 void init(void)
@@ -117,21 +136,21 @@ void init(void)
     // The color the windows will redraw. Its done to erase the previous frame.
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black, no opacity(alpha).
 
-    glMatrixMode(GL_PROJECTION);  // Select the projection matrix
-    glOrtho(-(ViewingWidth / 2),  // X coordinate of left edge
-            (ViewingWidth / 2),   // X coordinate of right edge
-            -(ViewingHeight / 2), // Y coordinate of bottom edge
-            (ViewingHeight / 2),  // Y coordinate of top edge
-            -100,                 // Z coordinate of the “near” plane
-            100);                 // Z coordinate of the “far” plane
-    glMatrixMode(GL_MODELVIEW);   // Select the projection matrix
+    glMatrixMode(GL_PROJECTION); // Select the projection matrix
+    glOrtho(0.0,                 // X coordinate of left edge
+            ViewingWidth,        // X coordinate of right edge
+            0.0,                 // Y coordinate of bottom edge
+            ViewingHeight,       // Y coordinate of top edge
+            -100,                // Z coordinate of the “near” plane
+            100);                // Z coordinate of the “far” plane
+    glMatrixMode(GL_MODELVIEW);  // Select the projection matrix
     glLoadIdentity();
 }
 
 void idle(void)
 {
     double inc = INC_KEYIDLE;
-    //Treat keyPress
+    // Treat keyPress
     if (keyStatus[(int)('a')])
     {
         puppet.walk(-inc);
@@ -139,6 +158,10 @@ void idle(void)
     if (keyStatus[(int)('d')])
     {
         puppet.walk(inc);
+    }
+    if (mouseStatus[2] || puppet.isInTheAir())
+    {
+        puppet.fly();
     }
 
     for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end();)

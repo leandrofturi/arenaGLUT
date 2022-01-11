@@ -15,8 +15,10 @@ class Puppet
     GLfloat gThighHeight;
     GLfloat gArmElevation;
     GLfloat gArmTranslation;
+    GLfloat gFlySpeed = 1.0;
 
     int walkDirection = 1; // -1: left, 1: right
+    int flying = -1;       // -1: no, 0: landing, 1: yes
 
 private:
     void drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaThigh[2]); // theta: angle referenced in the body
@@ -25,12 +27,13 @@ private:
     void drawHead(GLfloat x, GLfloat y);
     void drawPuppet(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaThigh[2], GLfloat thetaArm);
     void takeStep(GLfloat x, GLfloat y, GLfloat dx);
+    void takeFly(GLfloat x, GLfloat y, GLfloat dy);
 
 public:
     Puppet()
     {
-        gX = 0.0;
-        gY = -200.0;
+        gX = 50.0;
+        gY = 0.0;
     };
     void draw()
     {
@@ -50,9 +53,29 @@ public:
     {
         takeStep(gX, gY, dx);
     };
+    void fly()
+    {
+        takeFly(gX, gY, gFlySpeed);
+    };
+    void liftOff()
+    {
+        flying = 1;
+    };
+    void land()
+    {
+        flying = 0;
+    };
     void setDirection(int x)
     {
         walkDirection = (x > 0) - (x < 0);
+    };
+    int isInTheAir()
+    {
+        return flying >= 0;
+    };
+    int landing()
+    {
+        return flying == 0;
     };
 };
 
