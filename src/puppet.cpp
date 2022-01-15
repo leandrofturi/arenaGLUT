@@ -25,7 +25,12 @@ void Puppet::drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaTh
 
     if (walkDirection < 0)
     {
+        glTranslatef(-legWidth / 2.0, 0.0, 0.0);
         glRotatef(180.0, 0.0, 1.0, 0.0);
+    }
+    else
+    {
+        glTranslatef(legWidth / 2.0, 0.0, 0.0);
     }
     glRotatef(180.0, 0.0, 0.0, 1.0);
     glTranslatef(0.0, -gLegHeight - gThighHeight, 0.0);
@@ -55,13 +60,9 @@ void Puppet::drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaTh
 
 void Puppet::drawArm(GLfloat x, GLfloat y, GLfloat thetaArm)
 {
-
-    gArmElevation = armWidth / 2.0 * sin(Geometries::toRad(thetaArm));
-    gArmTranslation = (armWidth / 2.0) - (armWidth / 2.0 * cos(Geometries::toRad(thetaArm)));
-
     glPushMatrix();
 
-    glTranslatef(-gArmTranslation, gArmElevation, 0.0);
+    glTranslatef(-armWidth / 2.0, 0.0, 0.0);
     glRotatef(thetaArm, 0.0, 0.0, 1.0);
     Geometries::drawRect(armHeight, armWidth, 1.0, 1.0, 0.0);
 
@@ -71,6 +72,7 @@ void Puppet::drawArm(GLfloat x, GLfloat y, GLfloat thetaArm)
 void Puppet::drawBody(GLfloat x, GLfloat y)
 {
     glPushMatrix();
+    glTranslatef(-bodyWidth / 2.0, 0.0, 0.0);
 
     Geometries::drawRect(bodyHeight, bodyWidth, 0.0, 1.0, 0.0);
 

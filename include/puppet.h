@@ -13,8 +13,6 @@ class Puppet
     GLfloat gThetaArm = 0.0;
     GLfloat gLegHeight;
     GLfloat gThighHeight;
-    GLfloat gArmElevation;
-    GLfloat gArmTranslation;
     GLfloat gFlySpeed = 1.0;
 
     int walkDirection = 1; // -1: left, 1: right
