@@ -150,7 +150,7 @@ void Puppet::takeStep(GLfloat x, GLfloat y, GLfloat dx)
     }
     walkStep = (walkStep + 1) % 5;
 
-    gX = gX + 10 * dx;
+    gX = gX + 50 * dx;
 }
 
 GLfloat totalHeight()

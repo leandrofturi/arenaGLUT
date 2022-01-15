@@ -8,6 +8,7 @@
 #include <GL/freeglut.h>
 #include "include/puppet.h"
 #include "include/gunshot.h"
+#include "include/arena.h"
 
 #define INC_KEY 1
 #define INC_KEYIDLE 0.01
@@ -30,6 +31,7 @@ int animate = 0;
 // Components
 Puppet puppet;
 std::list<Gunshot *> gunshots;
+Arena arena;
 
 void renderScene(void)
 {
@@ -37,6 +39,7 @@ void renderScene(void)
     glClear(GL_COLOR_BUFFER_BIT);
 
     puppet.draw();
+    // arena.drawScenario();
 
     for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end(); ++it)
     {
@@ -197,6 +200,9 @@ void idle(void)
 
 int main(int argc, char *argv[])
 {
+    char *pathArena = (char *)malloc(256);
+    strcpy(pathArena, argv[1]);
+
     // Initialize openGL with Double buffer and RGB color without transparency.
     // Its interesting to try GLUT_SINGLE instead of GLUT_DOUBLE.
     glutInit(&argc, argv);
@@ -217,7 +223,12 @@ int main(int argc, char *argv[])
 
     init();
 
+    // Arena
+    arena.loadScenario(pathArena);
+
     glutMainLoop();
+
+    free(pathArena);
 
     return 0;
 }

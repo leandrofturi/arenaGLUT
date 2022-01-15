@@ -8,14 +8,12 @@ float Geometries::toRad(float theta)
 
 void Geometries::drawRect(GLfloat height, GLfloat width, GLfloat R, GLfloat G, GLfloat B)
 {
-    GLfloat halfWidth = width * 0.5;
-
     glColor3f(R, G, B);
     glBegin(GL_POLYGON);
-    glVertex3f(-halfWidth, 0.0, 0.0);
-    glVertex3f(+halfWidth, 0.0, 0.0);
-    glVertex3f(+halfWidth, height, 0.0);
-    glVertex3f(-halfWidth, height, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(width, 0.0, 0.0);
+    glVertex3f(width, height, 0.0);
+    glVertex3f(0.0, height, 0.0);
     glEnd();
 }
 

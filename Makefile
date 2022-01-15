@@ -10,8 +10,8 @@
 CPP=g++
 CFLAGS=-I. -Wall -g -lm
 GLUTFLAGS=-lGL -lGLU -lglut
-DEPS = geometries.h puppet.h gunshot.h
-OBJ = src/geometries.o src/puppet.o src/gunshot.o main.o
+DEPS = geometries.h puppet.h gunshot.h arena.h tinyxml2.h
+OBJ = src/geometries.o src/puppet.o src/gunshot.o src/arena.o tinyxml2/tinyxml2.o main.o
 
 all: trabalhocg clean
 
@@ -22,7 +22,7 @@ trabalhocg: $(OBJ)
 	$(CPP) -o $@ $^ $(CFLAGS) $(GLUTFLAGS)
 
 run: all
-	./trabalhocg
+	./trabalhocg input/arena_teste.svg
 
 clean:
 	rm -f *.o
