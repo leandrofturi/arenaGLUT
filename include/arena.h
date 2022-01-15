@@ -2,7 +2,11 @@
 #define ARENA_H
 #include <list>
 #include <iostream>
+#include <list>
 #include "../tinyxml2/tinyxml2.h"
+#include "puppet.h"
+#include "opponent.h"
+#include "block.h"
 
 enum GeomType
 {
@@ -77,8 +81,6 @@ class Arena
 private:
   std::list<Item *> items;
 
-  void setDimension();
-
 public:
   Arena(){};
   ~Arena()
@@ -91,7 +93,7 @@ public:
 
   int loadScenario(const char *path);
   void printElements();
-  void centralize(double ViewingWidth, double ViewingHeight);
+  void loadElements(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet);
   void drawScenario();
 };
 

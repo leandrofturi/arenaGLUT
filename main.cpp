@@ -30,6 +30,8 @@ int animate = 0;
 
 // Components
 Puppet puppet;
+std::list<Block *> blocks;
+std::list<Opponent *> opponents;
 std::list<Gunshot *> gunshots;
 Arena arena;
 
@@ -38,8 +40,18 @@ void renderScene(void)
     // Clear the screen.
     glClear(GL_COLOR_BUFFER_BIT);
 
+    arena.loadElements(&blocks, &opponents, &puppet);
     puppet.draw();
-    // arena.drawScenario();
+
+    for (std::list<Block *>::iterator it = blocks.begin(); it != blocks.end(); ++it)
+    {
+        (*it)->draw();
+    }
+
+    for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+    {
+        (*it)->draw();
+    }
 
     for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end(); ++it)
     {
@@ -137,7 +149,7 @@ void init(void)
 {
     ResetKeyStatus();
     // The color the windows will redraw. Its done to erase the previous frame.
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black, no opacity(alpha).
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f); // Black, no opacity(alpha).
 
     glMatrixMode(GL_PROJECTION); // Select the projection matrix
     glOrtho(0.0,                 // X coordinate of left edge

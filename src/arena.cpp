@@ -152,25 +152,6 @@ void Item::draw()
   glPopMatrix();
 }
 
-void Arena::setDimension()
-{
-  for (std::list<Item *>::iterator it = items.begin(); it != items.end(); it++)
-  {
-    if ((fabs((*it)->fill.R - BLUE.R) < 1e-8) && (fabs((*it)->fill.G - BLUE.G) < 1e-8) && (fabs((*it)->fill.B - BLUE.B) < 1e-8))
-    {
-      ArenaHeight = (*it)->height;
-      ArenaWidth = (*it)->width;
-      refX = (*it)->x;
-      refY = (*it)->y;
-    }
-    else if ((fabs((*it)->fill.R - GREEN.R) < 1e-8) && (fabs((*it)->fill.G - GREEN.G) < 1e-8) && (fabs((*it)->fill.B - GREEN.B) < 1e-8))
-    {
-      PuppetX0 = (*it)->cx;
-      PuppetY0 = (*it)->cy;
-    }
-  }
-}
-
 int Arena::loadScenario(const char *path)
 {
   XMLDocument doc;
@@ -188,7 +169,6 @@ int Arena::loadScenario(const char *path)
     items.push_back(item);
   }
 
-  setDimension();
   return 0;
 }
 
@@ -200,6 +180,37 @@ void Arena::printElements()
   for (std::list<Item *>::iterator it = items.begin(); it != items.end(); it++)
   {
     (*it)->printAttr();
+  }
+}
+
+void Arena::loadElements(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet)
+{
+  for (std::list<Item *>::iterator it = items.begin(); it != items.end(); it++)
+  {
+    if ((*it)->geomType == RECT)
+    {
+      if ((fabs((*it)->fill.R - BLUE.R) < 1e-8) && (fabs((*it)->fill.G - BLUE.G) < 1e-8) && (fabs((*it)->fill.B - BLUE.B) < 1e-8))
+      {
+        ArenaHeight = (*it)->height;
+        ArenaWidth = (*it)->width;
+        refX = (*it)->x;
+        refY = (*it)->y;
+        continue;
+      }
+      Block *block = new Block((*it)->x, (*it)->y, (*it)->width, (*it)->height, (*it)->fill.R, (*it)->fill.G, (*it)->fill.B);
+      blocks->push_back(block);
+    }
+    else if ((*it)->geomType == CIRCLE)
+    {
+      if ((fabs((*it)->fill.R - GREEN.R) < 1e-8) && (fabs((*it)->fill.G - GREEN.G) < 1e-8) && (fabs((*it)->fill.B - GREEN.B) < 1e-8))
+      {
+        PuppetX0 = (*it)->cx;
+        PuppetY0 = (*it)->cy;
+        continue;
+      }
+      Opponent *opponent = new Opponent((*it)->cx, (*it)->cy, (*it)->r, (*it)->fill.R, (*it)->fill.G, (*it)->fill.B);
+      opponents->push_back(opponent);
+    }
   }
 }
 
