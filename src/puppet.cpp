@@ -3,16 +3,16 @@
 #include <math.h>
 
 // Dimensions
-#define legHeight 30.0
-#define legWidth 15.0
-#define thighHeight 50.0
-#define thighWidth 15.0
-#define armHeight 10.0
-#define armWidth 80.0
-#define bodyHeight 100.0
-#define bodyWidth 60.0
-#define radiusHead 30.0
-#define stepSize 20.0
+#define legHeight 16.0
+#define legWidth 6.0
+#define thighHeight 20.0
+#define thighWidth 6.0
+#define armHeight 4.8
+#define armWidth 32.0
+#define bodyHeight 40.0
+#define bodyWidth 24.0
+#define radiusHead 12.0
+#define stepSize 8.0
 
 int walkStep = 0; // 5 steps of motion
 
@@ -22,20 +22,21 @@ void Puppet::drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaTh
     gThighHeight = thighHeight * cos(Geometries::toRad(thetaThigh[0]));
 
     glPushMatrix();
+    glTranslatef(0.0, -gLegHeight - gThighHeight, 0.0);
 
-    if (walkDirection < 0)
+    if (walkDirection > 0)
     {
-        glTranslatef(-legWidth / 2.0, 0.0, 0.0);
+        glTranslatef(legWidth / 2.0, 0.0, 0.0);
         glRotatef(180.0, 0.0, 1.0, 0.0);
     }
     else
     {
-        glTranslatef(legWidth / 2.0, 0.0, 0.0);
+        glTranslatef(-legWidth / 2.0, 0.0, 0.0);
     }
-    glRotatef(180.0, 0.0, 0.0, 1.0);
-    glTranslatef(0.0, -gLegHeight - gThighHeight, 0.0);
 
     glPushMatrix();
+    glTranslatef(-legWidth / 2.0, 0.0, 0.0);
+
     glRotatef(thetaThigh[0], 0.0, 0.0, 1.0);
     Geometries::drawRect(legHeight, legWidth, 1.0, 0.0, 0.0);
 
@@ -45,6 +46,7 @@ void Puppet::drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaTh
 
     glPopMatrix();
     glPushMatrix();
+    glTranslatef(legWidth / 2.0, 0.0, 0.0);
 
     glRotatef(-thetaThigh[1], 0.0, 0.0, 1.0);
     Geometries::drawRect(legHeight, legWidth, 1.0, 0.0, 0.0);
@@ -62,7 +64,6 @@ void Puppet::drawArm(GLfloat x, GLfloat y, GLfloat thetaArm)
 {
     glPushMatrix();
 
-    glTranslatef(-armWidth / 2.0, 0.0, 0.0);
     glRotatef(thetaArm, 0.0, 0.0, 1.0);
     Geometries::drawRect(armHeight, armWidth, 1.0, 1.0, 0.0);
 
@@ -94,7 +95,8 @@ void Puppet::drawPuppet(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat theta
     glTranslatef(x, y, 0.0);
 
     drawLegs(x, y, thetaLeg, thetaThigh);
-    glTranslatef(0.0, gLegHeight + gThighHeight, 0.0);
+    // Geometries::drawCircle(1.0, 1.0, 1.0, 1.0);
+    glTranslatef(0.0, -gLegHeight - gThighHeight - 0.9 * bodyHeight, 0.0);
     drawBody(x, y);
     glTranslatef(0.0, bodyHeight / 2.0, 0.0);
     glPushMatrix();
@@ -103,11 +105,10 @@ void Puppet::drawPuppet(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat theta
     {
         glRotatef(180.0, 0.0, 1.0, 0.0);
     }
-    glTranslatef(armWidth / 2.0, 0.0, 0.0);
 
     drawArm(x, y, thetaArm);
     glPopMatrix();
-    glTranslatef(0.0, bodyHeight / 2.0 + radiusHead, 0.0);
+    glTranslatef(0.0, -bodyHeight / 2.0 - radiusHead, 0.0);
     drawHead(x, y);
 
     glPopMatrix();
@@ -152,7 +153,7 @@ void Puppet::takeStep(GLfloat x, GLfloat y, GLfloat dx)
     }
     walkStep = (walkStep + 1) % 5;
 
-    gX = gX + 50 * dx;
+    gX = gX + gSpeed * dx;
 }
 
 GLfloat totalHeight()
@@ -166,6 +167,7 @@ void Puppet::takeFly(GLfloat x, GLfloat y, GLfloat dy)
     thetaThigh[1] = 15.0;
     thetaLeg[0] = 0.0;
     thetaLeg[1] = 0.0;
+    int LIMIT = 200;
 
     static int dir = 1;
 
@@ -177,18 +179,18 @@ void Puppet::takeFly(GLfloat x, GLfloat y, GLfloat dy)
         dir = -1;
     case 1: // yes
         GLfloat h = dir * 10 * dy;
-        if (gY + h > (3 * totalHeight()))
+        if (gY - totalHeight() - h < (gFlyY0 - 4.0 * totalHeight()))
         {
-            gY -= h;
+            gY += h;
             flying = 0;
         }
-        else if (gY + h < 0)
+        else if (gY - totalHeight() - h > LIMIT)
         {
             flying = -1;
         }
         else
         {
-            gY += h;
+            gY -= h;
         }
         dir = 1;
         break;
@@ -208,7 +210,7 @@ void Puppet::rotateArm(GLfloat inc)
 Gunshot *Puppet::shoot()
 {
     GLfloat posShotX = gX,
-            posShotY = gY + gLegHeight + gThighHeight + bodyHeight / 2.0 + armHeight / 2.0;
+            posShotY = gY - gLegHeight - gThighHeight - bodyHeight / 2.0 + 3.0 * armHeight / 2.0;
     GLfloat directionAng = gThetaArm;
     if (walkDirection < 0)
     {
@@ -216,6 +218,6 @@ Gunshot *Puppet::shoot()
     }
     Geometries::movePoint(posShotX, posShotY, directionAng, armWidth);
 
-    Gunshot *shot = new Gunshot(posShotX, posShotY, directionAng);
+    Gunshot *shot = new Gunshot(posShotX, posShotY, directionAng, 2.0 * gSpeed / 20.0);
     return shot;
 }

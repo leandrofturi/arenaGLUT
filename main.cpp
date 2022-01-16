@@ -40,7 +40,6 @@ void renderScene(void)
     // Clear the screen.
     glClear(GL_COLOR_BUFFER_BIT);
 
-    arena.loadElements(&blocks, &opponents, &puppet);
     puppet.draw();
 
     for (std::list<Block *>::iterator it = blocks.begin(); it != blocks.end(); ++it)
@@ -52,7 +51,6 @@ void renderScene(void)
     {
         (*it)->draw();
     }
-
     for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end(); ++it)
     {
         (*it)->draw();
@@ -84,7 +82,7 @@ void mouse(int button, int state, int x, int y)
 
 void passiveMouseMotion(int x, int y)
 {
-    if (y < ViewingHeight / 2)
+    if (y > ViewingHeight / 2)
     {
         puppet.rotateArm(2);
     }
@@ -154,8 +152,8 @@ void init(void)
     glMatrixMode(GL_PROJECTION); // Select the projection matrix
     glOrtho(0.0,                 // X coordinate of left edge
             ViewingWidth,        // X coordinate of right edge
-            0.0,                 // Y coordinate of bottom edge
-            ViewingHeight,       // Y coordinate of top edge
+            ViewingHeight,       // Y coordinate of bottom edge
+            0.0,                 // Y coordinate of top edge
             -100,                // Z coordinate of the “near” plane
             100);                // Z coordinate of the “far” plane
     glMatrixMode(GL_MODELVIEW);  // Select the projection matrix
@@ -237,6 +235,7 @@ int main(int argc, char *argv[])
 
     // Arena
     arena.loadScenario(pathArena);
+    arena.loadElements(&blocks, &opponents, &puppet);
 
     glutMainLoop();
 

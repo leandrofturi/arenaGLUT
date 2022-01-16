@@ -80,6 +80,7 @@ class Arena
 
 private:
   std::list<Item *> items;
+  void centerize(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet);
 
 public:
   Arena(){};

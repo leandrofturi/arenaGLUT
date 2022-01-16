@@ -13,7 +13,9 @@ class Puppet
     GLfloat gThetaArm = 0.0;
     GLfloat gLegHeight;
     GLfloat gThighHeight;
+    GLfloat gSpeed = 50.0;
     GLfloat gFlySpeed = 1.0;
+    GLfloat gFlyY0 = 1.0;
 
     int walkDirection = 1; // -1: left, 1: right
     int flying = -1;       // -1: no, 0: landing, 1: yes
@@ -30,12 +32,17 @@ private:
 public:
     Puppet()
     {
-        gX = 50.0;
-        gY = 0.0;
+        gX = 10.0;
+        gY = 300.0;
     };
     void draw()
     {
         drawPuppet(gX, gY, thetaLeg, thetaThigh, gThetaArm);
+    };
+    void setInitial(GLfloat x, GLfloat y)
+    {
+        gX = x;
+        gY = y;
     };
     void rotateArm(GLfloat inc);
     Gunshot *shoot();
@@ -57,6 +64,7 @@ public:
     };
     void liftOff()
     {
+        gFlyY0 = gY;
         flying = 1;
     };
     void land()

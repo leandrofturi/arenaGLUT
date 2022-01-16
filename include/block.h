@@ -31,6 +31,27 @@ public:
     {
         drawBlock(gX, gY);
     };
+    void move(GLfloat dx, GLfloat dy)
+    {
+        gX += dx;
+        gY += dy;
+    };
+    GLfloat getX()
+    {
+        return gX;
+    };
+    GLfloat getY()
+    {
+        return gY;
+    };
+    void setX(GLfloat x)
+    {
+        gX = x;
+    };
+    void setY(GLfloat x)
+    {
+        gY = x;
+    };
 };
 
 #endif /* BLOCK_H */

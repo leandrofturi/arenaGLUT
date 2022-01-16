@@ -206,12 +206,29 @@ void Arena::loadElements(std::list<Block *> *blocks, std::list<Opponent *> *oppo
       {
         PuppetX0 = (*it)->cx;
         PuppetY0 = (*it)->cy;
-        continue;
+        // continue;
       }
       Opponent *opponent = new Opponent((*it)->cx, (*it)->cy, (*it)->r, (*it)->fill.R, (*it)->fill.G, (*it)->fill.B);
       opponents->push_back(opponent);
     }
   }
+
+  centerize(blocks, opponents, puppet);
+}
+
+void Arena::centerize(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet)
+{
+  for (std::list<Block *>::iterator it = blocks->begin(); it != blocks->end(); ++it)
+  {
+    (*it)->move(-refX, -refY);
+  }
+
+  for (std::list<Opponent *>::iterator it = opponents->begin(); it != opponents->end(); ++it)
+  {
+    (*it)->move(-refX, -refY);
+  }
+
+  puppet->setInitial(PuppetX0 - refX, PuppetY0 - refY);
 }
 
 void Arena::drawScenario()

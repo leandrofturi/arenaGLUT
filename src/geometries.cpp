@@ -40,3 +40,21 @@ void Geometries::movePoint(GLfloat &x, GLfloat &y, GLfloat angle, GLfloat step)
     x += step * cos(theta);
     y += step * sin(theta);
 }
+
+void Geometries::rotatePoint(GLfloat cx, GLfloat cy, GLfloat angle, GLfloat &x, GLfloat &y)
+{
+    GLfloat s = sin(angle);
+    GLfloat c = cos(angle);
+
+    // translate point back to origin:
+    x -= cx;
+    y -= cy;
+
+    // rotate point
+    GLfloat xnew = x * c - y * s;
+    GLfloat ynew = x * s + y * c;
+
+    // translate point back:
+    x = xnew + cx;
+    y = ynew + cy;
+}

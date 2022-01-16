@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #define maxDistance 500
-#define radiusGunshot 5
+#define radiusGunshot 4.8
 
 void Gunshot::drawGunshot(GLfloat x, GLfloat y)
 {
