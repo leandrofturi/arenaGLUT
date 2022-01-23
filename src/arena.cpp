@@ -205,8 +205,8 @@ void Arena::loadElements(std::list<Block *> *blocks, std::list<Opponent *> *oppo
       if ((fabs((*it)->fill.R - GREEN.R) < 1e-8) && (fabs((*it)->fill.G - GREEN.G) < 1e-8) && (fabs((*it)->fill.B - GREEN.B) < 1e-8))
       {
         PuppetX0 = (*it)->cx;
-        PuppetY0 = (*it)->cy;
-        // continue;
+        PuppetY0 = (*it)->cy + (*it)->r;
+        continue;
       }
       Opponent *opponent = new Opponent((*it)->cx, (*it)->cy, (*it)->r, (*it)->fill.R, (*it)->fill.G, (*it)->fill.B);
       opponents->push_back(opponent);

@@ -1,18 +1,19 @@
 #include "../include/puppet.h"
 #include "../include/geometries.h"
+#include "../include/collision.h"
 #include <math.h>
+#include <cstdio>
 
-// Dimensions
-#define legHeight 16.0
-#define legWidth 6.0
-#define thighHeight 20.0
-#define thighWidth 6.0
-#define armHeight 4.8
-#define armWidth 32.0
-#define bodyHeight 40.0
-#define bodyWidth 24.0
-#define radiusHead 12.0
-#define stepSize 8.0
+#define legHeight 3.2
+#define legWidth 1.2
+#define thighHeight 4.0
+#define thighWidth 1.2
+#define armHeight 0.96
+#define armWidth 6.4
+#define bodyHeight 8.0
+#define bodyWidth 4.8
+#define radiusHead 2.4
+#define stepSize 1.6
 
 int walkStep = 0; // 5 steps of motion
 
@@ -156,10 +157,17 @@ void Puppet::takeStep(GLfloat x, GLfloat y, GLfloat dx)
     gX = gX + gSpeed * dx;
 }
 
-GLfloat totalHeight()
+GLfloat Puppet::getHeight()
 {
-    return legHeight + bodyHeight + 2 * radiusHead;
+    return legHeight + bodyHeight + 2.0 * radiusHead;
 }
+
+GLfloat Puppet::getWidth()
+{
+    return bodyWidth + armWidth / 2.0;
+}
+
+int i = 0;
 
 void Puppet::takeFly(GLfloat x, GLfloat y, GLfloat dy)
 {
@@ -167,34 +175,23 @@ void Puppet::takeFly(GLfloat x, GLfloat y, GLfloat dy)
     thetaThigh[1] = 15.0;
     thetaLeg[0] = 0.0;
     thetaLeg[1] = 0.0;
-    int LIMIT = 200;
 
-    static int dir = 1;
+    GLfloat h = gFlySpeed * dy;
+    GLfloat hP = getHeight();
 
-    switch (flying)
+    printf("%d\n", i++);
+    if (gY - h - hP <= 0) // top limit
     {
-    case -1: // no
-        break;
-    case 0: // land
-        dir = -1;
-    case 1: // yes
-        GLfloat h = dir * 10 * dy;
-        if (gY - totalHeight() - h < (gFlyY0 - 4.0 * totalHeight()))
-        {
-            gY += h;
-            flying = 0;
-        }
-        else if (gY - totalHeight() - h > LIMIT)
-        {
-            flying = -1;
-        }
-        else
-        {
-            gY -= h;
-        }
-        dir = 1;
-        break;
+        flying = 0;
+        return;
     }
+    if (gY - h > gY0) // bottom limit
+    {
+        gY = gY0;
+        flying = 0;
+        return;
+    }
+    gY -= h;
 }
 
 int sgn(GLfloat x)

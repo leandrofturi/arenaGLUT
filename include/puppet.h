@@ -2,12 +2,15 @@
 #define PUPPET_H
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <math.h>
 #include "gunshot.h"
+#include <cstdio>
 
 class Puppet
 {
     GLfloat gX;
     GLfloat gY;
+    GLfloat gY0 = 0.0;
     GLfloat thetaLeg[2] = {0.0, 0.0};
     GLfloat thetaThigh[2] = {15.0, 15.0};
     GLfloat gThetaArm = 0.0;
@@ -15,10 +18,11 @@ class Puppet
     GLfloat gThighHeight;
     GLfloat gSpeed = 50.0;
     GLfloat gFlySpeed = 1.0;
-    GLfloat gFlyY0 = 1.0;
+    GLfloat gFlyY0 = 0.0;
 
     int walkDirection = 1; // -1: left, 1: right
-    int flying = -1;       // -1: no, 0: landing, 1: yes
+    int flying = 0;        // 0: no, 1: yes
+    int elevated = 0;      // 0: no, 1: yes
 
 private:
     void drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaThigh[2]); // theta: angle referenced in the body
@@ -30,11 +34,7 @@ private:
     void takeFly(GLfloat x, GLfloat y, GLfloat dy);
 
 public:
-    Puppet()
-    {
-        gX = 10.0;
-        gY = 300.0;
-    };
+    Puppet(){};
     void draw()
     {
         drawPuppet(gX, gY, thetaLeg, thetaThigh, gThetaArm);
@@ -43,6 +43,7 @@ public:
     {
         gX = x;
         gY = y;
+        gY0 = y;
     };
     void rotateArm(GLfloat inc);
     Gunshot *shoot();
@@ -54,34 +55,46 @@ public:
     {
         return gY;
     };
+    GLfloat getHeight();
+    GLfloat getWidth();
     void walk(GLfloat dx)
     {
         takeStep(gX, gY, dx);
     };
     void fly()
     {
+        flying = 1;
+        elevated = 0;
         takeFly(gX, gY, gFlySpeed);
     };
-    void liftOff()
-    {
-        gFlyY0 = gY;
-        flying = 1;
-    };
-    void land()
+    void shootDown()
     {
         flying = 0;
+        elevated = 0;
+    };
+    bool isFlying()
+    {
+        return flying;
+    };
+    void gravity()
+    {
+        if (!flying && !elevated)
+        {
+            if (fabs(gY - gY0) >= 1e-3)
+            {
+                takeFly(gX, gY, -gFlySpeed);
+            }
+        }
+    };
+    void elevate(GLfloat y)
+    {
+        gY = y;
+        gFlyY0 = y;
+        elevated = 1;
     };
     void setDirection(int x)
     {
         walkDirection = (x > 0) - (x < 0);
-    };
-    int isInTheAir()
-    {
-        return flying >= 0;
-    };
-    int landing()
-    {
-        return flying == 0;
     };
 };
 

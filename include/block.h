@@ -52,6 +52,14 @@ public:
     {
         gY = x;
     };
+    GLfloat getWidth()
+    {
+        return gWidth;
+    };
+    GLfloat getHeight()
+    {
+        return gHeight;
+    };
 };
 
 #endif /* BLOCK_H */

@@ -9,6 +9,7 @@
 #include "include/puppet.h"
 #include "include/gunshot.h"
 #include "include/arena.h"
+#include "include/collision.h"
 
 #define INC_KEY 1
 #define INC_KEYIDLE 0.01
@@ -24,9 +25,6 @@ const GLint Height = 500;
 // Viewing dimensions
 const GLint ViewingWidth = 500;
 const GLint ViewingHeight = 500;
-
-// Puppet motion
-int animate = 0;
 
 // Components
 Puppet puppet;
@@ -67,15 +65,14 @@ void mouse(int button, int state, int x, int y)
     {
         gunshots.push_back(puppet.shoot());
     }
-    if ((button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !puppet.landing()) || animate)
+    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !puppet.isFlying())
     {
         mouseStatus[2] = 1;
-        puppet.liftOff();
     }
     if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
     {
         mouseStatus[2] = 0;
-        puppet.land();
+        puppet.shootDown();
     }
     glutPostRedisplay();
 }
@@ -105,9 +102,6 @@ void keyPress(unsigned char key, int x, int y)
 {
     switch (key)
     {
-    case '1':
-        animate = !animate;
-        break;
     case 'a':
     case 'A':
         keyStatus[(int)('a')] = 1; // Using keyStatus trick
@@ -163,7 +157,7 @@ void init(void)
 void idle(void)
 {
     double inc = INC_KEYIDLE;
-    // Treat keyPress
+
     if (keyStatus[(int)('a')])
     {
         puppet.walk(-inc);
@@ -172,7 +166,7 @@ void idle(void)
     {
         puppet.walk(inc);
     }
-    if (mouseStatus[2] || puppet.isInTheAir())
+    if (mouseStatus[2])
     {
         puppet.fly();
     }
@@ -190,20 +184,8 @@ void idle(void)
         }
     }
 
-    // Control animation
-    if (animate)
-    {
-        static int dir = 1;
-        if (puppet.getX() > (ViewingWidth / 2))
-        {
-            dir *= -1;
-        }
-        else if (puppet.getX() < -(ViewingWidth / 2))
-        {
-            dir *= -1;
-        }
-        puppet.walk(dir * INC_KEYIDLE);
-    }
+    puppet.gravity();
+    Collision::handleCollision(&puppet, blocks);
 
     glutPostRedisplay();
 }

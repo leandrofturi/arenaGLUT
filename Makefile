@@ -10,8 +10,8 @@
 CPP=g++
 CFLAGS=-I. -Wall -g -lm
 GLUTFLAGS=-lGL -lGLU -lglut
-DEPS = geometries.h puppet.h block.h opponent.h gunshot.h arena.h tinyxml2.h
-OBJ = src/geometries.o src/puppet.o src/block.o src/opponent.o src/gunshot.o src/arena.o tinyxml2/tinyxml2.o main.o
+DEPS = geometries.h puppet.h block.h opponent.h gunshot.h arena.h collision.h tinyxml2.h
+OBJ = src/geometries.o src/puppet.o src/block.o src/opponent.o src/gunshot.o src/arena.o src/collision.o tinyxml2/tinyxml2.o main.o
 
 all: trabalhocg clean
 
