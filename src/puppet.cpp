@@ -159,15 +159,13 @@ void Puppet::takeStep(GLfloat x, GLfloat y, GLfloat dx)
 
 GLfloat Puppet::getHeight()
 {
-    return legHeight + bodyHeight + 2.0 * radiusHead;
+    return legHeight + thighHeight + bodyHeight + 2.0 * radiusHead;
 }
 
 GLfloat Puppet::getWidth()
 {
     return bodyWidth + armWidth / 2.0;
 }
-
-int i = 0;
 
 void Puppet::takeFly(GLfloat x, GLfloat y, GLfloat dy)
 {
@@ -179,8 +177,7 @@ void Puppet::takeFly(GLfloat x, GLfloat y, GLfloat dy)
     GLfloat h = gFlySpeed * dy;
     GLfloat hP = getHeight();
 
-    printf("%d\n", i++);
-    if (gY - h - hP <= 0) // top limit
+    if (gY - h - hP <= gFlyYf) // top limit
     {
         flying = 0;
         return;

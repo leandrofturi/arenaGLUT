@@ -77,6 +77,7 @@ class Arena
 
   float PuppetX0 = 0.0;
   float PuppetY0 = 0.0;
+  float PuppetYRef = 0.0;
 
 private:
   std::list<Item *> items;

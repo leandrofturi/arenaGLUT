@@ -192,6 +192,7 @@ void Arena::loadElements(std::list<Block *> *blocks, std::list<Opponent *> *oppo
       if ((fabs((*it)->fill.R - BLUE.R) < 1e-8) && (fabs((*it)->fill.G - BLUE.G) < 1e-8) && (fabs((*it)->fill.B - BLUE.B) < 1e-8))
       {
         ArenaHeight = (*it)->height;
+        PuppetYRef = (*it)->height;
         ArenaWidth = (*it)->width;
         refX = (*it)->x;
         refY = (*it)->y;
@@ -228,7 +229,8 @@ void Arena::centerize(std::list<Block *> *blocks, std::list<Opponent *> *opponen
     (*it)->move(-refX, -refY);
   }
 
-  puppet->setInitial(PuppetX0 - refX, PuppetY0 - refY);
+  puppet->setInitial(PuppetX0 - refX, PuppetYRef);
+  puppet->setY(PuppetY0 - refY);
 }
 
 void Arena::drawScenario()

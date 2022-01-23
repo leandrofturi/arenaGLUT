@@ -19,8 +19,10 @@ class Puppet
     GLfloat gSpeed = 50.0;
     GLfloat gFlySpeed = 1.0;
     GLfloat gFlyY0 = 0.0;
+    GLfloat gFlyYf = 0.0;
 
     int walkDirection = 1; // -1: left, 1: right
+    int stopped = 0;       // -1: left, 1: right
     int flying = 0;        // 0: no, 1: yes
     int elevated = 0;      // 0: no, 1: yes
 
@@ -44,6 +46,7 @@ public:
         gX = x;
         gY = y;
         gY0 = y;
+        gFlyYf = 0.0;
     };
     void rotateArm(GLfloat inc);
     Gunshot *shoot();
@@ -55,16 +58,28 @@ public:
     {
         return gY;
     };
+    void setY(GLfloat y)
+    {
+        gY = y;
+    };
     GLfloat getHeight();
     GLfloat getWidth();
     void walk(GLfloat dx)
     {
-        takeStep(gX, gY, dx);
+        if (stopped != walkDirection)
+        {
+            takeStep(gX, gY, dx);
+        }
+    };
+    void stop(int dir)
+    {
+        stopped = dir;
     };
     void fly()
     {
         flying = 1;
         elevated = 0;
+        stopped = 0;
         takeFly(gX, gY, gFlySpeed);
     };
     void shootDown()
@@ -72,25 +87,34 @@ public:
         flying = 0;
         elevated = 0;
     };
+    void uncover() {
+        gFlyYf = 0.0;
+    }
     bool isFlying()
     {
         return flying;
     };
     void gravity()
     {
-        if (!flying && !elevated)
+        if (!flying && !elevated && (fabs(gY - gY0) >= 1e-3))
         {
-            if (fabs(gY - gY0) >= 1e-3)
-            {
-                takeFly(gX, gY, -gFlySpeed);
-            }
+            takeFly(gX, gY, -gFlySpeed);
         }
+    };
+    bool isFalling()
+    {
+        return !flying && !elevated && (fabs(gY - gY0) >= 1e-3);
     };
     void elevate(GLfloat y)
     {
         gY = y;
         gFlyY0 = y;
         elevated = 1;
+    };
+    void cover(GLfloat y)
+    {
+        gFlyYf = y;
+        shootDown();
     };
     void setDirection(int x)
     {
