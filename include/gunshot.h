@@ -2,6 +2,7 @@
 #define GUNSHOT_H
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <math.h>
 
 class Gunshot
 {
@@ -11,6 +12,9 @@ class Gunshot
     GLfloat gY;
     GLfloat gDirectionAng;
     GLfloat gSpeed;
+    GLfloat gR;
+    GLfloat gG;
+    GLfloat gB;
 
 private:
     void drawGunshot(GLfloat x, GLfloat y);
@@ -24,6 +28,9 @@ public:
         gY = y;
         gDirectionAng = directionAng;
         gSpeed = speed;
+        gR = ((double) rand() / (RAND_MAX));
+        gG = ((double) rand() / (RAND_MAX));
+        gB = ((double) rand() / (RAND_MAX));
     };
     void draw()
     {
@@ -31,11 +38,15 @@ public:
     };
     void move();
     bool valid();
-    void getPos(GLfloat &xOut, GLfloat &yOut)
+    GLfloat getX()
     {
-        xOut = gX;
-        yOut = gY;
+        return gX;
     };
+    GLfloat getY()
+    {
+        return gY;
+    };
+    GLfloat getRadius();
 };
 
 #endif /* GUNSHOT_H */

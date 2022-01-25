@@ -16,11 +16,12 @@ class Puppet
     GLfloat gThetaArm = 0.0;
     GLfloat gLegHeight;
     GLfloat gThighHeight;
-    GLfloat gSpeed = 50.0;
+    GLfloat gSpeed = 5.0;
     GLfloat gFlySpeed = 1.0;
     GLfloat gFlyY0 = 0.0;
     GLfloat gFlyYf = 0.0;
 
+    int alive = 1;         // 0: no, 1: yes
     int walkDirection = 1; // -1: left, 1: right
     int stopped = 0;       // -1: left, 1: right
     int flying = 0;        // 0: no, 1: yes
@@ -64,11 +65,15 @@ public:
     };
     GLfloat getHeight();
     GLfloat getWidth();
+    void kill()
+    {
+        alive = 0;
+    };
     void walk(GLfloat dx)
     {
         if (stopped != walkDirection)
         {
-            takeStep(gX, gY, dx);
+            takeStep(gX, gY, 10.0 * dx);
         }
     };
     void stop(int dir)
@@ -87,7 +92,8 @@ public:
         flying = 0;
         elevated = 0;
     };
-    void uncover() {
+    void uncover()
+    {
         gFlyYf = 0.0;
     }
     bool isFlying()

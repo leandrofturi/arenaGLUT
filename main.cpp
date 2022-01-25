@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+#include <iterator>
 #include <list>
+#include <chrono>
 #include <GL/freeglut.h>
 #include "include/puppet.h"
 #include "include/gunshot.h"
@@ -48,7 +50,12 @@ void renderScene(void)
     for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
     {
         (*it)->draw();
+        for (std::list<Gunshot *>::iterator gs = (*it)->gunshots.begin(); gs != (*it)->gunshots.end(); ++gs)
+        {
+            (*gs)->draw();
+        }
     }
+
     for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end(); ++it)
     {
         (*it)->draw();
@@ -56,8 +63,6 @@ void renderScene(void)
 
     glutSwapBuffers(); // Draw the new frame of the game.
 }
-
-#define MB_PRESSED(state, button) (1 << (button))
 
 void mouse(int button, int state, int x, int y)
 {
@@ -137,6 +142,26 @@ void ResetKeyStatus()
     mouseStatus[2] = 0;
 }
 
+void opponentShot(int time)
+{
+    int i = (int)(rand() % opponents.size());
+    std::list<Opponent *>::iterator it = opponents.begin();
+    std::advance(it, i);
+    (*it)->shot();
+
+    glutTimerFunc(500, opponentShot, 0.0);
+}
+
+void opponentMove(int time)
+{
+    for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+    {
+        (*it)->move();
+    }
+
+    glutTimerFunc(100, opponentMove, 0.0);
+}
+
 void init(void)
 {
     ResetKeyStatus();
@@ -184,8 +209,24 @@ void idle(void)
         }
     }
 
+    for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+    {
+        for (std::list<Gunshot *>::iterator gs = (*it)->gunshots.begin(); gs != (*it)->gunshots.end();)
+        {
+            (*gs)->move();
+            if (!(*gs)->valid())
+            {
+                gs = (*it)->gunshots.erase(gs);
+            }
+            else
+            {
+                ++gs;
+            }
+        }
+    }
+
     puppet.gravity();
-    Collision::handleCollision(&puppet, blocks);
+    Collision::handleCollision(&puppet, blocks, opponents);
 
     glutPostRedisplay();
 }
@@ -212,6 +253,9 @@ int main(int argc, char *argv[])
     glutKeyboardUpFunc(keyup);
     glutMouseFunc(mouse);
     glutPassiveMotionFunc(passiveMouseMotion);
+
+    glutTimerFunc(500, opponentShot, 0.0);
+    glutTimerFunc(100, opponentMove, 0.0);
 
     init();
 

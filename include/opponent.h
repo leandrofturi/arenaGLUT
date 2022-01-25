@@ -2,6 +2,10 @@
 #define OPPONENT_H
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <list>
+#include <math.h>
+#include "gunshot.h"
+#include "block.h"
 
 class Opponent
 {
@@ -11,9 +15,19 @@ class Opponent
     GLfloat gR;
     GLfloat gG;
     GLfloat gB;
+    GLfloat gSpeed = 2.5;
+
+    GLfloat gXLim[2];
+
+    double walkDirection = ((double)rand() / (RAND_MAX)) * 2.0 - 1.0; // -1: left, 1: right
+
+public:
+    std::list<Gunshot *> gunshots;
 
 private:
     void drawOpponent(GLfloat x, GLfloat y);
+    Gunshot *takeShoot();
+    void takeMoviment();
 
 public:
     Opponent(GLfloat x, GLfloat y, GLfloat radius, GLfloat R, GLfloat G, GLfloat B)
@@ -29,11 +43,7 @@ public:
     {
         drawOpponent(gX, gY);
     };
-    void move(GLfloat dx, GLfloat dy)
-    {
-        gX += dx;
-        gY += dy;
-    };
+    void setInitial(std::list<Block *> *blocks, GLfloat x, GLfloat y);
     GLfloat getX()
     {
         return gX;
@@ -42,13 +52,19 @@ public:
     {
         return gY;
     };
-    void setX(GLfloat x)
+    GLfloat getRadius()
     {
-        gX = x;
+        return gRadius;
     };
-    void setY(GLfloat x)
+    void shot()
     {
-        gY = x;
+        Gunshot *s = takeShoot();
+        s->draw();
+        gunshots.push_back(s);
+    };
+    void move()
+    {
+        takeMoviment();
     };
 };
 

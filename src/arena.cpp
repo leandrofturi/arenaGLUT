@@ -226,7 +226,7 @@ void Arena::centerize(std::list<Block *> *blocks, std::list<Opponent *> *opponen
 
   for (std::list<Opponent *>::iterator it = opponents->begin(); it != opponents->end(); ++it)
   {
-    (*it)->move(-refX, -refY);
+    (*it)->setInitial(blocks, -refX, -refY);
   }
 
   puppet->setInitial(PuppetX0 - refX, PuppetYRef);
