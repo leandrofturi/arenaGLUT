@@ -17,6 +17,9 @@ class Opponent
     GLfloat gB;
     GLfloat gSpeed = 2.5;
 
+    GLfloat ArenaWidth = 500.0;
+    GLfloat ArenaHeight = 500.0;
+
     GLfloat gXLim[2];
 
     double walkDirection = ((double)rand() / (RAND_MAX)) * 2.0 - 1.0; // -1: left, 1: right
@@ -43,7 +46,7 @@ public:
     {
         drawOpponent(gX, gY);
     };
-    void setInitial(std::list<Block *> *blocks, GLfloat x, GLfloat y);
+    void setInitial(std::list<Block *> *blocks, GLfloat x, GLfloat y, GLfloat arenaWidth, GLfloat arenaHeight);
     GLfloat getX()
     {
         return gX;

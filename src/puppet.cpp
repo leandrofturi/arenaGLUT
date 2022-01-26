@@ -261,6 +261,6 @@ Gunshot *Puppet::shoot()
     }
     Geometries::movePoint(posShotX, posShotY, directionAng, armWidth);
 
-    Gunshot *shot = new Gunshot(posShotX, posShotY, directionAng, 2.0 * gSpeed);
+    Gunshot *shot = new Gunshot(posShotX, posShotY, directionAng, gSpeed / 2.0);
     return shot;
 }

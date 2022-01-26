@@ -28,9 +28,12 @@ public:
         gY = y;
         gDirectionAng = directionAng;
         gSpeed = speed;
-        gR = ((double) rand() / (RAND_MAX));
-        gG = ((double) rand() / (RAND_MAX));
-        gB = ((double) rand() / (RAND_MAX));
+        gR = ((double)rand() / (RAND_MAX));
+        gG = ((double)rand() / (RAND_MAX));
+        gB = ((double)rand() / (RAND_MAX));
+
+        GLfloat ViewingWidth = 500.0;
+        GLfloat ViewingHeight = 500.0;
     };
     void draw()
     {

@@ -81,7 +81,7 @@ class Arena
 
 private:
   std::list<Item *> items;
-  void centerize(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet);
+  void centerize(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet, GLfloat ViewingWidth, GLfloat ViewingHeight);
 
 public:
   Arena(){};
@@ -92,10 +92,18 @@ public:
       it = items.erase(it);
     }
   };
+  GLfloat getHeight()
+  {
+    return ArenaHeight;
+  };
+  GLfloat getWidth()
+  {
+    return ArenaWidth;
+  };
 
   int loadScenario(const char *path);
   void printElements();
-  void loadElements(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet);
+  void loadElements(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet, GLfloat ViewingWidth, GLfloat ViewingHeight);
   void drawScenario();
 };
 

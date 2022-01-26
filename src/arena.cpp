@@ -183,7 +183,7 @@ void Arena::printElements()
   }
 }
 
-void Arena::loadElements(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet)
+void Arena::loadElements(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet, GLfloat ViewingWidth, GLfloat ViewingHeight)
 {
   for (std::list<Item *>::iterator it = items.begin(); it != items.end(); it++)
   {
@@ -214,10 +214,10 @@ void Arena::loadElements(std::list<Block *> *blocks, std::list<Opponent *> *oppo
     }
   }
 
-  centerize(blocks, opponents, puppet);
+  centerize(blocks, opponents, puppet, ArenaWidth, ArenaHeight);
 }
 
-void Arena::centerize(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet)
+void Arena::centerize(std::list<Block *> *blocks, std::list<Opponent *> *opponents, Puppet *puppet, GLfloat ViewingWidth, GLfloat ViewingHeight)
 {
   for (std::list<Block *>::iterator it = blocks->begin(); it != blocks->end(); ++it)
   {
@@ -226,10 +226,10 @@ void Arena::centerize(std::list<Block *> *blocks, std::list<Opponent *> *opponen
 
   for (std::list<Opponent *>::iterator it = opponents->begin(); it != opponents->end(); ++it)
   {
-    (*it)->setInitial(blocks, -refX, -refY);
+    (*it)->setInitial(blocks, -refX, -refY, ViewingWidth, ViewingHeight);
   }
 
-  puppet->setInitial(PuppetX0 - refX, PuppetYRef);
+  puppet->setInitial(PuppetX0 - refX, PuppetYRef, ViewingWidth, ViewingHeight);
   puppet->setY(PuppetY0 - refY);
 }
 

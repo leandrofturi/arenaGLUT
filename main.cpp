@@ -176,6 +176,7 @@ void init(void)
             -100,                // Z coordinate of the “near” plane
             100);                // Z coordinate of the “far” plane
     glMatrixMode(GL_MODELVIEW);  // Select the projection matrix
+
     glLoadIdentity();
 }
 
@@ -185,11 +186,17 @@ void idle(void)
 
     if (keyStatus[(int)('a')])
     {
-        puppet.walk(-inc);
+        if (puppet.walk(-inc))
+        {
+            glTranslatef(puppet.getSpeed() * inc, 0.0, 0.0);
+        }
     }
     if (keyStatus[(int)('d')])
     {
-        puppet.walk(inc);
+        if (puppet.walk(inc))
+        {
+            glTranslatef(-puppet.getSpeed() * inc, 0.0, 0.0);
+        }
     }
     if (mouseStatus[2])
     {
@@ -261,7 +268,13 @@ int main(int argc, char *argv[])
 
     // Arena
     arena.loadScenario(pathArena);
-    arena.loadElements(&blocks, &opponents, &puppet);
+    arena.loadElements(&blocks, &opponents, &puppet, ViewingWidth, ViewingHeight);
+
+    GLfloat h = arena.getHeight();
+
+    GLfloat scale = (ViewingHeight - h) / h + 1.0;
+    glTranslatef(-puppet.getX()*scale + ViewingHeight / 2.0, 0.0, 0.0);
+    glScalef(scale, scale, scale);
 
     glutMainLoop();
 
