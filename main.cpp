@@ -147,7 +147,7 @@ void opponentShot(int time)
     int i = (int)(rand() % opponents.size());
     std::list<Opponent *>::iterator it = opponents.begin();
     std::advance(it, i);
-    (*it)->shot();
+    (*it)->shot(puppet.getX(), puppet.getY());
 
     glutTimerFunc(500, opponentShot, 0.0);
 }

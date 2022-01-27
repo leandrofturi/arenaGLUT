@@ -6,6 +6,11 @@ float Geometries::toRad(float theta)
     return theta * 0.0174533;
 }
 
+float Geometries::toDegree(float theta)
+{
+    return theta / 0.0174533;
+}
+
 void Geometries::drawRect(GLfloat height, GLfloat width, GLfloat R, GLfloat G, GLfloat B)
 {
     glColor3f(R, G, B);

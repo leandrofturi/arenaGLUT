@@ -13,9 +13,12 @@ void Opponent::drawOpponent(GLfloat x, GLfloat y)
     glPopMatrix();
 }
 
-Gunshot *Opponent::takeShoot()
+Gunshot *Opponent::takeShoot(GLfloat x, GLfloat y)
 {
-    GLfloat directionAng = (double)(rand() % 180) + 180;
+    GLfloat directionAng = Geometries::toDegree(atan2(y - gX, x - gX));
+    if (gY < y) {
+        directionAng *= -1;
+    }
 
     Gunshot *shot = new Gunshot(gX, gY, directionAng, 2.0 * gSpeed);
     return shot;

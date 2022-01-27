@@ -6,6 +6,7 @@
 namespace Geometries
 {
     float toRad(float theta);
+    float toDegree(float theta);
     void drawRect(GLfloat height, GLfloat width, GLfloat R, GLfloat G, GLfloat B);
     void drawCircle(GLfloat radius, GLfloat R, GLfloat G, GLfloat B);
     void movePoint(GLfloat &x, GLfloat &y, GLfloat angle, GLfloat step);

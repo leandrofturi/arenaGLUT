@@ -31,7 +31,7 @@ public:
 
 private:
     void drawOpponent(GLfloat x, GLfloat y);
-    Gunshot *takeShoot();
+    Gunshot *takeShoot(GLfloat x, GLfloat y);
     void takeMoviment();
 
 public:
@@ -62,15 +62,18 @@ public:
     {
         return gRadius;
     };
-    void shot()
+    void shot(GLfloat x, GLfloat y)
     {
         if (alive)
         {
-            Gunshot *s = takeShoot();
+            Gunshot *s = takeShoot(x, y);
             s->draw();
             gunshots.push_back(s);
         }
     };
+    void changeDirection(int dir) {
+        walkDirection = dir;
+    }
     void move()
     {
         if (alive)

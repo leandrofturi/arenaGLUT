@@ -1,6 +1,8 @@
 #include "../include/collision.h"
 #include "../include/geometries.h"
 
+int isBumped = 0;
+
 bool Collision::bumpTop(Puppet *puppet, Block *block)
 {
     GLfloat x1 = puppet->getX();
@@ -25,11 +27,13 @@ bool Collision::bumpTop(Puppet *puppet, std::list<Block *> blocks)
             if (bumpTop(puppet, (*it)))
             {
                 puppet->cover((*it)->getY() + (*it)->getHeight());
+                isBumped = 1;
                 return true;
             }
         }
     }
     puppet->uncover();
+    isBumped = 0;
     return false;
 }
 
@@ -60,11 +64,13 @@ bool Collision::bumpBottom(Puppet *puppet, std::list<Block *> blocks)
                 {
                     puppet->elevate((*it)->getY());
                 }
+                isBumped = 1;
                 return true;
             }
         }
     }
     puppet->shootDown();
+    isBumped = 0;
     return false;
 }
 
@@ -92,11 +98,13 @@ bool Collision::bumpFront(Puppet *puppet, std::list<Block *> blocks)
             if (bumpFront(puppet, (*it)))
             {
                 puppet->stop(1);
+                isBumped = 1;
                 return true;
             }
         }
     }
     puppet->stop(0);
+    isBumped = 0;
     return false;
 }
 
@@ -124,11 +132,13 @@ bool Collision::bumpBack(Puppet *puppet, std::list<Block *> blocks)
             if (bumpBack(puppet, (*it)))
             {
                 puppet->stop(-1);
+                isBumped = 1;
                 return true;
             }
         }
     }
     puppet->stop(0);
+    isBumped = 0;
     return false;
 }
 
@@ -196,7 +206,10 @@ bool Collision::bumpBottom(Puppet *puppet, std::list<Opponent *> *opponents)
             }
         }
     }
-    puppet->shootDown();
+    if (!isBumped)
+    {
+        puppet->shootDown();
+    }
     return false;
 }
 
@@ -228,11 +241,15 @@ bool Collision::bumpFront(Puppet *puppet, std::list<Opponent *> *opponents)
             if (bumpFront(puppet, (*it)))
             {
                 puppet->stop(1);
+                (*it)->changeDirection(1);
                 return true;
             }
         }
     }
-    puppet->stop(0);
+    if (!isBumped)
+    {
+        puppet->stop(0);
+    }
     return false;
 }
 
@@ -264,11 +281,15 @@ bool Collision::bumpBack(Puppet *puppet, std::list<Opponent *> *opponents)
             if (bumpBack(puppet, (*it)))
             {
                 puppet->stop(-1);
+                (*it)->changeDirection(-1);
                 return true;
             }
         }
     }
-    puppet->stop(0);
+    if (!isBumped)
+    {
+        puppet->stop(0);
+    }
     return false;
 }
 
@@ -352,14 +373,15 @@ void Collision::handleCollision(Puppet *puppet, std::list<Block *> blocks, std::
     if (!bumpFront(puppet, blocks))
     {
         if (!bumpBack(puppet, blocks))
-        {
-            if (!bumpFront(puppet, opponents))
-            {
-                if (!bumpBack(puppet, opponents))
-                    ;
-            }
-        }
+            ;
     }
+
+    if (!bumpFront(puppet, opponents))
+    {
+        if (!bumpBack(puppet, opponents))
+            ;
+    }
+
     if (!bumpTop(puppet, blocks))
     {
         if (!bumpBottom(puppet, blocks))
