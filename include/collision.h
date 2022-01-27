@@ -10,27 +10,25 @@
 
 namespace Collision
 {
-    int bumpTop(Puppet *puppet, Block *block);
-    int bumpTop(Puppet *puppet, std::list<Block *> blocks);
-    int bumpBottom(Puppet *puppet, Block *block);
-    int bumpBottom(Puppet *puppet, std::list<Block *> blocks);
-    int bumpFront(Puppet *puppet, Block *block);
-    int bumpFront(Puppet *puppet, std::list<Block *> blocks);
-    int bumpBack(Puppet *puppet, Block *block);
-    int bumpBack(Puppet *puppet, std::list<Block *> blocks);
+    bool bumpTop(Puppet *puppet, Block *block);
+    bool bumpTop(Puppet *puppet, std::list<Block *> blocks);
+    bool bumpBottom(Puppet *puppet, Block *block);
+    bool bumpBottom(Puppet *puppet, std::list<Block *> blocks);
+    bool bumpFront(Puppet *puppet, Block *block);
+    bool bumpFront(Puppet *puppet, std::list<Block *> blocks);
+    bool bumpBack(Puppet *puppet, Block *block);
+    bool bumpBack(Puppet *puppet, std::list<Block *> blocks);
 
-    int bump(Puppet *puppet, Gunshot *gunshot);
+    bool bump(Puppet *puppet, Gunshot *gunshot);
 
-    int bumpTop(Puppet *puppet, Opponent *opponent);
-    int bumpTop(Puppet *puppet, std::list<Opponent *> opponents);
-    int bumpBottom(Puppet *puppet, Opponent *opponent);
-    int bumpBottom(Puppet *puppet, std::list<Opponent *> opponents);
-    int bumpFront(Puppet *puppet, Opponent *opponent);
-    int bumpFront(Puppet *puppet, std::list<Opponent *> opponents);
-    int bumpBack(Puppet *puppet, Opponent *opponent);
-    int bumpBack(Puppet *puppet, std::list<Opponent *> opponents);
+    bool bumpBottom(Puppet *puppet, Opponent *opponent);
+    bool bumpBottom(Puppet *puppet, std::list<Opponent *> opponents);
+    bool bumpFront(Puppet *puppet, Opponent *opponent);
+    bool bumpFront(Puppet *puppet, std::list<Opponent *> opponents);
+    bool bumpBack(Puppet *puppet, Opponent *opponent);
+    bool bumpBack(Puppet *puppet, std::list<Opponent *> opponents);
 
-    int bumpGunshot(Puppet *puppet, std::list<Opponent *> opponents);
+    bool bumpGunshot(Puppet *puppet, std::list<Opponent *> opponents);
 
     void handleCollision(Puppet *puppet, std::list<Block *> blocks, std::list<Opponent *> opponents);
 }

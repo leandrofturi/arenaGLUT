@@ -58,3 +58,27 @@ void Geometries::rotatePoint(GLfloat cx, GLfloat cy, GLfloat angle, GLfloat &x, 
     x = xnew + cx;
     y = ynew + cy;
 }
+
+// https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
+bool Geometries::intersects(GLfloat cx, GLfloat cy, GLfloat r, GLfloat rx, GLfloat ry, GLfloat rw, GLfloat rh)
+{
+    GLfloat dx = abs(cx - rx) - rw / 2,
+            dy = abs(cy - ry) - rh / 2;
+
+    if (dx > r || dy > r)
+    {
+        return false;
+    }
+    if (dx <= 0 || dy <= 0)
+    {
+        return true;
+    }
+
+    return (dx * dx + dy * dy <= r * r);
+}
+
+// https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other
+bool Geometries::intersects(GLfloat Aleft, GLfloat Aright, GLfloat Atop, GLfloat Abottom, GLfloat Bleft, GLfloat Bright, GLfloat Btop, GLfloat Bbottom)
+{
+    return fmax(Aleft, Bleft) < fmin(Aright, Bright) & fmax(Atop, Btop) < fmin(Abottom, Bbottom);
+}

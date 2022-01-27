@@ -213,7 +213,7 @@ GLfloat Puppet::getHeight()
 
 GLfloat Puppet::getWidth()
 {
-    return bodyWidth + armWidth / 2.0;
+    return bodyWidth;
 }
 
 void Puppet::takeFly(GLfloat x, GLfloat y, GLfloat dy)

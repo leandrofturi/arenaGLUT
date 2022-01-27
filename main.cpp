@@ -93,11 +93,11 @@ void passiveMouseMotion(int x, int y)
         puppet.rotateArm(-2);
     }
 
-    if (x < ViewingWidth / 2)
+    if (x < ViewingWidth / 2 && (!keyStatus[(int)('d')]))
     {
         puppet.setDirection(-1);
     }
-    else
+    else if (!keyStatus[(int)('a')])
     {
         puppet.setDirection(1);
     }
@@ -156,7 +156,7 @@ void opponentMove(int time)
 {
     for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
     {
-        (*it)->move();
+        // (*it)->move();
     }
 
     glutTimerFunc(100, opponentMove, 0.0);
@@ -186,14 +186,14 @@ void idle(void)
 
     if (keyStatus[(int)('a')])
     {
-        if (puppet.walk(-inc))
+        if ((puppet.getDirection() == -1) && puppet.walk(-inc))
         {
             glTranslatef(puppet.getSpeed() * inc, 0.0, 0.0);
         }
     }
     if (keyStatus[(int)('d')])
     {
-        if (puppet.walk(inc))
+        if ((puppet.getDirection() == 1) && puppet.walk(inc))
         {
             glTranslatef(-puppet.getSpeed() * inc, 0.0, 0.0);
         }
@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
     GLfloat h = arena.getHeight();
 
     GLfloat scale = (ViewingHeight - h) / h + 1.0;
-    glTranslatef(-puppet.getX()*scale + ViewingHeight / 2.0, 0.0, 0.0);
+    glTranslatef(-puppet.getX() * scale + ViewingHeight / 2.0, 0.0, 0.0);
     glScalef(scale, scale, scale);
 
     glutMainLoop();

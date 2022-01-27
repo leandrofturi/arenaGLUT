@@ -137,6 +137,10 @@ public:
     {
         walkDirection = (x > 0) - (x < 0);
     };
+    int getDirection()
+    {
+        return walkDirection;
+    };
 };
 
 #endif /* PUPPET_H */
