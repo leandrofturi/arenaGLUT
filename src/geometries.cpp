@@ -59,22 +59,33 @@ void Geometries::rotatePoint(GLfloat cx, GLfloat cy, GLfloat angle, GLfloat &x, 
     y = ynew + cy;
 }
 
-// https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
-bool Geometries::intersects(GLfloat cx, GLfloat cy, GLfloat r, GLfloat rx, GLfloat ry, GLfloat rw, GLfloat rh)
+// https://www.geeksforgeeks.org/check-if-any-point-overlaps-the-given-circle-and-rectangle/
+/*
+Given two opposite diagonal points of a rectangle (X1, Y1), (X2, Y2) and the center, 
+    radius of the circle R, (Xc, Yc), the task is to check if there exists any point P 
+    that belongs to both the circle as well as the rectangle.
+*/
+bool Geometries::intersects(GLfloat R, GLfloat Xc, GLfloat Yc,
+                            GLfloat X1, GLfloat Y1,
+                            GLfloat X2, GLfloat Y2)
 {
-    GLfloat dx = abs(cx - rx) - rw / 2,
-            dy = abs(cy - ry) - rh / 2;
 
-    if (dx > r || dy > r)
-    {
-        return false;
-    }
-    if (dx <= 0 || dy <= 0)
-    {
-        return true;
-    }
+    // Find the nearest point on the
+    // rectangle to the center of
+    // the circle
+    GLfloat Xn = fmax(X1, fmin(Xc, X2));
+    GLfloat Yn = fmax(Y1, fmin(Yc, Y2));
 
-    return (dx * dx + dy * dy <= r * r);
+    // Find the distance between the
+    // nearest point and the center
+    // of the circle
+    // Distance between 2 points,
+    // (x1, y1) & (x2, y2) in
+    // 2D Euclidean space is
+    // ((x1-x2)**2 + (y1-y2)**2)**0.5
+    GLfloat Dx = Xn - Xc;
+    GLfloat Dy = Yn - Yc;
+    return (Dx * Dx + Dy * Dy) <= R * R;
 }
 
 // https://stackoverflow.com/questions/306316/determine-if-two-rectangles-overlap-each-other

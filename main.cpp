@@ -156,7 +156,7 @@ void opponentMove(int time)
 {
     for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
     {
-        // (*it)->move();
+        (*it)->move();
     }
 
     glutTimerFunc(100, opponentMove, 0.0);
@@ -233,7 +233,7 @@ void idle(void)
     }
 
     puppet.gravity();
-    Collision::handleCollision(&puppet, blocks, opponents);
+    Collision::handleCollision(&puppet, blocks, &opponents, &gunshots);
 
     glutPostRedisplay();
 }

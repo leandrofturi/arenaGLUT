@@ -23,7 +23,7 @@ Gunshot *Opponent::takeShoot()
 
 void Opponent::takeMoviment()
 {
-    if (((gX - gSpeed) <= gXLim[0]) || ((gX + gSpeed) >= gXLim[1]))
+    if (((gX - gRadius - gSpeed) <= gXLim[0]) || ((gX + gRadius + gSpeed) >= gXLim[1]))
     {
         walkDirection *= -1;
     }

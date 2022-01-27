@@ -24,6 +24,9 @@ trabalhocg: $(OBJ)
 run: all
 	./trabalhocg input/arena_teste.svg
 
+val: all
+	valgrind ./trabalhocg input/arena_teste.svg
+
 clean:
 	rm -f *.o
 	rm -f src/*.o

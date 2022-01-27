@@ -24,6 +24,8 @@ class Opponent
 
     double walkDirection = ((double)rand() / (RAND_MAX)) * 2.0 - 1.0; // -1: left, 1: right
 
+    int alive = 1; // 1: yes, 0: no
+
 public:
     std::list<Gunshot *> gunshots;
 
@@ -44,7 +46,8 @@ public:
     };
     void draw()
     {
-        drawOpponent(gX, gY);
+        if (alive)
+            drawOpponent(gX, gY);
     };
     void setInitial(std::list<Block *> *blocks, GLfloat x, GLfloat y, GLfloat arenaWidth, GLfloat arenaHeight);
     GLfloat getX()
@@ -61,14 +64,28 @@ public:
     };
     void shot()
     {
-        Gunshot *s = takeShoot();
-        s->draw();
-        gunshots.push_back(s);
+        if (alive)
+        {
+            Gunshot *s = takeShoot();
+            s->draw();
+            gunshots.push_back(s);
+        }
     };
     void move()
     {
-        takeMoviment();
+        if (alive)
+        {
+            takeMoviment();
+        }
     };
+    int isAlive()
+    {
+        return alive == 1;
+    }
+    void kill()
+    {
+        alive = 0;
+    }
 };
 
 #endif /* OPPONENT_H */
