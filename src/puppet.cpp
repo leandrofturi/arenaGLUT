@@ -45,7 +45,7 @@ void Puppet::drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaTh
     }
     else
     {
-        Geometries::drawRect(legHeight, legWidth, 1.0, 0.0, 0.0);
+        Geometries::drawRect(legHeight, legWidth, 1.0, 1.0, 1.0);
     }
 
     glTranslatef(0.0, legHeight, 0.0);
@@ -56,7 +56,7 @@ void Puppet::drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaTh
     }
     else
     {
-        Geometries::drawRect(thighHeight, thighWidth, 1.0, 0.0, 0.0);
+        Geometries::drawRect(thighHeight, thighWidth, 1.0, 1.0, 1.0);
     }
 
     glPopMatrix();
@@ -70,7 +70,7 @@ void Puppet::drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaTh
     }
     else
     {
-        Geometries::drawRect(legHeight, legWidth, 1.0, 0.0, 0.0);
+        Geometries::drawRect(legHeight, legWidth, 1.0, 1.0, 1.0);
     }
 
     glTranslatef(0.0, legHeight, 0.0);
@@ -81,7 +81,7 @@ void Puppet::drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaTh
     }
     else
     {
-        Geometries::drawRect(thighHeight, thighWidth, 1.0, 0.0, 0.0);
+        Geometries::drawRect(thighHeight, thighWidth, 1.0, 1.0, 1.0);
     }
 
     glPopMatrix();
@@ -100,7 +100,7 @@ void Puppet::drawArm(GLfloat x, GLfloat y, GLfloat thetaArm)
     }
     else
     {
-        Geometries::drawRect(armHeight, armWidth, 1.0, 0.0, 0.0);
+        Geometries::drawRect(armHeight, armWidth, 1.0, 1.0, 1.0);
     }
 
     glPopMatrix();
@@ -117,7 +117,7 @@ void Puppet::drawBody(GLfloat x, GLfloat y)
     }
     else
     {
-        Geometries::drawRect(bodyHeight, bodyWidth, 1.0, 0.0, 0.0);
+        Geometries::drawRect(bodyHeight, bodyWidth, 1.0, 1.0, 1.0);
     }
 
     glPopMatrix();
@@ -133,7 +133,7 @@ void Puppet::drawHead(GLfloat x, GLfloat y)
     }
     else
     {
-        Geometries::drawCircle(radiusHead, 1.0, 0.0, 0.0);
+        Geometries::drawCircle(radiusHead, 1.0, 1.0, 1.0);
     }
 
     glPopMatrix();

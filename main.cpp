@@ -35,9 +35,33 @@ std::list<Opponent *> opponents;
 std::list<Gunshot *> gunshots;
 Arena arena;
 
+int atingido = 0;
+static char str[1000];
+void *font = GLUT_BITMAP_9_BY_15;
+void ImprimePlacar(GLfloat x, GLfloat y)
+{
+    glColor3f(1.0, 1.0, 1.0);
+    glRasterPos2f(x, y);
+    const char *tmpWin = "Voce ganhou";
+    const char *tmpLose = "Voce perdeu";
+    const char *tmpStr;
+    if (puppet.isAlive())
+    {
+        tmpStr = tmpWin;
+    }
+    else
+    {
+        tmpStr = tmpLose;
+    }
+    while (*tmpStr)
+    {
+        glutBitmapCharacter(font, *tmpStr);
+        tmpStr++;
+    }
+}
+
 void renderScene(void)
 {
-    // Clear the screen.
     glClear(GL_COLOR_BUFFER_BIT);
 
     puppet.draw();
@@ -61,66 +85,114 @@ void renderScene(void)
         (*it)->draw();
     }
 
+    if (atingido)
+    {
+        ImprimePlacar(puppet.getX() - 8, puppet.getY() - puppet.getHeight() * 1.5);
+    }
+
     glutSwapBuffers(); // Draw the new frame of the game.
 }
 
 void mouse(int button, int state, int x, int y)
 {
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    if (!atingido)
     {
-        gunshots.push_back(puppet.shoot());
+        if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+        {
+            gunshots.push_back(puppet.shoot());
+        }
+        if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !puppet.isFlying())
+        {
+            mouseStatus[2] = 1;
+        }
+        if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
+        {
+            mouseStatus[2] = 0;
+            puppet.shootDown();
+        }
+        glutPostRedisplay();
     }
-    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !puppet.isFlying())
-    {
-        mouseStatus[2] = 1;
-    }
-    if (button == GLUT_RIGHT_BUTTON && state == GLUT_UP)
-    {
-        mouseStatus[2] = 0;
-        puppet.shootDown();
-    }
-    glutPostRedisplay();
 }
 
 void passiveMouseMotion(int x, int y)
 {
-    if (y > ViewingHeight / 2)
+    if (!atingido)
     {
-        puppet.rotateArm(2);
-    }
-    else
-    {
-        puppet.rotateArm(-2);
-    }
+        if (y > ViewingHeight / 2)
+        {
+            puppet.rotateArm(2);
+        }
+        else
+        {
+            puppet.rotateArm(-2);
+        }
 
-    if (x < ViewingWidth / 2 && (!keyStatus[(int)('d')]))
-    {
-        puppet.setDirection(-1);
-    }
-    else if (!keyStatus[(int)('a')])
-    {
-        puppet.setDirection(1);
+        if (x < ViewingWidth / 2 && (!keyStatus[(int)('d')]))
+        {
+            puppet.setDirection(-1);
+        }
+        else if (!keyStatus[(int)('a')])
+        {
+            puppet.setDirection(1);
+        }
     }
 }
 
 void keyPress(unsigned char key, int x, int y)
 {
-    switch (key)
+    GLfloat hr = arena.getHeight();
+    GLfloat scaler = (ViewingHeight - hr) / hr + 1.0;
+
+    if (!atingido)
     {
-    case 'a':
-    case 'A':
-        keyStatus[(int)('a')] = 1; // Using keyStatus trick
-        puppet.setDirection(-1);
-        break;
-    case 'd':
-    case 'D':
-        keyStatus[(int)('d')] = 1; // Using keyStatus trick
-        puppet.setDirection(1);
-        break;
-    case 27:
-        exit(0);
+        switch (key)
+        {
+        case 'a':
+        case 'A':
+            keyStatus[(int)('a')] = 1; // Using keyStatus trick
+            puppet.setDirection(-1);
+            break;
+        case 'd':
+        case 'D':
+            keyStatus[(int)('d')] = 1; // Using keyStatus trick
+            puppet.setDirection(1);
+            break;
+        case 27:
+            exit(0);
+        }
+        glutPostRedisplay();
     }
-    glutPostRedisplay();
+    else
+    {
+        switch (key)
+        {
+        case 'r':
+        case 'R':
+            puppet.reset();
+            for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end();)
+            {
+                it = gunshots.erase(it);
+            }
+
+            for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+            {
+                //(*it)->reset();
+                for (std::list<Gunshot *>::iterator gs = (*it)->gunshots.begin(); gs != (*it)->gunshots.end();)
+                {
+                    gs = (*it)->gunshots.erase(gs);
+                }
+            }
+            atingido = 0;
+            glLoadIdentity();
+            glTranslatef(-puppet.getX() * scaler + ViewingHeight / 2.0, 0.0, 0.0);
+            glScalef(scaler, scaler, scaler);
+
+            break;
+        case 27:
+            exit(0);
+        }
+        glutPostRedisplay();
+    }
 }
 
 void keyup(unsigned char key, int x, int y)
@@ -144,22 +216,28 @@ void ResetKeyStatus()
 
 void opponentShot(int time)
 {
-    int i = (int)(rand() % opponents.size());
-    std::list<Opponent *>::iterator it = opponents.begin();
-    std::advance(it, i);
-    (*it)->shot(puppet.getX(), puppet.getY());
+    if (!atingido)
+    {
+        int i = (int)(rand() % opponents.size());
+        std::list<Opponent *>::iterator it = opponents.begin();
+        std::advance(it, i);
+        (*it)->shot(puppet.getX(), puppet.getY());
 
-    glutTimerFunc(500, opponentShot, 0.0);
+        glutTimerFunc(500, opponentShot, 0.0);
+    }
 }
 
 void opponentMove(int time)
 {
-    for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+    if (!atingido)
     {
-        (*it)->move();
-    }
+        for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+        {
+            (*it)->move();
+        }
 
-    glutTimerFunc(100, opponentMove, 0.0);
+        glutTimerFunc(100, opponentMove, 0.0);
+    }
 }
 
 void init(void)
@@ -182,60 +260,73 @@ void init(void)
 
 void idle(void)
 {
-    double inc = INC_KEYIDLE;
+    if (!atingido)
+    {
+        if (!puppet.isAlive())
+        {
+            atingido = 1;
+        }
 
-    if (keyStatus[(int)('a')])
-    {
-        if ((puppet.getDirection() == -1) && puppet.walk(-inc))
-        {
-            glTranslatef(puppet.getSpeed() * inc, 0.0, 0.0);
-        }
-    }
-    if (keyStatus[(int)('d')])
-    {
-        if ((puppet.getDirection() == 1) && puppet.walk(inc))
-        {
-            glTranslatef(-puppet.getSpeed() * inc, 0.0, 0.0);
-        }
-    }
-    if (mouseStatus[2])
-    {
-        puppet.fly();
-    }
+        double inc = INC_KEYIDLE;
 
-    for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end();)
-    {
-        (*it)->move();
-        if (!(*it)->valid())
+        if (puppet.getX() + puppet.getSpeed() * inc >= arena.getWidth())
         {
-            it = gunshots.erase(it);
+            atingido = 1;
         }
-        else
-        {
-            ++it;
-        }
-    }
 
-    for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
-    {
-        for (std::list<Gunshot *>::iterator gs = (*it)->gunshots.begin(); gs != (*it)->gunshots.end();)
+        if (keyStatus[(int)('a')])
         {
-            (*gs)->move();
-            if (!(*gs)->valid())
+            if ((puppet.getDirection() == -1) && puppet.walk(-inc))
             {
-                gs = (*it)->gunshots.erase(gs);
+                glTranslatef(puppet.getSpeed() * inc, 0.0, 0.0);
+            }
+        }
+        if (keyStatus[(int)('d')])
+        {
+            if ((puppet.getDirection() == 1) && puppet.walk(inc))
+            {
+                glTranslatef(-puppet.getSpeed() * inc, 0.0, 0.0);
+            }
+        }
+        if (mouseStatus[2])
+        {
+            puppet.fly();
+        }
+
+        for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end();)
+        {
+            (*it)->move();
+            if (!(*it)->valid())
+            {
+                it = gunshots.erase(it);
             }
             else
             {
-                ++gs;
+                ++it;
             }
         }
+
+        for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+        {
+            for (std::list<Gunshot *>::iterator gs = (*it)->gunshots.begin(); gs != (*it)->gunshots.end();)
+            {
+                (*gs)->move();
+                if (!(*gs)->valid())
+                {
+                    gs = (*it)->gunshots.erase(gs);
+                }
+                else
+                {
+                    ++gs;
+                }
+            }
+        }
+
+        puppet.gravity();
+        Collision::handleCollision(&puppet, blocks, &opponents, &gunshots);
+
+        glutPostRedisplay();
     }
-
-    puppet.gravity();
-    Collision::handleCollision(&puppet, blocks, &opponents, &gunshots);
-
-    glutPostRedisplay();
 }
 
 int main(int argc, char *argv[])

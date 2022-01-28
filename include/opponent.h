@@ -11,6 +11,8 @@ class Opponent
 {
     GLfloat gX;
     GLfloat gY;
+    GLfloat gX0;
+    GLfloat gY0;
     GLfloat gRadius;
     GLfloat gR;
     GLfloat gG;
@@ -39,6 +41,8 @@ public:
     {
         gX = x;
         gY = y;
+        gX0 = x;
+        gY0 = y;
         gRadius = radius;
         gR = R;
         gG = G;
@@ -71,7 +75,8 @@ public:
             gunshots.push_back(s);
         }
     };
-    void changeDirection(int dir) {
+    void changeDirection(int dir)
+    {
         walkDirection = dir;
     }
     void move()
@@ -88,6 +93,15 @@ public:
     void kill()
     {
         alive = 0;
+    }
+    void reset()
+    {
+        gX = gX0;
+        gY = gY0;
+
+        walkDirection = ((double)rand() / (RAND_MAX)) * 2.0 - 1.0;
+
+        alive = 1;
     }
 };
 

@@ -10,6 +10,7 @@ class Puppet
 {
     GLfloat gX;
     GLfloat gY;
+    GLfloat gX0 = 0.0;
     GLfloat gY0 = 0.0;
     GLfloat thetaLeg[2] = {0.0, 0.0};
     GLfloat thetaThigh[2] = {15.0, 15.0};
@@ -49,6 +50,7 @@ public:
     {
         gX = x;
         gY = y;
+        gX0 = x;
         gY0 = y;
         gFlyYf = 0.0;
         ArenaWidth = arenaWidth;
@@ -77,6 +79,10 @@ public:
     void kill()
     {
         alive = 0;
+    };
+    bool isAlive()
+    {
+        return alive == 1;
     };
     bool walk(GLfloat dx)
     {
@@ -141,6 +147,28 @@ public:
     {
         return walkDirection;
     };
+    GLfloat getDisplacement()
+    {
+        return gX - gX0;
+    }
+    void reset()
+    {
+        gX = gX0;
+        gY = gY0;
+        thetaLeg[0] = 0.0;
+        thetaLeg[1] = 0.0;
+        thetaThigh[0] = 15.0;
+        thetaThigh[1] = 15.0;
+        gThetaArm = 0.0;
+        gFlyY0 = 0.0;
+        gFlyYf = 0.0;
+
+        alive = 1;
+        walkDirection = 1;
+        stopped = 0;
+        flying = 0;
+        elevated = 0;
+    }
 };
 
 #endif /* PUPPET_H */
