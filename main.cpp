@@ -35,6 +35,12 @@ std::list<Opponent *> opponents;
 std::list<Gunshot *> gunshots;
 Arena arena;
 
+// Luz Camera Acao 
+int tipocamera;
+bool luzon;
+bool luz;
+
+
 int atingido = 0;
 static char str[1000];
 void *font = GLUT_BITMAP_9_BY_15;
@@ -156,6 +162,21 @@ void keyPress(unsigned char key, int x, int y)
         case 'D':
             keyStatus[(int)('d')] = 1; // Using keyStatus trick
             puppet.setDirection(1);
+            break;
+        case '1':
+            tipocamera = 1;
+            break;
+        case '2':
+            tipocamera = 2;
+            break;
+        case '3':
+            tipocamera = 3;
+            break;
+        case 'l':
+        case 'L':
+            if(luzon == true)
+                luz = !luz;
+            luzon = false;
             break;
         case 27:
             exit(0);
