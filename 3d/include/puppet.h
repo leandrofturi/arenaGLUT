@@ -11,7 +11,8 @@ class Puppet
     GLfloat gX = 0.0;
     GLfloat gY = 0.0;
     GLfloat gZ = 0.0;
-    GLfloat gSpeed = 50.0;
+    GLfloat gSpeed = 0.5;
+    GLfloat gCamXYAngle = 0.0;
 
     OBJ *head;
     GLuint texturePuppet;
@@ -33,6 +34,18 @@ public:
     GLfloat getZ()
     {
         return gZ;
+    }
+    void setX(GLfloat x)
+    {
+        gX = x;
+    }
+    void setY(GLfloat y)
+    {
+        gY = y;
+    }
+    void setZ(GLfloat z)
+    {
+        gZ = z;
     }
 };
 

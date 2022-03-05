@@ -25,6 +25,7 @@ void Puppet::draw()
     GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1};
     GLfloat mat_shininess[] = {50.0};
 
+    glRotatef(gCamXYAngle, 0, 1, 0);
     glTranslatef(gX, gY, gZ);
 
     glColor3f(1, 1, 0);
@@ -55,5 +56,5 @@ void Puppet::walk(double inc)
 
 void Puppet::rotate(double inc)
 {
-    gX = gX + gSpeed * inc;
+    gCamXYAngle = gCamXYAngle + inc;
 }

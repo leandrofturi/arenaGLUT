@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include <math.h>
 #include <stdio.h>
+#include "include/imageloader.h"
 #include "include/puppet.h"
 #include "include/arena.h"
 
@@ -10,15 +11,14 @@ Arena arena;
 Puppet puppet;
 
 // Key status
-#define INC_KEYIDLE 0.01
+#define INC_KEYIDLE 1
 
 int keyStatus[256];
 
-//Cotroles de giro
-double angleDay = 0;
-double angleYear = 0;
+// Identificadores de textura
+GLuint texturePlane;
 
-//Camera controls
+// Camera controls
 double camDist = 50;
 double camXYAngle = 0;
 double camXZAngle = 0;
@@ -28,9 +28,39 @@ int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
 
+// Cotroles de giro
+double anglePuppet = 0;
+
+GLuint LoadTextureRAW(const char *filename)
+{
+
+    GLuint texture;
+
+    Image *image = loadBMP(filename);
+
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    //    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_REPLACE );
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D,               //Always GL_TEXTURE_2D
+                 0,                           //0 for now
+                 GL_RGB,                      //Format OpenGL uses for image
+                 image->width, image->height, //Width and height
+                 0,                           //The border of the image
+                 GL_RGB,                      //GL_RGB, because pixels are stored in RGB format
+                 GL_UNSIGNED_BYTE,            //GL_UNSIGNED_BYTE, because pixels are stored
+                                              //as unsigned numbers
+                 image->pixels);              //The actual pixel data
+    delete image;
+
+    return texture;
+}
+
 void RasterChars(GLfloat x, GLfloat y, GLfloat z, const char *text, double r, double g, double b)
 {
-    //Push to recover original attributes
+    // Push to recover original attributes
     glPushAttrib(GL_ENABLE_BIT);
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
@@ -98,6 +128,42 @@ void DrawAxes()
     glPopAttrib();
 }
 
+void DisplayPlane(GLuint texture)
+{
+    GLfloat materialEmission[] = {1.0, 1.0, 1.0, 1};
+    GLfloat materialColorA[] = {0.2, 0.2, 0.2, 1};
+    GLfloat materialColorD[] = {1.0, 1.0, 1.0, 1};
+    GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1};
+    GLfloat mat_shininess[] = {100.0};
+    glColor3f(1, 1, 1);
+
+    glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
+    glMaterialfv(GL_FRONT, GL_AMBIENT, materialColorA);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, materialColorD);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //X
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); //Y
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    double textureS = 1; // Bigger than 1, repeat
+    glBegin(GL_QUADS);
+    glNormal3f(0, 1, 0);
+    glTexCoord2f(0, 0);
+    glVertex3f(-1, 0, -1);
+    glNormal3f(0, 1, 0);
+    glTexCoord2f(0, textureS);
+    glVertex3f(-1, 0, +1);
+    glNormal3f(0, 1, 0);
+    glTexCoord2f(textureS, textureS);
+    glVertex3f(+1, 0, +1);
+    glNormal3f(0, 1, 0);
+    glTexCoord2f(textureS, 0);
+    glVertex3f(+1, 0, -1);
+    glEnd();
+}
+
 void display(void)
 {
     glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -114,21 +180,23 @@ void display(void)
     else if (toggleCam == 1)
     {
         PrintText(0.1, 0.1, "Static Camera at a Distance", 0, 1, 0);
-        gluLookAt(10, 10, 50, 0, 0, 0, 0, 1, 0);
+        gluLookAt(arena.getWidth() / 2.0, arena.getHeight() / 2.0, 50, 0, 0, 0, 0, 1, 0);
     }
     else if (toggleCam == 2)
     {
         PrintText(0.1, 0.1, "Puppet Camera", 0, 1, 0);
-        gluLookAt(0, 0, 0, -sin(angleYear / 180 * M_PI), 0, -cos(angleYear / 180 * M_PI), 0, 1, 0);
+        // gluLookAt(puppet.getX(), puppet.getY(), puppet.getZ(), -sin(anglePuppet / 180 * M_PI), 0, -cos(anglePuppet / 180 * M_PI), 0, 1, 0);
+        gluLookAt(puppet.getX(), 0.0, puppet.getZ(), -sin(anglePuppet / 180 * M_PI), 0, -cos(anglePuppet / 180 * M_PI), 0, 1, 0);
     }
 
     GLfloat light_position[] = {puppet.getX(), puppet.getY(), puppet.getZ(), 1.0};
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     glPushMatrix();
-    glTranslatef(0, 0, -10);
-    arena.draw();
-    // Geometries::CreateSolidCube(2.0, 2.0, 2.0, COLOR{1.0, 1.0, 1.0});
+    glScalef(70, 70, 1);
+    glTranslatef(0, 0, -12);
+    glRotatef(90, 1, 0, 0);
+    DisplayPlane(texturePlane);
     glPopMatrix();
 
     if (toggleCam != 2)
@@ -139,6 +207,11 @@ void display(void)
         glPopMatrix();
     }
 
+    glPushMatrix();
+    glRotatef(anglePuppet, 0, 1, 0);
+    arena.draw();
+    glPopMatrix();
+
     glutSwapBuffers();
 }
 void init(void)
@@ -148,11 +221,13 @@ void init(void)
         keyStatus[i] = 0;
 
     glEnable(GL_DEPTH_TEST);
-    // glEnable(GL_TEXTURE_2D);
+    glEnable(GL_TEXTURE_2D);
     glEnable(GL_LIGHTING);
     glShadeModel(GL_SMOOTH);
 
     glDepthFunc(GL_LEQUAL);
+
+    texturePlane = LoadTextureRAW("img/stars1.bmp");
 
     arena.init("input/arena_teste.svg");
     puppet.init();
@@ -212,28 +287,18 @@ void mouse_motion(int x, int y)
 
 void idle()
 {
-    angleDay += 0.05;
-    angleYear += 0.01;
-
-    if (angleDay > 360)
-        angleDay = 0;
-    else if (angleDay < 0)
-        angleDay = 360;
-
-    if (angleYear > 360)
-        angleYear = 0;
-    else if (angleYear < 0)
-        angleYear = 360;
-
     double inc = INC_KEYIDLE;
 
     if (keyStatus[(int)('a')])
     {
+        camXYAngle -= inc;
         puppet.rotate(-inc);
     }
     if (keyStatus[(int)('d')])
     {
+        camXYAngle += inc;
         puppet.rotate(inc);
+        // camXZAngle += inc;
     }
     if (keyStatus[(int)('w')])
     {
@@ -336,7 +401,6 @@ void keyup(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-
 int main(int argc, char **argv)
 {
 
@@ -346,7 +410,7 @@ int main(int argc, char **argv)
 
     glutInitWindowSize(500, 500);
 
-    glutInitWindowPosition(100, 100);
+    glutInitWindowPosition(0, 0);
 
     glutCreateWindow("Arena Glut");
 

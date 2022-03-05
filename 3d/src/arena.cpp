@@ -177,6 +177,7 @@ void Arena::load(Puppet *puppet)
         ArenaWidth = (*it)->width;
         refX = (*it)->x;
         refY = (*it)->y;
+
         continue;
       }
     }
@@ -184,8 +185,11 @@ void Arena::load(Puppet *puppet)
     {
       if ((fabs((*it)->fill.R - GREEN.R) < 1e-8) && (fabs((*it)->fill.G - GREEN.G) < 1e-8) && (fabs((*it)->fill.B - GREEN.B) < 1e-8))
       {
-        PuppetX0 = (*it)->cx;
-        PuppetY0 = (*it)->cy + (*it)->r;
+        PuppetX0 = (*it)->cx - refX;
+        PuppetY0 = (*it)->cy + (*it)->r - refY;
+
+        // puppet->setX(PuppetX0 - refX);
+        // puppet->setY(PuppetY0 - refY);
 
         continue;
       }
@@ -201,7 +205,7 @@ void Arena::load(Puppet *puppet)
       {
         continue;
       }
-      Block *block = new Block((*it)->x, (*it)->y, 0.0, (*it)->width, (*it)->height, ArenaHeight / 2.0);
+      Block *block = new Block((*it)->x - refX, (*it)->y - refY, 0.0, (*it)->width, (*it)->height, ArenaHeight / 2.0);
       blocks.push_back(block);
     }
     else if ((*it)->geomType == CIRCLE)
