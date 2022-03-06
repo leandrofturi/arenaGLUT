@@ -14,6 +14,8 @@ class Puppet
     GLfloat gSpeed = 0.5;
     GLfloat gCamXYAngle = 0.0;
 
+    GLfloat gY0 = 0.0;
+
     OBJ *head;
     GLuint texturePuppet;
 
@@ -21,7 +23,9 @@ public:
     void init();
     void draw();
     void walk(double inc);
+    void jump(double inc);
     void rotate(double inc);
+    void handleGravity();
 
     GLfloat getX()
     {

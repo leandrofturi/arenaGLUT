@@ -173,9 +173,10 @@ void display(void)
     if (toggleCam == 0)
     {
         PrintText(0.1, 0.1, "Movable Camera", 0, 1, 0);
-        glTranslatef(0, 0, -camDist);
+        glTranslatef(0.0, 0.0, - camDist);
         glRotatef(camXZAngle, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
+        glTranslatef(-puppet.getX(), -puppet.getY(), -puppet.getZ());
     }
     else if (toggleCam == 1)
     {
@@ -185,8 +186,7 @@ void display(void)
     else if (toggleCam == 2)
     {
         PrintText(0.1, 0.1, "Puppet Camera", 0, 1, 0);
-        // gluLookAt(puppet.getX(), puppet.getY(), puppet.getZ(), -sin(anglePuppet / 180 * M_PI), 0, -cos(anglePuppet / 180 * M_PI), 0, 1, 0);
-        gluLookAt(puppet.getX(), 0.0, puppet.getZ(), -sin(anglePuppet / 180 * M_PI), 0, -cos(anglePuppet / 180 * M_PI), 0, 1, 0);
+        gluLookAt(puppet.getX(), puppet.getY(), puppet.getZ(), -sin(anglePuppet / 180 * M_PI), 0, -cos(anglePuppet / 180 * M_PI), 0, 1, 0);
     }
 
     GLfloat light_position[] = {puppet.getX(), puppet.getY(), puppet.getZ(), 1.0};
@@ -291,12 +291,12 @@ void idle()
 
     if (keyStatus[(int)('a')])
     {
-        camXYAngle -= inc;
+        camXYAngle -= (int)inc % 360;
         puppet.rotate(-inc);
     }
     if (keyStatus[(int)('d')])
     {
-        camXYAngle += inc;
+        camXYAngle += (int)inc % 360;
         puppet.rotate(inc);
         // camXZAngle += inc;
     }
@@ -308,7 +308,14 @@ void idle()
     {
         puppet.walk(inc);
     }
-
+    if (keyStatus[(int)(' ')])
+    {
+        puppet.jump(inc);
+    }
+    else
+    {
+        puppet.handleGravity();
+    }
     glutPostRedisplay();
 }
 
@@ -339,6 +346,9 @@ void keyboard(unsigned char key, int x, int y)
         break;
     case 's':
         keyStatus[(int)('s')] = 1;
+        break;
+    case ' ':
+        keyStatus[(int)(' ')] = 1;
         break;
     case 't':
         if (textureEnebled)
