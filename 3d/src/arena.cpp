@@ -188,8 +188,9 @@ void Arena::load(Puppet *puppet)
         PuppetX0 = (*it)->cx - refX;
         PuppetY0 = (*it)->cy + (*it)->r - refY;
 
-        // puppet->setX(PuppetX0 - refX);
-        // puppet->setY(PuppetY0 - refY);
+        puppet->setX(PuppetX0);
+        puppet->setY(PuppetY0);
+        puppet->setY0(PuppetY0);
 
         continue;
       }
@@ -226,11 +227,12 @@ void Arena::draw()
   glTranslatef(0.0, ArenaHeight * 2.0, 0.0);
   glRotatef(180.0, 1.0, 0.0, 0.0);
 
-  glTranslatef(-refX, -refY, 0.0);
-
+  // arena at front
+  glRotatef(-90.0, 0.0, 1.0, 0.0);
   for (std::list<Block *>::iterator it = blocks.begin(); it != blocks.end(); it++)
   {
     (*it)->draw();
   }
+
   glPopMatrix();
 }

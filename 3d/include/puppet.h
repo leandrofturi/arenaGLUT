@@ -47,6 +47,10 @@ public:
     {
         gY = y;
     }
+    void setY0(GLfloat y)
+    {
+        gY0 = y;
+    }
     void setZ(GLfloat z)
     {
         gZ = z;

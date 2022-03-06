@@ -12,8 +12,11 @@ Puppet puppet;
 
 // Key status
 #define INC_KEYIDLE 1
-
 int keyStatus[256];
+
+// Viewing dimensions
+const GLint ViewingWidth = 500;
+const GLint ViewingHeight = 500;
 
 // Identificadores de textura
 GLuint texturePlane;
@@ -100,6 +103,9 @@ void DrawAxes()
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
 
+    glPushMatrix();
+    glTranslatef(puppet.getX(), puppet.getY(), puppet.getZ());
+
     //x axis
     glPushMatrix();
     glColor3fv(color_r);
@@ -125,6 +131,9 @@ void DrawAxes()
     glTranslatef(0.5, 0, 0); // put in one end
     glutSolidCube(1.0);
     glPopMatrix();
+
+    glPopMatrix();
+
     glPopAttrib();
 }
 
@@ -173,7 +182,7 @@ void display(void)
     if (toggleCam == 0)
     {
         PrintText(0.1, 0.1, "Movable Camera", 0, 1, 0);
-        glTranslatef(0.0, 0.0, - camDist);
+        glTranslatef(0.0, 0.0, -camDist);
         glRotatef(camXZAngle, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
         glTranslatef(-puppet.getX(), -puppet.getY(), -puppet.getZ());
@@ -196,8 +205,9 @@ void display(void)
     glScalef(70, 70, 1);
     glTranslatef(0, 0, -12);
     glRotatef(90, 1, 0, 0);
-    DisplayPlane(texturePlane);
+    // DisplayPlane(texturePlane);
     glPopMatrix();
+
 
     if (toggleCam != 2)
     {
@@ -232,6 +242,12 @@ void init(void)
     arena.init("input/arena_teste.svg");
     puppet.init();
     arena.load(&puppet);
+    
+    // Scale for the arena height
+    // GLfloat h = arena.getHeight();
+    // GLfloat scale = (ViewingHeight - h) / h + 1.0;
+    // glTranslatef(-puppet.getX() * scale + ViewingHeight / 2.0, 0.0, 0.0);
+    // glScalef(scale, scale, scale);
 
     glEnable(GL_LIGHT0);
 }
