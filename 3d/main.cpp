@@ -202,12 +202,10 @@ void display(void)
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     glPushMatrix();
-    glScalef(70, 70, 1);
-    glTranslatef(0, 0, -12);
-    glRotatef(90, 1, 0, 0);
-    // DisplayPlane(texturePlane);
+    glTranslatef(0.0, arena.getHeight(), 0.0);
+    glScalef(arena.getWidth(), 1.0, arena.getHeight() / 2.0);
+    DisplayPlane(texturePlane);
     glPopMatrix();
-
 
     if (toggleCam != 2)
     {
@@ -242,7 +240,7 @@ void init(void)
     arena.init("input/arena_teste.svg");
     puppet.init();
     arena.load(&puppet);
-    
+
     // Scale for the arena height
     // GLfloat h = arena.getHeight();
     // GLfloat scale = (ViewingHeight - h) / h + 1.0;
