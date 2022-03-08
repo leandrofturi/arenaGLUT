@@ -17,6 +17,7 @@ class Puppet
     GLfloat gY0 = 0.0;
 
     OBJ *head;
+    OBJ *body;
     GLuint texturePuppet;
 
 public:
@@ -26,6 +27,9 @@ public:
     void jump(double inc);
     void rotate(double inc);
     void handleGravity();
+    //void drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaThigh[2]); // theta: angle referenced in the body
+    void drawBody(GLfloat X, GLfloat Y);
+    void drawHead(GLfloat x, GLfloat y);
 
     GLfloat getX()
     {
