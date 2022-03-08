@@ -31,9 +31,6 @@ int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
 
-// Cotroles de giro
-double anglePuppet = 0;
-
 GLuint LoadTextureRAW(const char *filename)
 {
 
@@ -195,7 +192,14 @@ void display(void)
     else if (toggleCam == 2)
     {
         PrintText(0.1, 0.1, "Puppet Camera", 0, 1, 0);
-        gluLookAt(puppet.getX(), puppet.getY(), puppet.getZ(), -sin(anglePuppet / 180 * M_PI), 0, -cos(anglePuppet / 180 * M_PI), 0, 1, 0);
+        gluLookAt(puppet.getX(), puppet.getY(), puppet.getZ(),
+                  puppet.getX() + 10*cos((camXYAngle + 90.0) * 0.0174533), puppet.getY(), puppet.getZ() + 10*sin((camXYAngle + 90.0) * 0.0174533),
+                  0, 1, 0);
+
+        // glTranslatef(puppet.getX(), puppet.getZ(), 0);
+        // glRotatef(camXYAngle, 0, 0, 1);
+
+        // glTranslatef(-puppet.getX(), -puppet.getZ(), 0);
     }
 
     GLfloat light_position[] = {puppet.getX(), puppet.getY(), puppet.getZ(), 1.0};
@@ -203,7 +207,7 @@ void display(void)
 
     glPushMatrix();
     glTranslatef(0.0, arena.getHeight(), 0.0);
-    glScalef(arena.getWidth(), 1.0, arena.getHeight() / 2.0);
+    glScalef(arena.getHeight() / 2.0, 1.0, arena.getWidth());
     DisplayPlane(texturePlane);
     glPopMatrix();
 
@@ -216,7 +220,6 @@ void display(void)
     }
 
     glPushMatrix();
-    glRotatef(anglePuppet, 0, 1, 0);
     arena.draw();
     glPopMatrix();
 

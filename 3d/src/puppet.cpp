@@ -64,8 +64,10 @@ void Puppet::rotate(double inc)
     gCamXYAngle = (int)(gCamXYAngle + inc) % 360;
 }
 
-void Puppet::handleGravity() {
-    if (gY > gY0) {
+void Puppet::handleGravity()
+{
+    if (gY > gY0)
+    {
         gY = gY - gSpeed;
     }
 }
