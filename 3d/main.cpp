@@ -188,7 +188,9 @@ void display(void)
     else if (toggleCam == 1)
     {
         PrintText(0.1, 0.1, "Static Camera at a Distance", 0, 1, 0);
-        gluLookAt(arena.getWidth() / 2.0, arena.getHeight() / 2.0, 50, 0, 0, 0, 0, 1, 0);
+        gluLookAt(arena.getHeight() / 2.0 + camDist * 2.0, arena.getHeight() * 1.5, puppet.getZ(),
+                  arena.getHeight() / 2.0, arena.getHeight() * 1.5, puppet.getZ(),
+                  0, 1, 0);
     }
     else if (toggleCam == 2)
     {

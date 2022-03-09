@@ -14,8 +14,13 @@
 #define stepSize 1.6
 
 void Puppet::init()
-{
+{   
+    COLOR color;
+    color.R = 0.0;
+    color.G = 1.0;
+    color.B = 0.0;
     head = Geometries::CreateSphere(radiusHead, 10);
+    // body = Geometries::CreateBody(bodyWidth,bodyHeight,(bodyWidth + bodyHeight)/2, color);
 }
 
 void Puppet::draw()
@@ -24,7 +29,7 @@ void Puppet::draw()
     GLfloat materialColor[] = {1.0, 1.0, 0.0, 1};
     GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1};
     GLfloat mat_shininess[] = {50.0};
-
+    
     glTranslatef(gX, gY, gZ);
 
     glColor3f(1, 1, 0);
@@ -46,7 +51,34 @@ void Puppet::draw()
         glVertex3f(head->vtx[i].X, head->vtx[i].Y, head->vtx[i].Z);
     }
     glEnd();
+
+    // glBegin(GL_TRIANGLE_STRIP);
+    // for (int i = 0; i < body->numVtx; i++)
+    // {
+    //     glNormal3f(body->vtx[i].nX, body->vtx[i].nY, body->vtx[i].nZ);
+    //     glTexCoord2f(body->vtx[i].U, body->vtx[i].V);
+    //     glVertex3f(body->vtx[i].X, body->vtx[i].Y, body->vtx[i].Z);
+    // }
+    // glEnd();
+    glPushMatrix();
+        glTranslatef(0,bodyHeight,0);
+        COLOR color;
+        color.R = 0.0;
+        color.G = 1.0;
+        color.B = 0.0;
+        Geometries::CreateSolidCube(bodyWidth,bodyHeight,(bodyWidth + bodyHeight)/2, color);
+    glPopMatrix();
 }
+
+void Puppet::drawBody(GLfloat x, GLfloat y){
+    glPushMatrix();
+        glTranslatef(0,5,0);
+    glPopMatrix();
+}
+
+// void Puppet::drawHead(){
+
+// }
 
 void Puppet::walk(double inc)
 {

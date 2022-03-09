@@ -38,7 +38,9 @@ typedef struct
 namespace Geometries
 {
     OBJ *CreateSphere(double R, double space);
+    OBJ *CreateBody(double width, double height, double depth, COLOR color);
     void CreateSolidCube(double width, double height, double depth, COLOR color);
     void CreateSolidSphere(double radius, COLOR color);
+    void drawRect(GLfloat height, GLfloat width, GLfloat R, GLfloat G, GLfloat B);
 }
 #endif /* GEOMETRIES_H */

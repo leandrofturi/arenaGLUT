@@ -90,6 +90,14 @@ public:
   {
     return ArenaWidth;
   };
+  GLfloat getRefX()
+  {
+    return refX;
+  };
+  GLfloat getRefY()
+  {
+    return refY;
+  };
 
   void init(const char *path);
   void print();
