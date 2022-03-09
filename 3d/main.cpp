@@ -213,13 +213,10 @@ void display(void)
     DisplayPlane(texturePlane);
     glPopMatrix();
 
-    // if (toggleCam != 2)
-    {
-        DrawAxes();
-        glPushMatrix();
-        puppet.draw();
-        glPopMatrix();
-    }
+    DrawAxes();
+    glPushMatrix();
+    puppet.draw();
+    glPopMatrix();
 
     glPushMatrix();
     arena.draw();
@@ -317,7 +314,6 @@ void idle()
     {
         camXYAngle += (int)inc % 360;
         puppet.rotate(inc);
-        // camXZAngle += inc;
     }
     if (keyStatus[(int)('w')])
     {
