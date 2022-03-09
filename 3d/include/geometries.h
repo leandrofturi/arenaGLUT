@@ -42,5 +42,6 @@ namespace Geometries
     void CreateSolidCube(double width, double height, double depth, COLOR color);
     void CreateSolidSphere(double radius, COLOR color);
     void drawRect(GLfloat height, GLfloat width, GLfloat R, GLfloat G, GLfloat B);
+    float toRad(float theta);
 }
 #endif /* GEOMETRIES_H */

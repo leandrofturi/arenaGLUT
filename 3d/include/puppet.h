@@ -15,6 +15,8 @@ class Puppet
     GLfloat gCamXYAngle = 0.0;
     GLfloat gThetaArm = 0.0;
     GLfloat gY0 = 0.0;
+    GLfloat gLegHeight;
+    GLfloat gThighHeight;
 
     OBJ *head;
     OBJ *body;

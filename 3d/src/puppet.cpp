@@ -77,7 +77,19 @@ void Puppet::draw()
         color.R = 0.0;
         color.G = 1.0;
         color.B = 1.0;
-        Geometries::CreateSolidSphere(radiusHead,colorHead);
+        Geometries::CreateSolidCube(armWidth, armHeight, (armHeight + armHeight)/2,colorArm);
+    glPopMatrix();
+    // legs
+    
+    glPushMatrix();
+         gLegHeight = 3.20;
+     gThighHeight = 3.863703;
+        glTranslatef(0.0, -gLegHeight - gThighHeight, 0.0);
+        COLOR colorLeg;
+        color.R = 1.0;
+        color.G = 0.0;
+        color.B = 0.0;
+        // Geometries::CreateSolidCube(,colorLeg);
     glPopMatrix();
 }
 
