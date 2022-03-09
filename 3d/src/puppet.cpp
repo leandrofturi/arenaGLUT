@@ -51,22 +51,33 @@ void Puppet::draw()
         glVertex3f(head->vtx[i].X, head->vtx[i].Y, head->vtx[i].Z);
     }
     glEnd();
-
-    // glBegin(GL_TRIANGLE_STRIP);
-    // for (int i = 0; i < body->numVtx; i++)
-    // {
-    //     glNormal3f(body->vtx[i].nX, body->vtx[i].nY, body->vtx[i].nZ);
-    //     glTexCoord2f(body->vtx[i].U, body->vtx[i].V);
-    //     glVertex3f(body->vtx[i].X, body->vtx[i].Y, body->vtx[i].Z);
-    // }
-    // glEnd();
+    // body
     glPushMatrix();
-        glTranslatef(0,bodyHeight,0);
+        glTranslatef(0.0, - 0.9 * bodyHeight, 0.0);
         COLOR color;
         color.R = 0.0;
         color.G = 1.0;
         color.B = 0.0;
         Geometries::CreateSolidCube(bodyWidth,bodyHeight,(bodyWidth + bodyHeight)/2, color);
+    glPopMatrix();
+    // head
+    glPushMatrix();
+        glTranslatef(0.0, -bodyHeight / 2.0 - radiusHead, 0.0);
+        COLOR colorHead;
+        color.R = 0.0;
+        color.G = 1.0;
+        color.B = 0.0;
+        Geometries::CreateSolidSphere(radiusHead,colorHead);
+    glPopMatrix();
+    // arm
+    glPushMatrix();
+        glRotatef(gThetaArm, 0.0, 0.0, 1.0);
+        glTranslatef(-bodyWidth / 2.0, 0.0, 0.0);
+        COLOR colorArm;
+        color.R = 0.0;
+        color.G = 1.0;
+        color.B = 1.0;
+        Geometries::CreateSolidSphere(radiusHead,colorHead);
     glPopMatrix();
 }
 
