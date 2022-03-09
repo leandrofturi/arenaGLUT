@@ -39,6 +39,10 @@ public:
     {
         return gZ;
     }
+    GLfloat getDepth()
+    {
+        return 2.4;
+    }
     void setX(GLfloat x)
     {
         gX = x;

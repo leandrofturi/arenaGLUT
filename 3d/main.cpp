@@ -183,6 +183,7 @@ void display(void)
         glRotatef(camXZAngle, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
         glTranslatef(-puppet.getX(), -puppet.getY(), -puppet.getZ());
+        printf("%.2lf\t%.2lf\t%.2lf\n", puppet.getX(), puppet.getY(), puppet.getZ());
     }
     else if (toggleCam == 1)
     {
@@ -192,14 +193,13 @@ void display(void)
     else if (toggleCam == 2)
     {
         PrintText(0.1, 0.1, "Puppet Camera", 0, 1, 0);
-        gluLookAt(puppet.getX(), puppet.getY(), puppet.getZ(),
-                  puppet.getX() + 10*cos((camXYAngle + 90.0) * 0.0174533), puppet.getY(), puppet.getZ() + 10*sin((camXYAngle + 90.0) * 0.0174533),
-                  0, 1, 0);
-
-        // glTranslatef(puppet.getX(), puppet.getZ(), 0);
-        // glRotatef(camXYAngle, 0, 0, 1);
-
-        // glTranslatef(-puppet.getX(), -puppet.getZ(), 0);
+        glTranslatef(0.0, 0.0, puppet.getDepth());
+        glRotatef(camXZAngle, 1, 0, 0);
+        glRotatef(camXYAngle, 0, 1, 0);
+        gluLookAt(
+            puppet.getX(), puppet.getY(), puppet.getZ(),
+            puppet.getX(), puppet.getY(), puppet.getZ() - camDist,
+            0.0, 1.0, 0.0);
     }
 
     GLfloat light_position[] = {puppet.getX(), puppet.getY(), puppet.getZ(), 1.0};
@@ -211,7 +211,7 @@ void display(void)
     DisplayPlane(texturePlane);
     glPopMatrix();
 
-    if (toggleCam != 2)
+    // if (toggleCam != 2)
     {
         DrawAxes();
         glPushMatrix();
