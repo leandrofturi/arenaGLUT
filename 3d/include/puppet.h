@@ -17,6 +17,8 @@ class Puppet
     GLfloat gY0 = 0.0;
     GLfloat gLegHeight;
     GLfloat gThighHeight;
+    GLfloat thetaLeg[2] = {0.0, 0.0};
+    GLfloat thetaThigh[2] = {15.0, 15.0};
 
     OBJ *head;
     OBJ *body;

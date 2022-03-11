@@ -32,7 +32,7 @@ void Puppet::draw()
     
     glTranslatef(gX, gY, gZ);
 
-    glColor3f(1, 1, 0);
+    glColor3f(1, 0, 0);
 
     glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, materialColor);
@@ -89,7 +89,34 @@ void Puppet::draw()
         color.R = 1.0;
         color.G = 0.0;
         color.B = 0.0;
-        // Geometries::CreateSolidCube(,colorLeg);
+        if (walkDirection > 0)
+    {
+        glTranslatef(legWidth / 2.0, 0.0, 0.0);
+        glRotatef(180.0, 0.0, 1.0, 0.0);
+    }
+    else
+    {
+        glTranslatef(-legWidth / 2.0, 0.0, 0.0);
+    }
+
+    glPushMatrix();
+    glTranslatef(-legWidth / 2.0, 0.0, 0.0);
+        glRotatef(thetaThigh[0], 0.0, 0.0, 1.0);
+        Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
+        glTranslatef(0.0, legHeight, 0.0);
+    glRotatef(thetaLeg[0], 0.0, 0.0, 1.0);
+    Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef(legWidth / 2.0, 0.0, 0.0);
+
+    glRotatef(-thetaThigh[1], 0.0, 0.0, 1.0);
+    Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
+    glTranslatef(0.0, legHeight, 0.0);
+    glRotatef(-thetaLeg[1], 0.0, 0.0, 1.0);
+    Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
+    glPopMatrix();
+
     glPopMatrix();
 }
 
