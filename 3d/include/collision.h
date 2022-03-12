@@ -19,24 +19,7 @@ namespace Collision
     bool bumpBack(Puppet *puppet, Block *block);
     bool bumpBack(Puppet *puppet, std::list<Block *> blocks);
 
-    bool bump(Puppet *puppet, Gunshot *gunshot);
-
-    bool bumpBottom(Puppet *puppet, Opponent *opponent);
-    bool bumpBottom(Puppet *puppet, std::list<Opponent *> *opponents);
-    bool bumpFront(Puppet *puppet, Opponent *opponent);
-    bool bumpFront(Puppet *puppet, std::list<Opponent *> *opponents);
-    bool bumpBack(Puppet *puppet, Opponent *opponent);
-    bool bumpBack(Puppet *puppet, std::list<Opponent *> *opponents);
-
-    bool bumpGunshot(Puppet *puppet, std::list<Opponent *> *opponents);
-
-    bool bumpOpponent(Gunshot *gunshot, Opponent *opponent);
-    void bumpOpponent(std::list<Gunshot *> *gunshots, std::list<Opponent *> *opponents);
-
-    bool bumpBlock(Gunshot *gunshot, Block *block);
-    void bumpBlock(std::list<Gunshot *> *gunshots, std::list<Block *> blocks);
-
-    void handleCollision(Puppet *puppet, std::list<Block *> blocks, std::list<Opponent *> *opponents, std::list<Gunshot *> *gunshots);
+    void handleCollision(Puppet *puppet, std::list<Block *> blocks);
 }
 
 #endif /* COLLISION_H */

@@ -43,9 +43,17 @@ public:
     {
         return gZ;
     }
+    GLfloat getWidth()
+    {
+        return 2 * 2.4;
+    }
+    GLfloat getHeight()
+    {
+        return 2 * 2.4;
+    }
     GLfloat getDepth()
     {
-        return 2.4;
+        return 2 * 2.4;
     }
     void setX(GLfloat x)
     {
