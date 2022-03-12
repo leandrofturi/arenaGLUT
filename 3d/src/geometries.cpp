@@ -81,6 +81,10 @@ OBJ *Geometries::CreateSphere(double R, double space)
     }
     return obj;
 }
+float Geometries::toRad(float theta)
+{
+    return theta * 0.0174533;
+}
 
 void Geometries::CreateSolidCube(double width, double height, double depth, COLOR color)
 {

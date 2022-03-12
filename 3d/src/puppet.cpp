@@ -32,7 +32,7 @@ void Puppet::draw()
     
     glTranslatef(gX, gY, gZ);
 
-    glColor3f(1, 1, 0);
+    glColor3f(1, 0, 0);
 
     glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, materialColor);
@@ -51,22 +51,72 @@ void Puppet::draw()
         glVertex3f(head->vtx[i].X, head->vtx[i].Y, head->vtx[i].Z);
     }
     glEnd();
-
-    // glBegin(GL_TRIANGLE_STRIP);
-    // for (int i = 0; i < body->numVtx; i++)
-    // {
-    //     glNormal3f(body->vtx[i].nX, body->vtx[i].nY, body->vtx[i].nZ);
-    //     glTexCoord2f(body->vtx[i].U, body->vtx[i].V);
-    //     glVertex3f(body->vtx[i].X, body->vtx[i].Y, body->vtx[i].Z);
-    // }
-    // glEnd();
+    // body
     glPushMatrix();
-        glTranslatef(0,bodyHeight,0);
+        glTranslatef(0.0, - 0.9 * bodyHeight, 0.0);
         COLOR color;
         color.R = 0.0;
         color.G = 1.0;
         color.B = 0.0;
         Geometries::CreateSolidCube(bodyWidth,bodyHeight,(bodyWidth + bodyHeight)/2, color);
+    glPopMatrix();
+    // head
+    glPushMatrix();
+        glTranslatef(0.0, -bodyHeight / 2.0 - radiusHead, 0.0);
+        COLOR colorHead;
+        color.R = 0.0;
+        color.G = 1.0;
+        color.B = 0.0;
+        Geometries::CreateSolidSphere(radiusHead,colorHead);
+    glPopMatrix();
+    // arm
+    glPushMatrix();
+        glRotatef(gThetaArm, 0.0, 0.0, 1.0);
+        glTranslatef(-bodyWidth / 2.0, 0.0, 0.0);
+        COLOR colorArm;
+        color.R = 0.0;
+        color.G = 1.0;
+        color.B = 1.0;
+        Geometries::CreateSolidCube(armWidth, armHeight, (armHeight + armHeight)/2,colorArm);
+    glPopMatrix();
+    // legs
+    
+    glPushMatrix();
+         gLegHeight = 3.20;
+     gThighHeight = 3.863703;
+        glTranslatef(0.0, -gLegHeight - gThighHeight, 0.0);
+        COLOR colorLeg;
+        color.R = 1.0;
+        color.G = 0.0;
+        color.B = 0.0;
+        if (walkDirection > 0)
+    {
+        glTranslatef(legWidth / 2.0, 0.0, 0.0);
+        glRotatef(180.0, 0.0, 1.0, 0.0);
+    }
+    else
+    {
+        glTranslatef(-legWidth / 2.0, 0.0, 0.0);
+    }
+
+    glPushMatrix();
+    glTranslatef(-legWidth / 2.0, 0.0, 0.0);
+        glRotatef(thetaThigh[0], 0.0, 0.0, 1.0);
+        Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
+        glTranslatef(0.0, legHeight, 0.0);
+    glRotatef(thetaLeg[0], 0.0, 0.0, 1.0);
+    Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef(legWidth / 2.0, 0.0, 0.0);
+
+    glRotatef(-thetaThigh[1], 0.0, 0.0, 1.0);
+    Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
+    glTranslatef(0.0, legHeight, 0.0);
+    glRotatef(-thetaLeg[1], 0.0, 0.0, 1.0);
+    Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
+    glPopMatrix();
+
     glPopMatrix();
 }
 

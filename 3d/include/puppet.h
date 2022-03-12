@@ -13,12 +13,17 @@ class Puppet
     GLfloat gZ = 0.0;
     GLfloat gSpeed = 0.5;
     GLfloat gCamXYAngle = 0.0;
-
+    GLfloat gThetaArm = 0.0;
     GLfloat gY0 = 0.0;
+    GLfloat gLegHeight;
+    GLfloat gThighHeight;
+    GLfloat thetaLeg[2] = {0.0, 0.0};
+    GLfloat thetaThigh[2] = {15.0, 15.0};
 
     OBJ *head;
     OBJ *body;
     GLuint texturePuppet;
+    int walkDirection = 1; // -1: left, 1: right
 
 public:
     void init();
