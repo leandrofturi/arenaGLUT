@@ -7,19 +7,14 @@
 #include "block.h"
 #include "opponent.h"
 #include "gunshot.h"
+#include "arena.h"
 
 namespace Collision
 {
-    bool bumpTop(Puppet *puppet, Block *block);
-    bool bumpTop(Puppet *puppet, std::list<Block *> blocks);
-    bool bumpBottom(Puppet *puppet, Block *block);
-    bool bumpBottom(Puppet *puppet, std::list<Block *> blocks);
-    bool bumpFront(Puppet *puppet, Block *block);
-    bool bumpFront(Puppet *puppet, std::list<Block *> blocks);
-    bool bumpBack(Puppet *puppet, Block *block);
-    bool bumpBack(Puppet *puppet, std::list<Block *> blocks);
+    bool bump(Puppet *puppet, Block *block, GLfloat aW, GLfloat aH);
+    bool bump(Puppet *puppet, std::list<Block *> blocks, GLfloat aW, GLfloat aH);
 
-    void handleCollision(Puppet *puppet, std::list<Block *> blocks);
+    bool collision(Puppet *puppet, Arena *arena);
 }
 
 #endif /* COLLISION_H */

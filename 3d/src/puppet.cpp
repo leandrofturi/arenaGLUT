@@ -51,6 +51,7 @@ void Puppet::draw()
         glVertex3f(head->vtx[i].X, head->vtx[i].Y, head->vtx[i].Z);
     }
     glEnd();
+    
     // body
     glPushMatrix();
         glTranslatef(0.0, - 0.9 * bodyHeight, 0.0);

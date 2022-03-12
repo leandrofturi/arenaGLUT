@@ -6,6 +6,7 @@
 #include "include/imageloader.h"
 #include "include/puppet.h"
 #include "include/arena.h"
+#include "include/collision.h"
 
 Arena arena;
 Puppet puppet;
@@ -183,7 +184,7 @@ void display(void)
         glRotatef(camXZAngle, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
         glTranslatef(-puppet.getX(), -puppet.getY(), -puppet.getZ());
-        printf("%.2lf\t%.2lf\t%.2lf\n", puppet.getX(), puppet.getY(), puppet.getZ());
+        // printf("%.2lf\t%.2lf\t%.2lf\n", puppet.getX(), puppet.getY(), puppet.getZ());
     }
     else if (toggleCam == 1)
     {
@@ -204,13 +205,13 @@ void display(void)
             0.0, 1.0, 0.0);
     }
 
-    GLfloat light_position[] = {puppet.getX(), puppet.getY(), puppet.getZ(), 1.0};
+    GLfloat light_position[] = {puppet.getX() - puppet.getDepth(), puppet.getY(), puppet.getZ() + puppet.getDepth(), 1.0};
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     glPushMatrix();
     glTranslatef(0.0, arena.getHeight(), 0.0);
     glScalef(arena.getHeight() / 2.0, 1.0, arena.getWidth());
-    DisplayPlane(texturePlane);
+    // DisplayPlane(texturePlane);
     glPopMatrix();
 
     DrawAxes();
@@ -304,6 +305,9 @@ void mouse_motion(int x, int y)
 void idle()
 {
     double inc = INC_KEYIDLE;
+
+    if (!Collision::collision(&puppet, &arena))
+        ;
 
     if (keyStatus[(int)('a')])
     {

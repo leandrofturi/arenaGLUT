@@ -26,15 +26,15 @@ public:
     void draw();
     GLfloat getX()
     {
-        return gX;
+        return gX - gWidth / 2.0;
     };
     GLfloat getY()
     {
-        return gY;
+        return gY + gHeight / 2.0;
     };
     GLfloat getZ()
     {
-        return gZ;
+        return gZ + gDepth / 2.0;
     };
     GLfloat getWidth()
     {

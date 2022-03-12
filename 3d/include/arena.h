@@ -71,6 +71,8 @@ class Arena
   float PuppetY0 = 0.0;
 
   std::list<Item *> items;
+
+public:
   std::list<Block *> blocks;
 
 public:
