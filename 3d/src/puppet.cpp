@@ -117,7 +117,7 @@ void Puppet::draw()
     // Perna Esquerda 
     glPushMatrix();
     // aqui fiz ele apontar para frente as pernas
-    //glRotatef(-180, 0.0, 0.0, 1.0);
+    glRotatef(90, 0.0, 1.0, 0.0);
     // aqui fiz ele estar um pouco a direita parecendo uma perna mesmo kk 
     glTranslatef(-1.0, 0.0, -(bodyWidth)/4);
 
@@ -129,13 +129,13 @@ void Puppet::draw()
     glutSolidCube(1.0);
     glPopMatrix();
 
-    // glPushMatrix();
-    // glColor3fv(color_r);
-    // glTranslatef(legWidth / 2.0, 0.0, 0.0);
-    // glRotatef(-thetaThigh[1], 0.0, 0.0, 1.0);
-    // glScalef(legWidth, legHeight, (legHeight + legWidth)/4);
-    // glutSolidCube(1.0);
-    // glPopMatrix();
+    glPushMatrix();
+    glColor3fv(color_r);
+    glTranslatef(legWidth / 2.0, 0.0, 0.0);
+    glRotatef(-thetaThigh[1], 0.0, 0.0, 1.0);
+    glScalef(legWidth, legHeight, (legHeight + legWidth)/4);
+    glutSolidCube(1.0);
+    glPopMatrix();
 
 
     
