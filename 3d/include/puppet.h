@@ -13,7 +13,7 @@ class Puppet
     GLfloat gZ = 0.0;
     GLfloat gSpeed = 0.5;
     GLfloat gCamXYAngle = 0.0;
-    GLfloat gThetaArm = 0.0;
+    GLfloat gThetaArm = 90.0;
     GLfloat gY0 = 0.0;
     GLfloat gLegHeight;
     GLfloat gThighHeight;
