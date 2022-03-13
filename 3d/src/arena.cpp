@@ -230,5 +230,26 @@ void Arena::draw()
     (*it)->draw();
   }
 
+  for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end(); ++it)
+  {
+    (*it)->draw();
+  }
+
   glPopMatrix();
+}
+
+void Arena::move()
+{
+  for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end();)
+  {
+    (*it)->move();
+    if (!(*it)->valid())
+    {
+      it = gunshots.erase(it);
+    }
+    else
+    {
+      ++it;
+    }
+  }
 }

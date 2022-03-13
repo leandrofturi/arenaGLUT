@@ -7,6 +7,7 @@
 #include "geometries.h"
 #include "puppet.h"
 #include "block.h"
+#include "gunshot.h"
 
 enum GeomType
 {
@@ -74,6 +75,7 @@ class Arena
 
 public:
   std::list<Block *> blocks;
+  std::list<Gunshot *> gunshots;
 
 public:
   Arena(){};
@@ -105,6 +107,7 @@ public:
   void print();
   void load(Puppet *puppet);
   void draw();
+  void move();
 };
 
 #endif /* ARENA_H */

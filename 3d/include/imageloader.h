@@ -1,6 +1,10 @@
 #ifndef IMAGE_LOADER_H
 #define IMAGE_LOADER_H
 
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+
 //Represents an image
 class Image
 {
@@ -21,5 +25,9 @@ public:
 
 //Reads a bitmap image from file.
 Image *loadBMP(const char *filename);
+
+namespace Loader {
+    GLuint LoadTextureRAW(const char *filename);
+}
 
 #endif

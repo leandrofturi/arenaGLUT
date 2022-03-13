@@ -4,6 +4,7 @@
 #include <GL/glu.h>
 #include <math.h>
 #include "geometries.h"
+#include "gunshot.h"
 #include <cstdio>
 
 class Puppet
@@ -13,20 +14,14 @@ class Puppet
     GLfloat gZ = 0.0;
     GLfloat gSpeed = 0.5;
     GLfloat gCamXYAngle = 0.0;
-    GLfloat gThetaArm = 90.0;
+    GLfloat gArmAngle = 0.0;
     GLfloat gY0 = 0.0;
-    GLfloat gXCollided = 0.0;
     GLfloat gYCollided = 0.0;
-    GLfloat gZCollided = 0.0;
 
     GLfloat gLegHeight;
     GLfloat gThighHeight;
     GLfloat thetaLeg[2] = {0.0, 0.0};
     GLfloat thetaThigh[2] = {15.0, 15.0};
-    GLfloat angPerna1;
-    GLfloat angPerna2;
-    GLfloat angPerna3;
-    GLfloat angPerna4;
 
     OBJ *head;
     OBJ *body;
@@ -39,13 +34,17 @@ public:
     void walk(double inc);
     void jump(double inc);
     void rotate(double inc);
+    void rotateArm(double inc);
     void handleGravity();
-    //void drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaThigh[2]); // theta: angle referenced in the body
-    void drawBody(GLfloat X, GLfloat Y);
-    void drawHead(GLfloat x, GLfloat y);
-    void AnimaPerna(GLfloat dx);
-    void takeStep(GLfloat x, GLfloat y, GLfloat dx);
+    Gunshot *shoot();
 
+private:
+    void drawLegs();
+    void drawArm();
+    void drawBody();
+    void drawHead();
+
+public:
     GLfloat getX()
     {
         return gX;
@@ -58,21 +57,16 @@ public:
     {
         return gZ;
     }
-    GLfloat getWidth()
-    {
-        return 2 * 2.4;
-    }
-    GLfloat getHeight()
-    {
-        return 2 * 2.4;
-    }
-    GLfloat getDepth()
-    {
-        return 2 * 2.4;
-    }
+    GLfloat getWidth();
+    GLfloat getHeight();
+    GLfloat getDepth();
     int getWalkDir()
     {
         return walkDirection;
+    }
+    void setDirection(int dir)
+    {
+        walkDirection = dir;
     }
     void setX(GLfloat x)
     {

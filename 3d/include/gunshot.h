@@ -3,29 +3,36 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <math.h>
+#include "geometries.h"
+#include "imageloader.h"
 
 class Gunshot
 {
+    GLfloat radiusGunshot = 1;
     GLfloat gXInit;
     GLfloat gYInit;
+    GLfloat gZInit;
     GLfloat gX;
     GLfloat gY;
+    GLfloat gZ;
     GLfloat gDirectionAng;
     GLfloat gSpeed;
     GLfloat gR;
     GLfloat gG;
     GLfloat gB;
+    GLuint textureGunshot;
 
-private:
-    void drawGunshot(GLfloat x, GLfloat y);
+    OBJ *head;
 
 public:
-    Gunshot(GLfloat x, GLfloat y, GLfloat directionAng, GLfloat speed)
+    Gunshot(GLfloat x, GLfloat y, GLfloat z, GLfloat directionAng, GLfloat speed)
     {
         gXInit = x;
         gYInit = y;
+        gZInit = z;
         gX = x;
         gY = y;
+        gZ = z;
         gDirectionAng = directionAng;
         gSpeed = speed;
         gR = ((double)rand() / (RAND_MAX));
@@ -34,11 +41,11 @@ public:
 
         GLfloat ViewingWidth = 500.0;
         GLfloat ViewingHeight = 500.0;
+
+        head = Geometries::CreateSphere(radiusGunshot, 10);
+        textureGunshot = Loader::LoadTextureRAW("img/sun1.bmp");
     };
-    void draw()
-    {
-        drawGunshot(gX, gY);
-    };
+    void draw();
     void move();
     bool valid();
     GLfloat getX()
@@ -48,6 +55,10 @@ public:
     GLfloat getY()
     {
         return gY;
+    };
+    GLfloat getZ()
+    {
+        return gZ;
     };
     GLfloat getRadius();
 };

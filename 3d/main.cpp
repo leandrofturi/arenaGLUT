@@ -184,7 +184,6 @@ void display(void)
         glRotatef(camXZAngle, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
         glTranslatef(-puppet.getX(), -puppet.getY(), -puppet.getZ());
-        // printf("%.2lf\t%.2lf\t%.2lf\n", puppet.getX(), puppet.getY(), puppet.getZ());
     }
     else if (toggleCam == 1)
     {
@@ -218,7 +217,6 @@ void display(void)
     glPushMatrix();
     puppet.draw();
     glPopMatrix();
-
     glPushMatrix();
     arena.draw();
     glPopMatrix();
@@ -273,7 +271,7 @@ void reshape(int w, int h)
     changeCamera(camAngle, w, h);
 }
 
-void mouse_callback(int button, int state, int x, int y)
+void mouseCallback(int button, int state, int x, int y)
 {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
@@ -285,9 +283,13 @@ void mouse_callback(int button, int state, int x, int y)
     {
         buttonDown = 0;
     }
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        arena.gunshots.push_back(puppet.shoot());
+    }
 }
 
-void mouse_motion(int x, int y)
+void mouseMotion(int x, int y)
 {
     if (!buttonDown)
         return;
@@ -300,6 +302,27 @@ void mouse_motion(int x, int y)
 
     lastX = x;
     lastY = y;
+}
+
+void passiveMouseMotion(int x, int y)
+{
+    if (y > ViewingHeight / 2)
+    {
+        puppet.rotateArm(-2);
+    }
+    else
+    {
+        puppet.rotateArm(+2);
+    }
+
+    if (x < ViewingWidth / 2 && (!keyStatus[(int)('d')]))
+    {
+        puppet.setDirection(-1);
+    }
+    else if (!keyStatus[(int)('a')])
+    {
+        puppet.setDirection(1);
+    }
 }
 
 void idle()
@@ -335,6 +358,8 @@ void idle()
     {
         puppet.handleGravity();
     }
+    arena.move();
+
     glutPostRedisplay();
 }
 
@@ -454,8 +479,9 @@ int main(int argc, char **argv)
     glutKeyboardFunc(keyboard);
     glutKeyboardUpFunc(keyup);
 
-    glutMotionFunc(mouse_motion);
-    glutMouseFunc(mouse_callback);
+    glutMotionFunc(mouseMotion);
+    glutMouseFunc(mouseCallback);
+    glutPassiveMotionFunc(passiveMouseMotion);
 
     glutMainLoop();
 
