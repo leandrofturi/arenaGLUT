@@ -306,8 +306,7 @@ void idle()
 {
     double inc = INC_KEYIDLE;
 
-    if (!Collision::collision(&puppet, &arena))
-        ;
+    bool bump = Collision::collision(&puppet, &arena);
 
     if (keyStatus[(int)('a')])
     {
@@ -321,15 +320,16 @@ void idle()
     }
     if (keyStatus[(int)('w')])
     {
-        puppet.walk(-inc);
+        puppet.walk(bump && !puppet.isElevated() ? inc : -inc);
     }
     if (keyStatus[(int)('s')])
     {
-        puppet.walk(inc);
+        puppet.walk(bump && !puppet.isElevated() ? -inc : inc);
     }
     if (keyStatus[(int)(' ')])
     {
-        puppet.jump(inc);
+        if (!bump || puppet.isElevated())
+            puppet.jump(inc);
     }
     else
     {

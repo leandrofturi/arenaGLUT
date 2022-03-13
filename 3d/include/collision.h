@@ -11,8 +11,8 @@
 
 namespace Collision
 {
-    bool bump(Puppet *puppet, Block *block, GLfloat aW, GLfloat aH);
-    bool bump(Puppet *puppet, std::list<Block *> blocks, GLfloat aW, GLfloat aH);
+    bool bump(Puppet *puppet, Block *block);
+    bool bump(Puppet *puppet, std::list<Block *> blocks);
 
     bool collision(Puppet *puppet, Arena *arena);
 }

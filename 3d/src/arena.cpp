@@ -206,7 +206,7 @@ void Arena::load(Puppet *puppet)
       {
         continue;
       }
-      Block *block = new Block((*it)->x - refX, (*it)->y - refY, 0.0, (*it)->width, (*it)->height, ArenaHeight / 2.0);
+      Block *block = new Block((*it)->x - refX, -(*it)->y + refY + ArenaHeight * 2.0, 0.0, (*it)->width, (*it)->height, ArenaHeight / 2.0);
       blocks.push_back(block);
     }
     else if ((*it)->geomType == CIRCLE)
@@ -222,10 +222,6 @@ void Arena::load(Puppet *puppet)
 void Arena::draw()
 {
   glPushMatrix();
-
-  // mirroring
-  glTranslatef(0.0, ArenaHeight * 2.0, 0.0);
-  glRotatef(180.0, 1.0, 0.0, 0.0);
 
   // arena at front
   glRotatef(-90.0, 0.0, 1.0, 0.0);

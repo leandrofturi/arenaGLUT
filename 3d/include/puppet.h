@@ -15,6 +15,10 @@ class Puppet
     GLfloat gCamXYAngle = 0.0;
     GLfloat gThetaArm = 0.0;
     GLfloat gY0 = 0.0;
+    GLfloat gXCollided = 0.0;
+    GLfloat gYCollided = 0.0;
+    GLfloat gZCollided = 0.0;
+
     GLfloat gLegHeight;
     GLfloat gThighHeight;
     GLfloat thetaLeg[2] = {0.0, 0.0};
@@ -23,7 +27,7 @@ class Puppet
     OBJ *head;
     OBJ *body;
     GLuint texturePuppet;
-    int walkDirection = 1; // -1: left, 1: right
+    int walkDirection = 1; // -1: back, 1: front
 
 public:
     void init();
@@ -60,6 +64,10 @@ public:
     {
         return 2 * 2.4;
     }
+    int getWalkDir()
+    {
+        return walkDirection;
+    }
     void setX(GLfloat x)
     {
         gX = x;
@@ -75,6 +83,16 @@ public:
     void setZ(GLfloat z)
     {
         gZ = z;
+    }
+    void elevate(bool c)
+    {
+        gYCollided = 0.0;
+        if (c)
+            gYCollided = gY;
+    }
+    bool isElevated()
+    {
+        return fabs(gYCollided) >= 1e-4;
     }
 };
 
