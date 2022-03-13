@@ -13,6 +13,42 @@
 #define radiusHead 2.4
 #define stepSize 1.6
 
+int walkStep = 0; 
+
+// void Puppet::AnimaPerna(GLfloat dx){
+//     // parar perna1 (max)
+//     GLfloat maxAng1 = 45;
+//     // parar perna1 
+//     GLfloat maxAng2 = -45;
+//     if(dx > 0){
+//         direcao = 1;
+//         //angBraco = -90;
+//     }
+//     if(dx < 0){
+//         direcao = -1;
+//         //angBraco = -270;
+//     }
+    
+//     GLfloat x_1 = tan(angPerna1 * M_PI/180) * pernas;
+//     GLfloat xd = x_1 + dx * perna1Status; 
+//     GLfloat angNew = atan2(xd, pernas)* 180/M_PI;
+//     //
+//     if( abs(angNew) >= maxAng1){
+//         perna1Status = perna1Status*(-1);
+//         angPerna1 = angNew;
+//     }
+//     if(angNew < 0){
+//         angPerna2 = -angNew;
+//         angPerna4 = -angPerna1;
+//     }else{
+//         angPerna2 = angPerna1;
+//         angPerna4 = angNew;
+//     }
+//     angPerna1 = angNew;
+//     angPerna3 = -angNew;
+    
+// }
+
 void Puppet::init()
 {   
     COLOR color;
@@ -151,14 +187,55 @@ void Puppet::drawBody(GLfloat x, GLfloat y){
     glPopMatrix();
 }
 
-// void Puppet::drawHead(){
 
-// }
+void Puppet::takeStep(GLfloat x, GLfloat y, GLfloat dx)
+{
+    if (walkStep == 0)
+    {
+        thetaThigh[0] = 15.0;
+        thetaThigh[1] = 15.0;
+        thetaLeg[0] = 0.0;
+        thetaLeg[1] = 0.0;
+    }
+    else if (walkStep == 1)
+    {
+        thetaThigh[0] = 30.0;
+        thetaThigh[1] = 10.0;
+        thetaLeg[0] = -40.0;
+        thetaLeg[1] = 25.0;
+    }
+    else if (walkStep == 2)
+    {
+        thetaThigh[0] = 25.0;
+        thetaThigh[1] = 15.0;
+        thetaLeg[0] = -25.0;
+        thetaLeg[1] = 35.0;
+    }
+    else if (walkStep == 3)
+    {
+        thetaThigh[0] = 25.0;
+        thetaThigh[1] = 15.0;
+        thetaLeg[0] = -5.0;
+        thetaLeg[1] = 40.0;
+    }
+    else if (walkStep == 4)
+    {
+        thetaThigh[0] = 20.0;
+        thetaThigh[1] = 15.0;
+        thetaLeg[0] = -5.0;
+        thetaLeg[1] = 15.0;
+    }
+    walkStep = (walkStep + 1) % 5;
+
+    gX = gX + gSpeed * dx;
+}
+
 
 void Puppet::walk(double inc)
 {
     gX = gX + gSpeed * inc * cos((gCamXYAngle + 90.0) * 0.0174533);
     gZ = gZ + gSpeed * inc * sin((gCamXYAngle + 90.0) * 0.0174533);
+    Puppet::takeStep(gX, gY, inc);
 }
 
 void Puppet::jump(double inc)
