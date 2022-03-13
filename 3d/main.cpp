@@ -359,6 +359,7 @@ void idle()
         puppet.handleGravity();
     }
     arena.move();
+    arena.handleGravity();
 
     glutPostRedisplay();
 }
@@ -443,6 +444,21 @@ void keyboard(unsigned char key, int x, int y)
         changeCamera(camAngle, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
         break;
     }
+    case 'A':
+        if (puppet.isActing()) break;
+        puppet.kick();
+        break;
+    case 'P':
+        if (puppet.isActing()) break;
+        puppet.punch();
+        break;
+    case 'D':
+        if (puppet.isActing()) break;
+        puppet.dance();
+        break;
+    case '0':
+        puppet.animate();
+        break;
     case 27:
         exit(0);
         break;
@@ -453,6 +469,18 @@ void keyup(unsigned char key, int x, int y)
 {
     keyStatus[(int)(key)] = 0;
     glutPostRedisplay();
+}
+
+void opponentShot(int time)
+{
+    arena.opponentShot(&puppet);
+    glutTimerFunc(500, opponentShot, 0.0);
+}
+
+void opponentMove(int time)
+{
+    arena.opponentMove();
+    glutTimerFunc(100, opponentMove, 0.0);
 }
 
 int main(int argc, char **argv)
@@ -482,6 +510,9 @@ int main(int argc, char **argv)
     glutMotionFunc(mouseMotion);
     glutMouseFunc(mouseCallback);
     glutPassiveMotionFunc(passiveMouseMotion);
+
+    glutTimerFunc(500, opponentShot, 0.0);
+    glutTimerFunc(100, opponentMove, 0.0);
 
     glutMainLoop();
 

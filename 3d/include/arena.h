@@ -110,6 +110,9 @@ public:
   void load(Puppet *puppet);
   void draw();
   void move();
+  void opponentMove();
+  void opponentShot(Puppet *puppet);
+  void handleGravity();
 };
 
 #endif /* ARENA_H */

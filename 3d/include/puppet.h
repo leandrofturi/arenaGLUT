@@ -5,6 +5,7 @@
 #include <math.h>
 #include "geometries.h"
 #include "gunshot.h"
+#include "objloader.h"
 #include <cstdio>
 
 class Puppet
@@ -26,7 +27,22 @@ class Puppet
     OBJ *head;
     OBJ *body;
     GLuint texturePuppet;
+    meshes meshPuppet;
     int walkDirection = 1; // -1: back, 1: front
+
+    bool animated = false;
+
+    // ID das meshes lidas
+    int movIdle = -1;
+    int movPunch = -1;
+    int movKick = -1;
+    int movDance = -1;
+
+    // Controles dos golpes
+    int kicking = 0;
+    int punching = 0;
+    int dancing = 0;
+    int acting = 0;
 
 public:
     void init();
@@ -52,6 +68,10 @@ public:
     GLfloat getY()
     {
         return gY;
+    }
+    GLfloat getY0()
+    {
+        return gY0;
     }
     GLfloat getZ()
     {
@@ -94,9 +114,30 @@ public:
     {
         return fabs(gYCollided) >= 1e-4;
     }
-    void kill() {
+    void kill()
+    {
         printf("MORREU\n");
     };
+    bool isActing()
+    {
+        return acting;
+    }
+    void kick()
+    {
+        kicking = 1;
+    }
+    void punch()
+    {
+        punching = 1;
+    }
+    void dance()
+    {
+        dancing = 1;
+    }
+    void animate()
+    {
+        animated = !animated;
+    }
 };
 
 #endif /* PUPPET_H */

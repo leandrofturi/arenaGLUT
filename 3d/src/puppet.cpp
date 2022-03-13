@@ -21,6 +21,20 @@ void Puppet::init()
 {
     head = Geometries::CreateSphere(radiusHead, 10);
     texturePuppet = Loader::LoadTextureRAW("img/sun1.bmp");
+
+    // glShadeModel(GL_SMOOTH);
+    // glEnable(GL_LIGHTING);
+    // glEnable(GL_LIGHT0);
+    // glEnable(GL_DEPTH_TEST);
+
+    //Carrega as meshes dos arquivos
+    movIdle = meshPuppet.loadMeshAnim("blender/idle/ninja_idle_######.obj", 40);
+    movPunch = meshPuppet.loadMeshAnim("blender/punch/ninja_punching_######.obj", 35);
+    movKick = meshPuppet.loadMeshAnim("blender/kick/ninja_kick_######.obj", 35);
+    movDance = meshPuppet.loadMeshAnim("blender/dance/ninja_dance_######.obj", 90);
+    meshPuppet.loadTexture("img/stars1.bmp");
+
+    meshPuppet.drawInit(movIdle);
 }
 
 GLfloat Puppet::getWidth()
@@ -43,23 +57,71 @@ void Puppet::draw()
     glPushMatrix();
     glTranslatef(gX, gY + getHeight(), gZ);
 
-    drawHead();
+    if (!animated)
+    {
+        drawHead();
 
-    glPushAttrib(GL_ENABLE_BIT);
-    glDisable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
+        glPushAttrib(GL_ENABLE_BIT);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_TEXTURE_2D);
 
-    glPushMatrix();
+        glPushMatrix();
 
-    glTranslatef(0.0, -2.5 * radiusHead, 0.0);
-    drawBody();
-    drawArm();
+        glTranslatef(0.0, -2.5 * radiusHead, 0.0);
+        drawBody();
+        drawArm();
 
-    glTranslatef(0.0, -bodyHeight, 0.0);
-    drawLegs();
+        glTranslatef(0.0, -bodyHeight, 0.0);
+        drawLegs();
 
-    glPopMatrix();
-    glPopAttrib();
+        glPopMatrix();
+        glPopAttrib();
+    }
+    else
+    {
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+
+        glPushAttrib(GL_ENABLE_BIT);
+
+        //Translada para o centro do lutador para facilitar a rotacao da camera
+        glTranslatef(0, -getHeight(), 0);
+
+        glScalef(0.25, 0.25, 0.25);
+        if (walkDirection > 0)
+            glRotatef(180.0, 0.0, 1.0, 0.0);
+
+        //Escolhe entre iniciar o desenho do chute ou soco
+        if (kicking && !acting)
+        {
+            meshPuppet.drawInit(movKick);
+            acting = 1;
+        }
+        else if (punching && !acting)
+        {
+            meshPuppet.drawInit(movPunch);
+            acting = 1;
+        }
+        else if (dancing && !acting)
+        {
+            meshPuppet.drawInit(movDance);
+            acting = 1;
+        }
+
+        //Desenha as proximas frames ateh acabar
+        int rtn = meshPuppet.drawNext();
+        //Reinicia com o movimento de parado esperando a luta
+        if (rtn)
+        {
+            meshPuppet.drawInit(movIdle);
+            acting = 0;
+            punching = 0;
+            kicking = 0;
+            dancing = 0;
+        }
+        glPopAttrib();
+        glPopMatrix();
+    }
 
     glPopMatrix();
 }
@@ -260,12 +322,12 @@ Gunshot *Puppet::shoot()
     if (walkDirection > 0)
         angleXZ = gCamXYAngle + 180;
     else
-        posShotX += 2.0*armWidth;
+        posShotX += 2.0 * armWidth;
 
     posShotY -= 2.0 * bodyHeight / 3.0 + armDepth;
 
-    posShotX -= armWidth * cos(gArmAngle*0.0174533);
-    posShotY += armWidth * sin(gArmAngle*0.0174533);
+    posShotX -= armWidth * cos(gArmAngle * 0.0174533);
+    posShotY += armWidth * sin(gArmAngle * 0.0174533);
 
     Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0);
     return shot;

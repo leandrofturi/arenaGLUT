@@ -220,7 +220,7 @@ void Arena::load(Puppet *puppet)
       opponent->init();
       opponent->setZ(-(*it)->cx + refX);
       opponent->setY(-(*it)->cy + refY + ArenaHeight * 2.0);
-      opponent->setY0(-(*it)->cy + refY + ArenaHeight * 2.0);
+      opponent->setY0(puppet->getY0());
 
       opponents.push_back(opponent);
     }
@@ -265,5 +265,30 @@ void Arena::move()
     {
       ++it;
     }
+  }
+}
+
+void Arena::opponentMove()
+{
+  for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+  {
+    (*it)->walk(1);
+  }
+}
+
+void Arena::opponentShot(Puppet *puppet)
+{
+  int i = (int)(rand() % opponents.size());
+  std::list<Opponent *>::iterator it = opponents.begin();
+  std::advance(it, i);
+
+  gunshots.push_back((*it)->shoot());
+}
+
+void Arena::handleGravity()
+{
+  for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+  {
+    (*it)->handleGravity();
   }
 }
