@@ -15,7 +15,8 @@ class Gunshot
     GLfloat gX;
     GLfloat gY;
     GLfloat gZ;
-    GLfloat gDirectionAng;
+    GLfloat gAngleXZ;
+    GLfloat gAngleY;
     GLfloat gSpeed;
     GLfloat gR;
     GLfloat gG;
@@ -25,7 +26,7 @@ class Gunshot
     OBJ *head;
 
 public:
-    Gunshot(GLfloat x, GLfloat y, GLfloat z, GLfloat directionAng, GLfloat speed)
+    Gunshot(GLfloat x, GLfloat y, GLfloat z, GLfloat angleXZ, GLfloat angleY, GLfloat speed)
     {
         gXInit = x;
         gYInit = y;
@@ -33,7 +34,8 @@ public:
         gX = x;
         gY = y;
         gZ = z;
-        gDirectionAng = directionAng;
+        gAngleXZ = angleXZ;
+        gAngleY = angleY;
         gSpeed = speed;
         gR = ((double)rand() / (RAND_MAX));
         gG = ((double)rand() / (RAND_MAX));

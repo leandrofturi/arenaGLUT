@@ -40,8 +40,10 @@ void Gunshot::draw()
 
 void Gunshot::move()
 {
-    gX += cos((gDirectionAng) * 0.0174533) * gSpeed;
-    gZ -= sin((gDirectionAng) * 0.0174533) * gSpeed;
+    gX = gX + gSpeed * cos(gAngleXZ * 0.0174533);
+    gZ = gZ + gSpeed * sin(gAngleXZ * 0.0174533);
+
+    gY = gY + gSpeed * sin(gAngleY * 0.0174533);
 }
 
 bool Gunshot::valid()

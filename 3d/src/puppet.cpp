@@ -196,16 +196,16 @@ void Puppet::drawArm()
 
     glPushMatrix();
 
-    glRotatef(gArmAngle*sgn(walkDirection), 1, 0, 0);
+    glRotatef(gArmAngle * sgn(walkDirection), 1, 0, 0);
 
-    glTranslatef(2 * bodyWidth / 3.0 - armDepth, 0.0, -armWidth / 2.0);
+    glTranslatef(2.0 * bodyWidth / 3.0 - armDepth, 0.0, -armWidth / 2.0);
     glRotatef(90, 0, 1, 0);
     // glRotatef(-45, 0, 0, 1);
     Geometries::CreateSolidCube(armWidth, armHeight, armDepth, COLOR{0.15, 0.15, 0.15});
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(-2 * bodyWidth / 3.0 + armDepth, 0.0, -armWidth / 2.0);
+    glTranslatef(-2.0 * bodyWidth / 3.0 + armDepth, 0.0, -armWidth / 2.0);
     glRotatef(90, 0, 1, 0);
     // glRotatef(+45, 0, 0, 1);
     Geometries::CreateSolidCube(armWidth, armHeight, armDepth, COLOR{0.15, 0.15, 0.15});
@@ -253,17 +253,18 @@ void Puppet::drawHead()
 
 Gunshot *Puppet::shoot()
 {
-    GLfloat posShotX = gX,
-            posShotY = gY;
-    GLfloat directionAng = gCamXYAngle;
+    GLfloat posShotX = gZ,
+            posShotY = gY + getHeight(),
+            posShotZ = -gX;
+    GLfloat angleXZ = gCamXYAngle;
     if (walkDirection > 0)
-    {
-        directionAng = gCamXYAngle + 180;
-    }
-    
-    // posShotX += armWidth*cos((directionAng + 90.0) * 0.0174533);
-    // posShotY += armWidth*sin((directionAng + 90.0) * 0.0174533);
+        angleXZ = gCamXYAngle + 180;
 
-    Gunshot *shot = new Gunshot(posShotX, getY(), gZ, directionAng, gSpeed*3.0);
+    posShotY -= 2.0 * bodyHeight / 3.0 + armDepth;
+
+    posShotX -= armWidth * cos(gArmAngle*0.0174533);
+    posShotY += armWidth * sin(gArmAngle*0.0174533);
+
+    Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0);
     return shot;
 }
