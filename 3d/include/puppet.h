@@ -13,7 +13,7 @@ class Puppet
     GLfloat gZ = 0.0;
     GLfloat gSpeed = 0.5;
     GLfloat gCamXYAngle = 0.0;
-    GLfloat gThetaArm = 0.0;
+    GLfloat gThetaArm = 90.0;
     GLfloat gY0 = 0.0;
     GLfloat gXCollided = 0.0;
     GLfloat gYCollided = 0.0;
@@ -23,6 +23,10 @@ class Puppet
     GLfloat gThighHeight;
     GLfloat thetaLeg[2] = {0.0, 0.0};
     GLfloat thetaThigh[2] = {15.0, 15.0};
+    GLfloat angPerna1;
+    GLfloat angPerna2;
+    GLfloat angPerna3;
+    GLfloat angPerna4;
 
     OBJ *head;
     OBJ *body;
@@ -39,6 +43,8 @@ public:
     //void drawLegs(GLfloat x, GLfloat y, GLfloat thetaLeg[2], GLfloat thetaThigh[2]); // theta: angle referenced in the body
     void drawBody(GLfloat X, GLfloat Y);
     void drawHead(GLfloat x, GLfloat y);
+    void AnimaPerna(GLfloat dx);
+    void takeStep(GLfloat x, GLfloat y, GLfloat dx);
 
     GLfloat getX()
     {

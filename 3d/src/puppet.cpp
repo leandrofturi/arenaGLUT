@@ -13,6 +13,42 @@
 #define radiusHead 2.4
 #define stepSize 1.6
 
+int walkStep = 0; 
+
+// void Puppet::AnimaPerna(GLfloat dx){
+//     // parar perna1 (max)
+//     GLfloat maxAng1 = 45;
+//     // parar perna1 
+//     GLfloat maxAng2 = -45;
+//     if(dx > 0){
+//         direcao = 1;
+//         //angBraco = -90;
+//     }
+//     if(dx < 0){
+//         direcao = -1;
+//         //angBraco = -270;
+//     }
+    
+//     GLfloat x_1 = tan(angPerna1 * M_PI/180) * pernas;
+//     GLfloat xd = x_1 + dx * perna1Status; 
+//     GLfloat angNew = atan2(xd, pernas)* 180/M_PI;
+//     //
+//     if( abs(angNew) >= maxAng1){
+//         perna1Status = perna1Status*(-1);
+//         angPerna1 = angNew;
+//     }
+//     if(angNew < 0){
+//         angPerna2 = -angNew;
+//         angPerna4 = -angPerna1;
+//     }else{
+//         angPerna2 = angPerna1;
+//         angPerna4 = angNew;
+//     }
+//     angPerna1 = angNew;
+//     angPerna3 = -angNew;
+    
+// }
+
 void Puppet::init()
 {
     COLOR color;
@@ -61,7 +97,6 @@ void Puppet::draw()
     glEnd();
     glPopMatrix();
 
-    /*
     // body
 
     glPushMatrix();
@@ -77,7 +112,7 @@ void Puppet::draw()
     // // arm
     glPushMatrix();
         glColor3fv(color_g);
-        glRotatef(gThetaArm, 0.0, 0.0, 1.0);
+        glRotatef(gThetaArm, 0.0, 1.0, 0.0);
         glScalef(armWidth, armHeight, (armHeight + armWidth)/4);
         glTranslatef(bodyWidth/6, bodyHeight, 0.0);
         glutSolidCube(1.0);
@@ -85,98 +120,66 @@ void Puppet::draw()
     // // legs
     
     glPushMatrix();
+    glRotatef(180, 1.0, 0.0, 0.0); // rotacionei aqui para ficar padrao correto
     gLegHeight = 3.20;
     gThighHeight = 3.8637;
+    glTranslatef(0.0, 0.0, 0.0);
     
-    
+
+    // Perna Direita
+    glPushMatrix(); // esse push foi para fazer o translate das pernas
+    // aqui fiz ele apontar para frente as pernas
+    glRotatef(-90, 0.0, 1.0, 0.0);
+    // aqui fiz ele estar um pouco a direita parecendo uma perna mesmo kk 
+    glTranslatef(0.0, 0.0, -(bodyWidth)/4);
     glPushMatrix();
     glColor3fv(color_r);
     glTranslatef(-legWidth / 2.0, 0.0, 0.0);
-
     glRotatef(thetaThigh[0], 0.0, 0.0, 1.0);
-    glScalef(legWidth, legHeight, (legHeight + legWidth)/2);
+    glScalef(legWidth, legHeight, (legHeight + legWidth)/4);
     glutSolidCube(1.0);
+    glPopMatrix();
 
+    glPushMatrix();
     glColor3fv(color_r);
-    glTranslatef(0, -legHeight, 0.0);
+    glTranslatef(0.0, -legHeight, 0.0);
     glRotatef(thetaLeg[0], 0.0, 0.0, 1.0);
-    glScalef(legWidth, legHeight, (legHeight + legWidth)/2);
+    glScalef(legWidth, legHeight, (legHeight + legWidth)/4);
     glutSolidCube(1.0);
     glPopMatrix();
 
-    glPushMatrix();
-    glTranslatef(legWidth / 2, 0.0, 0.0);
-    glColor3fv(color_r);
-    glRotatef(-thetaThigh[1], 0.0, 0.0, 1.0);
-    glScalef(legWidth, legHeight, (legHeight + legWidth)/2);
-    glutSolidCube(1.0);
     glPopMatrix();
+    // Perna da direita feita acima 
+
+    // Perna Esquerda 
+    glPushMatrix();
+    // aqui fiz ele apontar para frente as pernas
+    glRotatef(90, 0.0, 1.0, 0.0);
+    // aqui fiz ele estar um pouco a direita parecendo uma perna mesmo kk 
+    glTranslatef(-1.0, 0.0, -(bodyWidth)/4);
 
     glPushMatrix();
-    glTranslatef(0.0, legHeight, 0.0);
+    glTranslatef(0.0, -legHeight, 0.0);
     glColor3fv(color_r);
     glRotatef(-thetaLeg[1], 0.0, 0.0, 1.0);
-    glScalef(legWidth, legHeight, (legHeight + legWidth)/2);
+    glScalef(legWidth, legHeight, (legHeight + legWidth)/4);
     glutSolidCube(1.0);
     glPopMatrix();
-    
 
+    glPushMatrix();
+    glColor3fv(color_r);
+    glTranslatef(legWidth / 2.0, 0.0, 0.0);
+    glRotatef(-thetaThigh[1], 0.0, 0.0, 1.0);
+    glScalef(legWidth, legHeight, (legHeight + legWidth)/4);
+    glutSolidCube(1.0);
     glPopMatrix();
 
-    // glTranslatef(0.0, gLegHeight + gThighHeight, 0.0);
-    // if (walkDirection > 0)
-    // {
-    //     glTranslatef(legWidth / 2.0, 0.0, 0.0);
-    //     glRotatef(180.0, 0.0, 1.0, 0.0);
-    // }
-    // else
-    // {
-    //     glTranslatef(-legWidth / 2.0, 0.0, 0.0);
-    // }
-    // //      gLegHeight = 3.20;
-    // //  gThighHeight = 3.863703;
-    // //     glTranslatef(0.0, -gLegHeight - gThighHeight, 0.0);
-    // //     COLOR colorLeg;
-    // //     color.R = 1.0;
-    // //     color.G = 0.0;
-    // //     color.B = 0.0;
-    // //     if (walkDirection > 0)
-    // // {
-    // //     glTranslatef(legWidth / 2.0, 0.0, 0.0);
-    // //     glRotatef(180.0, 0.0, 1.0, 0.0);
-    // // }
-    // // else
-    // // {
-    // //     glTranslatef(-legWidth / 2.0, 0.0, 0.0);
-    // // }
 
-    // glPushMatrix();
-    // glColor3fv(color_r);
-    // glTranslatef(legWidth / 2.0, 0.0, 0.0);
-    //      glRotatef(thetaThigh[0], 0.0, 0.0, 1.0);
-    //      glScalef(legWidth, legHeight, (legHeight + legWidth)/2 );
-    //     glutSolidCube(1.0);
+    
+    
+    glPopMatrix();
 
-    // //     Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
-    //      glTranslatef(0.0, legHeight, 0.0);
-    //      glRotatef(thetaLeg[0], 0.0, 0.0, 1.0);
-    // // Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
-    //  glPopMatrix();
-    //  glPushMatrix();
-    //  glColor3fv(color_r);
-    //  glTranslatef(legWidth / 2.0, 0.0, 0.0);
-
-    //  glRotatef(-thetaThigh[1], 0.0, 0.0, 1.0);
-    //  glScalef(legWidth, legHeight, (legHeight + legWidth)/2);
-
-    // // Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
-    // // glTranslatef(0.0, legHeight, 0.0);
-    // // glRotatef(-thetaLeg[1], 0.0, 0.0, 1.0);
-    // // Geometries::CreateSolidCube(legWidth, legHeight, (legHeight + legWidth)/2, colorLeg);
-    // // glPopMatrix();
-
-    //  glPopMatrix();
-    */
+    glPopMatrix();
 }
 
 void Puppet::drawBody(GLfloat x, GLfloat y)
@@ -186,9 +189,49 @@ void Puppet::drawBody(GLfloat x, GLfloat y)
     glPopMatrix();
 }
 
-// void Puppet::drawHead(){
 
-// }
+void Puppet::takeStep(GLfloat x, GLfloat y, GLfloat dx)
+{
+    if (walkStep == 0)
+    {
+        thetaThigh[0] = 15.0;
+        thetaThigh[1] = 15.0;
+        //thetaLeg[0] = 0.0;
+        //thetaLeg[1] = 0.0;
+    }
+    else if (walkStep == 1)
+    {
+        thetaThigh[0] = 30.0;
+        thetaThigh[1] = 10.0;
+        //thetaLeg[0] = -40.0;
+        //thetaLeg[1] = 25.0;
+    }
+    else if (walkStep == 2)
+    {
+        thetaThigh[0] = 25.0;
+        thetaThigh[1] = 15.0;
+        //thetaLeg[0] = -25.0;
+        //thetaLeg[1] = 35.0;
+    }
+    else if (walkStep == 3)
+    {
+        thetaThigh[0] = 25.0;
+        thetaThigh[1] = 15.0;
+        //thetaLeg[0] = -5.0;
+        //thetaLeg[1] = 40.0;
+    }
+    else if (walkStep == 4)
+    {
+        thetaThigh[0] = 20.0;
+        thetaThigh[1] = 15.0;
+        //thetaLeg[0] = -5.0;
+        //thetaLeg[1] = 15.0;
+    }
+    walkStep = (walkStep + 1) % 5;
+
+    gX = gX + gSpeed * dx;
+}
+
 
 void Puppet::walk(double inc)
 {
@@ -196,6 +239,7 @@ void Puppet::walk(double inc)
     else walkDirection = -1;
     gX = gX + gSpeed * inc * cos((gCamXYAngle + 90.0) * 0.0174533);
     gZ = gZ + gSpeed * inc * sin((gCamXYAngle + 90.0) * 0.0174533);
+    Puppet::takeStep(gX, gY, inc);
 }
 
 void Puppet::jump(double inc)
