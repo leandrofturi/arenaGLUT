@@ -45,12 +45,21 @@ void Puppet::draw()
 
     drawHead();
 
+    glPushAttrib(GL_ENABLE_BIT);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+
+    glPushMatrix();
+
     glTranslatef(0.0, -2.5 * radiusHead, 0.0);
     drawBody();
     drawArm();
 
     glTranslatef(0.0, -bodyHeight, 0.0);
     drawLegs();
+
+    glPopMatrix();
+    glPopAttrib();
 
     glPopMatrix();
 }
@@ -151,26 +160,26 @@ void Puppet::drawLegs()
     glTranslatef(-legWidth / 2.0, 0.0, 0.0);
 
     glRotatef(thetaThigh[0], 0.0, 0.0, 1.0);
-    Geometries::CreateSolidCube(legWidth, legHeight, legDepth, COLOR{0.0, 0.0, 0.0});
+    Geometries::CreateSolidCube(legWidth, legHeight, legDepth, COLOR{0.15, 0.15, 0.15});
 
     glTranslatef(0.0, legHeight, 0.0);
     glRotatef(thetaLeg[0], 0.0, 0.0, 1.0);
     if (walkStep != 0)
         glTranslatef(thighDepth / 2.0, 0.0, 0.0);
-    Geometries::CreateSolidCube(thighWidth, thighHeight, thighDepth, COLOR{0.0, 0.0, 0.0});
+    Geometries::CreateSolidCube(thighWidth, thighHeight, thighDepth, COLOR{0.15, 0.15, 0.15});
 
     glPopMatrix();
     glPushMatrix();
     glTranslatef(legWidth / 2.0, 0.0, 0.0);
 
     glRotatef(-thetaThigh[1], 0.0, 0.0, 1.0);
-    Geometries::CreateSolidCube(legWidth, legHeight, legDepth, COLOR{0.0, 0.0, 0.0});
+    Geometries::CreateSolidCube(legWidth, legHeight, legDepth, COLOR{0.15, 0.15, 0.15});
 
     glTranslatef(0.0, legHeight, 0.0);
     glRotatef(-thetaLeg[1], 0.0, 0.0, 1.0);
     if (walkStep != 0)
         glTranslatef(thighDepth / 2.0, 0.0, 0.0);
-    Geometries::CreateSolidCube(thighWidth, thighHeight, thighDepth, COLOR{0.0, 0.0, 0.0});
+    Geometries::CreateSolidCube(thighWidth, thighHeight, thighDepth, COLOR{0.15, 0.15, 0.15});
 
     glPopMatrix();
 
@@ -192,21 +201,21 @@ void Puppet::drawArm()
     glTranslatef(2 * bodyWidth / 3.0 - armDepth, 0.0, -armWidth / 2.0);
     glRotatef(90, 0, 1, 0);
     // glRotatef(-45, 0, 0, 1);
-    Geometries::CreateSolidCube(armWidth, armHeight, armDepth, COLOR{0.0, 0.0, 0.0});
+    Geometries::CreateSolidCube(armWidth, armHeight, armDepth, COLOR{0.15, 0.15, 0.15});
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(-2 * bodyWidth / 3.0 + armDepth, 0.0, -armWidth / 2.0);
     glRotatef(90, 0, 1, 0);
     // glRotatef(+45, 0, 0, 1);
-    Geometries::CreateSolidCube(armWidth, armHeight, armDepth, COLOR{0.0, 0.0, 0.0});
+    Geometries::CreateSolidCube(armWidth, armHeight, armDepth, COLOR{0.15, 0.15, 0.15});
     glPopMatrix();
     glPopMatrix();
 }
 
 void Puppet::drawBody()
 {
-    Geometries::CreateSolidCube(bodyWidth, bodyHeight, bodyDepth, COLOR{0.0, 0.0, 0.0});
+    Geometries::CreateSolidCube(bodyWidth, bodyHeight, bodyDepth, COLOR{0.15, 0.15, 0.15});
 }
 
 void Puppet::drawHead()
