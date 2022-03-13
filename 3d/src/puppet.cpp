@@ -194,36 +194,36 @@ void Puppet::takeStep(GLfloat x, GLfloat y, GLfloat dx)
     {
         thetaThigh[0] = 15.0;
         thetaThigh[1] = 15.0;
-        thetaLeg[0] = 0.0;
-        thetaLeg[1] = 0.0;
+        //thetaLeg[0] = 0.0;
+        //thetaLeg[1] = 0.0;
     }
     else if (walkStep == 1)
     {
         thetaThigh[0] = 30.0;
         thetaThigh[1] = 10.0;
-        thetaLeg[0] = -40.0;
-        thetaLeg[1] = 25.0;
+        //thetaLeg[0] = -40.0;
+        //thetaLeg[1] = 25.0;
     }
     else if (walkStep == 2)
     {
         thetaThigh[0] = 25.0;
         thetaThigh[1] = 15.0;
-        thetaLeg[0] = -25.0;
-        thetaLeg[1] = 35.0;
+        //thetaLeg[0] = -25.0;
+        //thetaLeg[1] = 35.0;
     }
     else if (walkStep == 3)
     {
         thetaThigh[0] = 25.0;
         thetaThigh[1] = 15.0;
-        thetaLeg[0] = -5.0;
-        thetaLeg[1] = 40.0;
+        //thetaLeg[0] = -5.0;
+        //thetaLeg[1] = 40.0;
     }
     else if (walkStep == 4)
     {
         thetaThigh[0] = 20.0;
         thetaThigh[1] = 15.0;
-        thetaLeg[0] = -5.0;
-        thetaLeg[1] = 15.0;
+        //thetaLeg[0] = -5.0;
+        //thetaLeg[1] = 15.0;
     }
     walkStep = (walkStep + 1) % 5;
 
