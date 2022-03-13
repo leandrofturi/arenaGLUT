@@ -215,6 +215,14 @@ void Arena::load(Puppet *puppet)
       {
         continue;
       }
+
+      Opponent *opponent = new Opponent();
+      opponent->init();
+      opponent->setZ(-(*it)->cx + refX);
+      opponent->setY(-(*it)->cy + refY + ArenaHeight * 2.0);
+      opponent->setY0(-(*it)->cy + refY + ArenaHeight * 2.0);
+
+      opponents.push_back(opponent);
     }
   }
 }
@@ -234,8 +242,14 @@ void Arena::draw()
   {
     (*it)->draw();
   }
-
   glPopMatrix();
+
+  for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+  {
+    glPushMatrix();
+    (*it)->draw();
+    glPopMatrix();
+  }
 }
 
 void Arena::move()

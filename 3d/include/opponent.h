@@ -2,107 +2,101 @@
 #define OPPONENT_H
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <list>
 #include <math.h>
+#include "geometries.h"
 #include "gunshot.h"
-#include "block.h"
+#include <cstdio>
 
 class Opponent
 {
-    GLfloat gX;
-    GLfloat gY;
-    GLfloat gX0;
-    GLfloat gY0;
-    GLfloat gRadius;
-    GLfloat gR;
-    GLfloat gG;
-    GLfloat gB;
-    GLfloat gSpeed = 2.5;
+    GLfloat gX = 0.0;
+    GLfloat gY = 0.0;
+    GLfloat gZ = 0.0;
+    GLfloat gSpeed = 0.5;
+    GLfloat gCamXYAngle = 0.0;
+    GLfloat gArmAngle = 0.0;
+    GLfloat gY0 = 0.0;
+    GLfloat gYCollided = 0.0;
 
-    GLfloat ArenaWidth = 500.0;
-    GLfloat ArenaHeight = 500.0;
+    GLfloat gLegHeight;
+    GLfloat gThighHeight;
+    GLfloat thetaLeg[2] = {0.0, 0.0};
+    GLfloat thetaThigh[2] = {15.0, 15.0};
 
-    GLfloat gXLim[2];
-
-    double walkDirection = ((double)rand() / (RAND_MAX)) * 2.0 - 1.0; // -1: left, 1: right
-
-    int alive = 1; // 1: yes, 0: no
+    OBJ *head;
+    OBJ *body;
+    GLuint textureOpponent;
+    int walkDirection = 1; // -1: back, 1: front
 
 public:
-    std::list<Gunshot *> gunshots;
+    void init();
+    void draw();
+    void walk(double inc);
+    void jump(double inc);
+    void rotate(double inc);
+    void rotateArm(double inc);
+    void handleGravity();
+    Gunshot *shoot();
 
 private:
-    void drawOpponent(GLfloat x, GLfloat y);
-    Gunshot *takeShoot(GLfloat x, GLfloat y);
-    void takeMoviment();
+    void drawLegs();
+    void drawArm();
+    void drawBody();
+    void drawHead();
 
 public:
-    Opponent(GLfloat x, GLfloat y, GLfloat radius, GLfloat R, GLfloat G, GLfloat B)
-    {
-        gX = x;
-        gY = y;
-        gX0 = x;
-        gY0 = y;
-        gRadius = radius;
-        gR = R;
-        gG = G;
-        gB = B;
-    };
-    void draw()
-    {
-        if (alive)
-            drawOpponent(gX, gY);
-    };
-    void setInitial(std::list<Block *> *blocks, GLfloat x, GLfloat y, GLfloat arenaWidth, GLfloat arenaHeight);
     GLfloat getX()
     {
         return gX;
-    };
+    }
     GLfloat getY()
     {
         return gY;
-    };
-    GLfloat getRadius()
+    }
+    GLfloat getZ()
     {
-        return gRadius;
-    };
-    void shot(GLfloat x, GLfloat y)
+        return gZ;
+    }
+    GLfloat getWidth();
+    GLfloat getHeight();
+    GLfloat getDepth();
+    int getWalkDir()
     {
-        if (alive)
-        {
-            Gunshot *s = takeShoot(x, y);
-            s->draw();
-            gunshots.push_back(s);
-        }
-    };
-    void changeDirection(int dir)
+        return walkDirection;
+    }
+    void setDirection(int dir)
     {
         walkDirection = dir;
     }
-    void move()
+    void setX(GLfloat x)
     {
-        if (alive)
-        {
-            takeMoviment();
-        }
+        gX = x;
+    }
+    void setY(GLfloat y)
+    {
+        gY = y;
+    }
+    void setY0(GLfloat y)
+    {
+        gY0 = y;
+    }
+    void setZ(GLfloat z)
+    {
+        gZ = z;
+    }
+    void elevate(bool c)
+    {
+        gYCollided = 0.0;
+        if (c)
+            gYCollided = gY;
+    }
+    bool isElevated()
+    {
+        return fabs(gYCollided) >= 1e-4;
+    }
+    void kill() {
+        printf("MORREU\n");
     };
-    int isAlive()
-    {
-        return alive == 1;
-    }
-    void kill()
-    {
-        alive = 0;
-    }
-    void reset()
-    {
-        gX = gX0;
-        gY = gY0;
-
-        walkDirection = ((double)rand() / (RAND_MAX)) * 2.0 - 1.0;
-
-        alive = 1;
-    }
 };
 
 #endif /* OPPONENT_H */
