@@ -6,6 +6,8 @@
 #include "geometries.h"
 #include "imageloader.h"
 
+#define maxDistance 500
+
 class Gunshot
 {
     GLfloat radiusGunshot = 1;
@@ -62,7 +64,21 @@ public:
     {
         return gZ;
     };
-    GLfloat getRadius();
+    GLfloat getWidth()
+    {
+        return radiusGunshot;
+    };
+    GLfloat getHeight()
+    {
+        return radiusGunshot;
+    };
+    GLfloat getDepth()
+    {
+        return radiusGunshot;
+    };
+    void bump() {
+        gX = gY = gZ = maxDistance;
+    }
 };
 
 #endif /* GUNSHOT_H */

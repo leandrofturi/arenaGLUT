@@ -259,6 +259,8 @@ Gunshot *Puppet::shoot()
     GLfloat angleXZ = gCamXYAngle;
     if (walkDirection > 0)
         angleXZ = gCamXYAngle + 180;
+    else
+        posShotX += 2.0*armWidth;
 
     posShotY -= 2.0 * bodyHeight / 3.0 + armDepth;
 

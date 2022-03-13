@@ -2,8 +2,6 @@
 #include "../include/geometries.h"
 #include <stdlib.h>
 
-#define maxDistance 500
-
 void Gunshot::draw()
 {
     GLfloat materialEmission[] = {1.00, 1.00, 0.00, 1};
@@ -49,9 +47,4 @@ void Gunshot::move()
 bool Gunshot::valid()
 {
     return fmax(fabs(gX - gXInit), fabs(gZ - gZInit)) < maxDistance;
-}
-
-GLfloat Gunshot::getRadius()
-{
-    return radiusGunshot;
 }

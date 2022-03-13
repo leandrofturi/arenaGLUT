@@ -94,6 +94,9 @@ public:
     {
         return fabs(gYCollided) >= 1e-4;
     }
+    void kill() {
+        printf("MORREU\n");
+    };
 };
 
 #endif /* PUPPET_H */
