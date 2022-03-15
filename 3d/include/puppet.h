@@ -80,6 +80,9 @@ public:
     GLfloat getWidth();
     GLfloat getHeight();
     GLfloat getDepth();
+    GLfloat getArmX();
+    GLfloat getArmY();
+    GLfloat getArmZ();
     int getWalkDir()
     {
         return walkDirection;

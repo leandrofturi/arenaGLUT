@@ -180,7 +180,7 @@ void display(void)
     if (toggleCam == 0)
     {
         PrintText(0.1, 0.1, "Movable Camera", 0, 1, 0);
-        glTranslatef(0.0, 0.0, -camDist);
+        glTranslatef(0.0, -puppet.getHeight(), -camDist);
         glRotatef(camXZAngle, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
         glTranslatef(-puppet.getX(), -puppet.getY(), -puppet.getZ());
@@ -195,12 +195,23 @@ void display(void)
     else if (toggleCam == 2)
     {
         PrintText(0.1, 0.1, "Puppet Camera", 0, 1, 0);
-        glTranslatef(0.0, 0.0, puppet.getDepth());
+        glTranslatef(0.0, -puppet.getHeight(), puppet.getDepth());
         glRotatef(camXZAngle, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
         gluLookAt(
             puppet.getX(), puppet.getY(), puppet.getZ(),
             puppet.getX(), puppet.getY(), puppet.getZ() - camDist,
+            0.0, 1.0, 0.0);
+    }
+    else if (toggleCam == 3)
+    {
+        PrintText(0.1, 0.1, "Arm Camera", 0, 1, 0);
+        glTranslatef(0.0, -puppet.getHeight() * 0.5, puppet.getDepth());
+        glRotatef(camXZAngle, 1, 0, 0);
+        glRotatef(camXYAngle, 0, 1, 0);
+        gluLookAt(
+            puppet.getArmX(), puppet.getArmY(), puppet.getArmZ(),
+            puppet.getArmX(), puppet.getArmY(), puppet.getArmZ() - camDist,
             0.0, 1.0, 0.0);
     }
 
@@ -210,7 +221,7 @@ void display(void)
     glPushMatrix();
     glTranslatef(0.0, arena.getHeight(), 0.0);
     glScalef(arena.getHeight() / 2.0, 1.0, arena.getWidth());
-    // DisplayPlane(texturePlane);
+    DisplayPlane(texturePlane);
     glPopMatrix();
 
     DrawAxes();
@@ -314,15 +325,6 @@ void passiveMouseMotion(int x, int y)
     {
         puppet.rotateArm(+2);
     }
-
-    if (x < ViewingWidth / 2 && (!keyStatus[(int)('d')]))
-    {
-        puppet.setDirection(-1);
-    }
-    else if (!keyStatus[(int)('a')])
-    {
-        puppet.setDirection(1);
-    }
 }
 
 void idle()
@@ -379,6 +381,9 @@ void keyboard(unsigned char key, int x, int y)
         break;
     case '3':
         toggleCam = 2;
+        break;
+    case '4':
+        toggleCam = 3;
         break;
     case 'a':
         keyStatus[(int)('a')] = 1;
@@ -445,15 +450,18 @@ void keyboard(unsigned char key, int x, int y)
         break;
     }
     case 'A':
-        if (puppet.isActing()) break;
+        if (puppet.isActing())
+            break;
         puppet.kick();
         break;
     case 'P':
-        if (puppet.isActing()) break;
+        if (puppet.isActing())
+            break;
         puppet.punch();
         break;
     case 'D':
-        if (puppet.isActing()) break;
+        if (puppet.isActing())
+            break;
         puppet.dance();
         break;
     case '0':

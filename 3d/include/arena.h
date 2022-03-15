@@ -96,6 +96,10 @@ public:
   {
     return ArenaWidth;
   };
+  GLfloat getDepth()
+  {
+    return ArenaHeight / 2.0;
+  };
   GLfloat getRefX()
   {
     return refX;

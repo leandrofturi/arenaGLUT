@@ -28,13 +28,13 @@ void Puppet::init()
     // glEnable(GL_DEPTH_TEST);
 
     //Carrega as meshes dos arquivos
-    movIdle = meshPuppet.loadMeshAnim("blender/idle/ninja_idle_######.obj", 40);
-    movPunch = meshPuppet.loadMeshAnim("blender/punch/ninja_punching_######.obj", 35);
-    movKick = meshPuppet.loadMeshAnim("blender/kick/ninja_kick_######.obj", 35);
-    movDance = meshPuppet.loadMeshAnim("blender/dance/ninja_dance_######.obj", 90);
-    meshPuppet.loadTexture("img/stars1.bmp");
+    // movIdle = meshPuppet.loadMeshAnim("blender/idle/ninja_idle_######.obj", 40);
+    // movPunch = meshPuppet.loadMeshAnim("blender/punch/ninja_punching_######.obj", 35);
+    // movKick = meshPuppet.loadMeshAnim("blender/kick/ninja_kick_######.obj", 35);
+    // movDance = meshPuppet.loadMeshAnim("blender/dance/ninja_dance_######.obj", 90);
+    // meshPuppet.loadTexture("blender/Ch24_1001_Diffuse.bmp");
 
-    meshPuppet.drawInit(movIdle);
+    // meshPuppet.drawInit(movIdle);
 }
 
 GLfloat Puppet::getWidth()
@@ -331,4 +331,30 @@ Gunshot *Puppet::shoot()
 
     Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0);
     return shot;
+}
+
+GLfloat Puppet::getArmX()
+{
+    GLfloat posShotX = gZ;
+
+    if (walkDirection < 0)
+        posShotX += 2.0 * armWidth;        
+    posShotX -= armWidth * cos(gArmAngle * 0.0174533);
+    return posShotX;
+}
+
+GLfloat Puppet::getArmY()
+{
+    GLfloat posShotY = gY + getHeight();
+
+    posShotY -= 2.0 * bodyHeight / 3.0 + armDepth;
+    posShotY += armWidth * sin(gArmAngle * 0.0174533);
+
+    return posShotY;
+}
+
+GLfloat Puppet::getArmZ()
+{
+    GLfloat posShotZ = -gX;
+    return posShotZ;
 }

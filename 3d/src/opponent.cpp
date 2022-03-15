@@ -271,3 +271,50 @@ Gunshot *Opponent::shoot()
     Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0);
     return shot;
 }
+
+void Opponent::setInitial(std::list<Block *> *blocks, GLfloat arenaWidth, GLfloat arenaHeight, GLfloat arenaDepth)
+{
+    gXLim[0] = 0;
+    gXLim[1] = arenaWidth;
+
+    gZLim[0] = 0;
+    gZLim[1] = arenaDepth;
+
+    ArenaWidth = arenaWidth;
+    ArenaHeight = arenaHeight;
+    ArenaDepth = arenaDepth;
+
+    for (std::list<Block *>::iterator it = blocks->begin(); it != blocks->end(); ++it)
+    {
+        GLfloat x = -(*it)->getZ();
+        GLfloat y = (*it)->getY();
+        GLfloat z = -(*it)->getX();
+        GLfloat w = (*it)->getDepth();
+        GLfloat h = (*it)->getHeight();
+        GLfloat d = (*it)->getWidth();
+
+        if ((gX >= x) && (gX <= (x + w)) && ((gY + getHeight() * 1.2) >= y) && (gY <= y))
+        {
+            gXLim[0] = x;
+            gXLim[1] = x + w;
+            return;
+        }
+        if ((gX >= (x + w)) && ((gX - gXLim[0]) > (gX - x - w)) && (gY >= y) && (gY <= (y + h)))
+        {
+            gXLim[0] = x + w;
+        }
+        if ((gX <= x) && ((gXLim[1] - gX) > (x - gX)) && (gY >= y) && (gY <= (y + h)))
+        {
+            gXLim[1] = x;
+        }
+    }
+}
+
+void Opponent::takeRandMoviment()
+{
+    if (((gX - getWidth() - gSpeed) <= gXLim[0]) || ((gX + getWidth() + gSpeed) >= gXLim[1]))
+    {
+        // walkDirection *= -1;
+    }
+    walk(1);
+}

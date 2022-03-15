@@ -83,6 +83,7 @@ bool meshes::loadTexture(string path){
                                                //as unsigned numbers
                              image->pixels);               //The actual pixel data
     delete image;
+    return true;
 }
 
 //função para carregar o OBJ

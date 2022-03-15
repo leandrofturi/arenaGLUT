@@ -3,8 +3,10 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <math.h>
+#include <list>
 #include "geometries.h"
 #include "gunshot.h"
+#include "block.h"
 #include <cstdio>
 
 class Opponent
@@ -15,7 +17,6 @@ class Opponent
     GLfloat gSpeed = 0.5;
     GLfloat gCamXYAngle = 0.0;
     GLfloat gArmAngle = 0.0;
-    GLfloat gY0 = 0.0;
     GLfloat gYCollided = 0.0;
 
     GLfloat gLegHeight;
@@ -26,7 +27,15 @@ class Opponent
     OBJ *head;
     OBJ *body;
     GLuint textureOpponent;
-    int walkDirection = 1; // -1: back, 1: front
+
+    double walkDirection = ((double)rand() / (RAND_MAX)) * 2.0 - 1.0; // -1: back, 1: front
+
+    GLfloat ArenaWidth;
+    GLfloat ArenaHeight;
+    GLfloat ArenaDepth;
+    GLfloat gXLim[2];
+    GLfloat gY0 = 0.0;
+    GLfloat gZLim[2];
 
 public:
     void init();
@@ -37,6 +46,8 @@ public:
     void rotateArm(double inc);
     void handleGravity();
     Gunshot *shoot();
+    void setInitial(std::list<Block *> *blocks, GLfloat arenaWidth, GLfloat arenaHeight, GLfloat arenaDepth);
+    void takeRandMoviment();
 
 private:
     void drawLegs();

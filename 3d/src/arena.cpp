@@ -209,7 +209,11 @@ void Arena::load(Puppet *puppet)
       Block *block = new Block((*it)->x - refX, -(*it)->y + refY + ArenaHeight * 2.0, 0.0, (*it)->width, (*it)->height, ArenaHeight / 2.0);
       blocks.push_back(block);
     }
-    else if ((*it)->geomType == CIRCLE)
+  }
+
+  for (std::list<Item *>::iterator it = items.begin(); it != items.end(); it++)
+  {
+    if ((*it)->geomType == CIRCLE)
     {
       if ((fabs((*it)->fill.R - GREEN.R) < 1e-8) && (fabs((*it)->fill.G - GREEN.G) < 1e-8) && (fabs((*it)->fill.B - GREEN.B) < 1e-8))
       {
@@ -221,6 +225,8 @@ void Arena::load(Puppet *puppet)
       opponent->setZ(-(*it)->cx + refX);
       opponent->setY(-(*it)->cy + refY + ArenaHeight * 2.0);
       opponent->setY0(puppet->getY0());
+
+      opponent->setInitial(&blocks, ArenaWidth, ArenaHeight, ArenaHeight / 2.0);
 
       opponents.push_back(opponent);
     }
@@ -272,7 +278,7 @@ void Arena::opponentMove()
 {
   for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
   {
-    (*it)->walk(1);
+    (*it)->takeRandMoviment();
   }
 }
 
