@@ -13,10 +13,11 @@ namespace Collision
 {
     bool bump(Puppet *puppet, Block *block);
     bool bump(Puppet *puppet, std::list<Block *> blocks);
-
     bool bump(Puppet *puppet, Gunshot *gunshot);
+    bool bump(Puppet *puppet, Opponent *opponent);
+    bool bump(Opponent *opponent, Gunshot *gunshot);
     bool bump(Gunshot *gunshot, Block *block);
-    bool bump(Puppet *puppet, std::list<Gunshot *> gunshots, std::list<Block *> blocks);
+    bool bump(Puppet *puppet, std::list<Gunshot *> gunshots, std::list<Opponent *> opponnets, std::list<Block *> blocks);
 
     bool collision(Puppet *puppet, Arena *arena);
 }

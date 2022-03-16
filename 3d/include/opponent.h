@@ -37,6 +37,8 @@ class Opponent
     GLfloat gY0 = 0.0;
     GLfloat gZLim[2];
 
+    bool alive = 1;
+
 public:
     void init();
     void draw();
@@ -123,8 +125,13 @@ public:
     }
     void kill()
     {
+        alive = false;
         printf("MORREU\n");
     };
+    bool isAlive()
+    {
+        return alive;
+    }
 };
 
 #endif /* OPPONENT_H */

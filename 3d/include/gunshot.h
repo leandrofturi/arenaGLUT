@@ -76,7 +76,8 @@ public:
     {
         return radiusGunshot;
     };
-    void bump() {
+    void bump()
+    {
         gX = gY = gZ = maxDistance;
     }
 };

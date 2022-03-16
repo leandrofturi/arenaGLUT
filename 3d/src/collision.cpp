@@ -59,13 +59,13 @@ bool Collision::bump(Puppet *puppet, Gunshot *gunshot)
 
     GLfloat x2 = -gunshot->getZ();
     GLfloat y2 = gunshot->getY();
-    GLfloat z2 = -gunshot->getX();
+    GLfloat z2 = gunshot->getX();
     GLfloat w2 = gunshot->getWidth();
     GLfloat h2 = gunshot->getHeight();
     GLfloat d2 = gunshot->getDepth();
 
-    bool collisionX = x1 - w1 >= x2 && x2 + w2 > x1;
-    bool collisionY = y1 + h1 >= y2 && y1 <= y2;
+    bool collisionX = x1 + w1 >= x2 && x2 + w2 >= x1;
+    bool collisionY = y1 + h1 >= y2 - h2 && y1 <= y2;
     bool collisionZ = z1 - d1 <= z2 && z2 - d2 < z1 + d1;
 
     return collisionX && collisionY && collisionZ;
@@ -94,16 +94,62 @@ bool Collision::bump(Gunshot *gunshot, Block *block)
     return collisionX && collisionY && collisionZ;
 }
 
-bool Collision::bump(Puppet *puppet, std::list<Gunshot *> gunshots, std::list<Block *> blocks)
+bool Collision::bump(Puppet *puppet, Opponent *opponent)
+{
+    GLfloat x1 = puppet->getX();
+    GLfloat y1 = puppet->getY();
+    GLfloat z1 = puppet->getZ();
+    GLfloat w1 = puppet->getWidth();
+    GLfloat h1 = puppet->getHeight();
+    GLfloat d1 = puppet->getDepth();
+
+    GLfloat x2 = opponent->getX();
+    GLfloat y2 = opponent->getY();
+    GLfloat z2 = opponent->getZ();
+    GLfloat w2 = opponent->getWidth();
+    GLfloat h2 = opponent->getHeight();
+    GLfloat d2 = opponent->getDepth();
+
+    bool collisionX = x1 <= x2 + w2 && x1 + w1 >= x2;
+    bool collisionY = y1 <= y2 + h2 && y1 + h1 >= y2;
+    bool collisionZ = z1 - d1 <= z2 && z2 - d2 < z1 + d1;
+
+    return collisionX && collisionY && collisionZ;
+}
+
+bool Collision::bump(Opponent *opponent, Gunshot *gunshot)
+{
+    GLfloat x1 = opponent->getX();
+    GLfloat y1 = opponent->getY();
+    GLfloat z1 = opponent->getZ();
+    GLfloat w1 = opponent->getWidth();
+    GLfloat h1 = opponent->getHeight();
+    GLfloat d1 = opponent->getDepth();
+
+    GLfloat x2 = -gunshot->getZ();
+    GLfloat y2 = gunshot->getY();
+    GLfloat z2 = gunshot->getX();
+    GLfloat w2 = gunshot->getWidth();
+    GLfloat h2 = gunshot->getHeight();
+    GLfloat d2 = gunshot->getDepth();
+
+    bool collisionX = x1 + w1 >= x2 && x2 + w2 >= x1;
+    bool collisionY = y1 + h1 >= y2 - h2 && y1 <= y2;
+    bool collisionZ = z1 - d1 <= z2 && z2 - d2 < z1 + d1;
+
+    return collisionX && collisionY && collisionZ;
+}
+
+bool Collision::bump(Puppet *puppet, std::list<Gunshot *> gunshots, std::list<Opponent *> opponnets, std::list<Block *> blocks)
 {
     for (std::list<Gunshot *>::iterator it = gunshots.begin(); it != gunshots.end(); ++it)
     {
         if (bump(puppet, (*it)))
         {
-            (*it)->bump();
             puppet->kill();
             return true;
         }
+
         for (std::list<Block *>::iterator jt = blocks.begin(); jt != blocks.end(); ++jt)
         {
             if (bump((*it), (*jt)))
@@ -112,8 +158,24 @@ bool Collision::bump(Puppet *puppet, std::list<Gunshot *> gunshots, std::list<Bl
                 return true;
             }
         }
-        // (*it)->bump();
+
+        for (std::list<Opponent *>::iterator jt = opponnets.begin(); jt != opponnets.end(); ++jt)
+        {
+            if (bump(puppet, (*jt)))
+            {
+                (*jt)->setDirection(-(*jt)->getWalkDir());
+                return true;
+            }
+
+            if (bump((*jt), (*it)))
+            {
+                (*it)->bump();
+                (*jt)->kill();
+                return true;
+            }
+        }
     }
+
     return false;
 }
 
@@ -121,7 +183,7 @@ bool Collision::bump(Puppet *puppet, std::list<Gunshot *> gunshots, std::list<Bl
 
 bool Collision::collision(Puppet *puppet, Arena *arena)
 {
-    if (bump(puppet, arena->gunshots, arena->blocks))
+    if (bump(puppet, arena->gunshots, arena->opponents, arena->blocks))
         ;
     return bump(puppet, arena->blocks);
 }
