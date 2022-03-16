@@ -238,8 +238,8 @@ void Arena::load(Puppet *puppet)
       }
       xLim[0] = -xLim[0] + refX;
       xLim[1] = -xLim[1] + refX;
-      zLim[0] = 0.0;
-      zLim[1] = ArenaHeight / 2.0;
+      zLim[0] = -ArenaHeight / 4.0;
+      zLim[1] = ArenaHeight / 4.0;
       if (y0 < -9999)
         y0 = puppet->getY0();
       else
@@ -308,6 +308,34 @@ void Arena::opponentMove()
   for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
   {
     (*it)->takeRandMoviment();
+  }
+}
+
+void Arena::opponentRotate(Puppet *puppet)
+{
+  GLfloat x1 = puppet->getX();
+  GLfloat y1 = puppet->getY();
+  GLfloat z1 = puppet->getZ();
+
+  for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
+  {
+    GLfloat x2 = (*it)->getX();
+    GLfloat y2 = (*it)->getY();
+    GLfloat z2 = (*it)->getZ();
+
+    if (z1 > z2)
+      (*it)->setCamXYAngle(-57.2958 * atan((x2 - x1) / (z2 - z1 + 0.000001) + 0.000001));
+    else
+      (*it)->setCamXYAngle(-57.2958 * atan((x1 - x2) / (z1 - z2 + 0.000001) + 0.000001));
+
+    if (z1 > z2 && (*it)->getWalkDir() > 0)
+      (*it)->setDirection(-1);
+    else if (z2 > z1 && (*it)->getWalkDir() < 0)
+      (*it)->setDirection(1);
+
+    printf("%.2lf\t%.2lf\t%.2lf\t%.2lf\n", x1, y1, z1, puppet->getCamXYAngle());
+    printf("%.2lf\t%.2lf\t%.2lf\t%.2lf\n\n", x2, y2, z2, (*it)->getCamXYAngle());
+    // (*it)->takeRandMoviment();
   }
 }
 

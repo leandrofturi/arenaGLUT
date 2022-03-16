@@ -115,6 +115,7 @@ public:
   void draw();
   void move();
   void opponentMove();
+  void opponentRotate(Puppet *puppet);
   void opponentShot(Puppet *puppet);
   void handleGravity();
 };

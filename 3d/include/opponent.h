@@ -28,7 +28,7 @@ class Opponent
     OBJ *body;
     GLuint textureOpponent;
 
-    int walkDirection = 1; // -1: back, 1: front
+    int walkDirection = (int)((double)rand() / (RAND_MAX)) * 2.0 - 1.0; // -1: back, 1: front
 
     GLfloat ArenaWidth;
     GLfloat ArenaHeight;
@@ -94,6 +94,14 @@ public:
     void setZ(GLfloat z)
     {
         gZ = z;
+    }
+    GLfloat getCamXYAngle()
+    {
+        return gCamXYAngle;
+    }
+    void setCamXYAngle(GLfloat angle)
+    {
+        gCamXYAngle = angle;
     }
     void elevate(bool c)
     {

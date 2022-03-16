@@ -83,6 +83,10 @@ public:
     GLfloat getArmX();
     GLfloat getArmY();
     GLfloat getArmZ();
+    GLfloat getCamXYAngle()
+    {
+        return gCamXYAngle;
+    }
     int getWalkDir()
     {
         return walkDirection;

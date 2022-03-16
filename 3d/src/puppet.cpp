@@ -130,6 +130,7 @@ int walkStep = 0; // 5 steps of motion
 
 void Puppet::walk(double inc)
 {
+    // printf("%.2lf\t%.2lf\t%.2lf\t%.2lf\n", gX, gY, gZ, gCamXYAngle);
     if (inc < 0)
         walkDirection = 1;
     else

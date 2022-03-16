@@ -361,6 +361,7 @@ void idle()
         puppet.handleGravity();
     }
     arena.move();
+    arena.opponentRotate(&puppet);
     arena.handleGravity();
 
     glutPostRedisplay();
