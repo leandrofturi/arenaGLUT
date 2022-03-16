@@ -333,9 +333,12 @@ void Arena::opponentRotate(Puppet *puppet)
     else if (z2 > z1 && (*it)->getWalkDir() < 0)
       (*it)->setDirection(1);
 
-    printf("%.2lf\t%.2lf\t%.2lf\t%.2lf\n", x1, y1, z1, puppet->getCamXYAngle());
-    printf("%.2lf\t%.2lf\t%.2lf\t%.2lf\n\n", x2, y2, z2, (*it)->getCamXYAngle());
-    // (*it)->takeRandMoviment();
+    if (y1 > y2)
+      (*it)->setArmAngle(fmax(-45, -57.2958 * atan((y1 - y2) / (z2 - z1 + 0.000001) + 0.000001)));
+    else
+      (*it)->setArmAngle(fmin(45, 57.2958 * atan((y2 - y1) / (z2 - z1 + 0.000001) + 0.000001)));
+    if (z2 > z1)
+      (*it)->setArmAngle(-(*it)->getArmAngle());
   }
 }
 

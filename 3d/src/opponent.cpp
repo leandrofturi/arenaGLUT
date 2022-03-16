@@ -282,7 +282,8 @@ void Opponent::setLimits(GLfloat xLim[2], GLfloat zLim[2])
 
 void Opponent::takeRandMoviment()
 {
-    if ((gZ + getWidth() >= gXLim[0]) || (gZ - getWidth() <= gXLim[1]))
+    if ((gZ + getWidth() >= gXLim[0]) || (gZ - getWidth() <= gXLim[1]) ||
+        (gX + getWidth() <= gZLim[0]) || (gX - getWidth() >= gZLim[1]))
     {
         walkDirection *= -1;
     }

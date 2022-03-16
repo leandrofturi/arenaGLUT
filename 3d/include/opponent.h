@@ -103,6 +103,14 @@ public:
     {
         gCamXYAngle = angle;
     }
+    GLfloat getArmAngle()
+    {
+        return gArmAngle;
+    }
+    void setArmAngle(GLfloat angle)
+    {
+        gArmAngle = angle;
+    }
     void elevate(bool c)
     {
         gYCollided = 0.0;
