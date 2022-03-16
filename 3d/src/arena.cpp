@@ -328,10 +328,12 @@ void Arena::opponentRotate(Puppet *puppet)
     else
       (*it)->setCamXYAngle(-57.2958 * atan((x1 - x2) / (z1 - z2 + 0.000001) + 0.000001));
 
+    /*
     if (z1 > z2 && (*it)->getWalkDir() > 0)
       (*it)->setDirection(-1);
     else if (z2 > z1 && (*it)->getWalkDir() < 0)
       (*it)->setDirection(1);
+    */
 
     if (y1 > y2)
       (*it)->setArmAngle(fmax(-45, -57.2958 * atan((y1 - y2) / (z2 - z1 + 0.000001) + 0.000001)));

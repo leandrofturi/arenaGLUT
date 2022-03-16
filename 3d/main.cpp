@@ -343,18 +343,32 @@ void idle()
         camXYAngle += (int)inc % 360;
         puppet.rotate(inc);
     }
-    if (keyStatus[(int)('w')])
+    if (puppet.isElevated())
     {
-        puppet.walk(bump && !puppet.isElevated() ? inc : -inc);
+        if (keyStatus[(int)('w')])
+        {
+            puppet.walk(bump ? -inc : inc);
+        }
+        if (keyStatus[(int)('s')])
+        {
+            puppet.walk(bump ? inc : -inc);
+        }
     }
-    if (keyStatus[(int)('s')])
+    else
     {
-        puppet.walk(bump && !puppet.isElevated() ? -inc : inc);
+        if (keyStatus[(int)('w')])
+        {
+            puppet.walk(bump ? inc : -inc);
+        }
+        if (keyStatus[(int)('s')])
+        {
+            puppet.walk(bump ? -inc : inc);
+        }
     }
-    if (keyStatus[(int)(' ')])
+
+    if (keyStatus[(int)(' ')] && (!bump || puppet.isElevated()))
     {
-        if (!bump || puppet.isElevated())
-            puppet.jump(inc);
+        puppet.jump(inc);
     }
     else
     {

@@ -2,6 +2,9 @@
 #include "../include/collision.h"
 #include "../include/geometries.h"
 
+int i = 0;
+int bompBottom = 0;
+
 bool Collision::bump(Puppet *puppet, Block *block)
 {
     GLfloat x1 = puppet->getX();
@@ -19,8 +22,13 @@ bool Collision::bump(Puppet *puppet, Block *block)
     GLfloat d2 = block->getWidth();
 
     bool collisionX = x1 - w1 >= x2 && x2 + w2 > x1;
-    bool collisionY = y1 + h1 >= y2 && y1 <= y2;
+    bool collisionY = y1 + h1 >= y2 - h2 && y1 <= y2;
     bool collisionZ = z1 - d1 <= z2 && z2 - d2 < z1 + d1;
+
+    if (collisionX && collisionY && collisionZ && fabs(y1 - y2) <= 0.1 * y1)
+        bompBottom = 1;
+    else
+        bompBottom = 0;
 
     return collisionX && collisionY && collisionZ;
 }
@@ -31,7 +39,8 @@ bool Collision::bump(Puppet *puppet, std::list<Block *> blocks)
     {
         if (bump(puppet, (*it)))
         {
-            puppet->elevate(true);
+            if (bompBottom)
+                puppet->elevate(true);
             return true;
         }
     }
