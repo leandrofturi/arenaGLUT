@@ -28,7 +28,7 @@ class Opponent
     OBJ *body;
     GLuint textureOpponent;
 
-    double walkDirection = ((double)rand() / (RAND_MAX)) * 2.0 - 1.0; // -1: back, 1: front
+    int walkDirection = 1; // -1: back, 1: front
 
     GLfloat ArenaWidth;
     GLfloat ArenaHeight;
@@ -46,7 +46,7 @@ public:
     void rotateArm(double inc);
     void handleGravity();
     Gunshot *shoot();
-    void setInitial(std::list<Block *> *blocks, GLfloat arenaWidth, GLfloat arenaHeight, GLfloat arenaDepth);
+    void setLimits(GLfloat xLim[2], GLfloat zLim[2]);
     void takeRandMoviment();
 
 private:
@@ -105,7 +105,8 @@ public:
     {
         return fabs(gYCollided) >= 1e-4;
     }
-    void kill() {
+    void kill()
+    {
         printf("MORREU\n");
     };
 };

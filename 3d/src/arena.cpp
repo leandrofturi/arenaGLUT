@@ -200,19 +200,6 @@ void Arena::load(Puppet *puppet)
   // loading
   for (std::list<Item *>::iterator it = items.begin(); it != items.end(); it++)
   {
-    if ((*it)->geomType == RECT)
-    {
-      if ((fabs((*it)->fill.R - BLUE.R) < 1e-8) && (fabs((*it)->fill.G - BLUE.G) < 1e-8) && (fabs((*it)->fill.B - BLUE.B) < 1e-8))
-      {
-        continue;
-      }
-      Block *block = new Block((*it)->x - refX, -(*it)->y + refY + ArenaHeight * 2.0, 0.0, (*it)->width, (*it)->height, ArenaHeight / 2.0);
-      blocks.push_back(block);
-    }
-  }
-
-  for (std::list<Item *>::iterator it = items.begin(); it != items.end(); it++)
-  {
     if ((*it)->geomType == CIRCLE)
     {
       if ((fabs((*it)->fill.R - GREEN.R) < 1e-8) && (fabs((*it)->fill.G - GREEN.G) < 1e-8) && (fabs((*it)->fill.B - GREEN.B) < 1e-8))
@@ -224,11 +211,53 @@ void Arena::load(Puppet *puppet)
       opponent->init();
       opponent->setZ(-(*it)->cx + refX);
       opponent->setY(-(*it)->cy + refY + ArenaHeight * 2.0);
-      opponent->setY0(puppet->getY0());
 
-      opponent->setInitial(&blocks, ArenaWidth, ArenaHeight, ArenaHeight / 2.0);
+      GLfloat xLim[2] = {-99999, 99999};
+      GLfloat zLim[2] = {-99999, 99999};
+      GLfloat y0 = -99999;
+      for (std::list<Item *>::iterator jt = items.begin(); jt != items.end(); jt++)
+      {
+        if ((*jt)->geomType == RECT)
+        {
+          GLfloat x = (*jt)->x;
+          GLfloat width = (*jt)->width;
+          GLfloat y = (*jt)->y;
+          GLfloat height = (*jt)->height;
+
+          if ((*it)->cx >= x && (*it)->cx <= x + width && (*it)->cy <= y && y0 < y)
+          {
+            xLim[0] = x - (*it)->r;
+            xLim[1] = x + width - (*it)->r;
+            y0 = y;
+          }
+          else if ((*it)->cx > x && xLim[0] < x && (*it)->cy >= y)
+            xLim[0] = x;
+          else if ((*it)->cx < x && xLim[1] > x && (*it)->cy >= y)
+            xLim[1] = x;
+        }
+      }
+      xLim[0] = -xLim[0] + refX;
+      xLim[1] = -xLim[1] + refX;
+      zLim[0] = 0.0;
+      zLim[1] = ArenaHeight / 2.0;
+      if (y0 < -9999)
+        y0 = puppet->getY0();
+      else
+        y0 = -y0 + refY + ArenaHeight * 2.0;
+      opponent->setLimits(xLim, zLim);
+      opponent->setY0(y0);
 
       opponents.push_back(opponent);
+    }
+
+    if ((*it)->geomType == RECT)
+    {
+      if ((fabs((*it)->fill.R - BLUE.R) < 1e-8) && (fabs((*it)->fill.G - BLUE.G) < 1e-8) && (fabs((*it)->fill.B - BLUE.B) < 1e-8))
+      {
+        continue;
+      }
+      Block *block = new Block((*it)->x - refX, -(*it)->y + refY + ArenaHeight * 2.0, 0.0, (*it)->width, (*it)->height, ArenaHeight / 2.0);
+      blocks.push_back(block);
     }
   }
 }

@@ -3,7 +3,7 @@
 #include <list>
 #include <iostream>
 #include <list>
-#include "../tinyxml2/tinyxml2.h"
+#include "tinyxml2.h"
 #include "geometries.h"
 #include "puppet.h"
 #include "block.h"
