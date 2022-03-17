@@ -22,19 +22,19 @@ void Puppet::init()
     head = Geometries::CreateSphere(radiusHead, 10);
     texturePuppet = Loader::LoadTextureRAW("img/sun1.bmp");
 
-    // glShadeModel(GL_SMOOTH);
-    // glEnable(GL_LIGHTING);
-    // glEnable(GL_LIGHT0);
-    // glEnable(GL_DEPTH_TEST);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
 
     //Carrega as meshes dos arquivos
-    // movIdle = meshPuppet.loadMeshAnim("blender/idle/ninja_idle_######.obj", 40);
-    // movPunch = meshPuppet.loadMeshAnim("blender/punch/ninja_punching_######.obj", 35);
-    // movKick = meshPuppet.loadMeshAnim("blender/kick/ninja_kick_######.obj", 35);
-    // movDance = meshPuppet.loadMeshAnim("blender/dance/ninja_dance_######.obj", 90);
-    // meshPuppet.loadTexture("blender/Ch24_1001_Diffuse.bmp");
+    movIdle = meshPuppet.loadMeshAnim("blender/idle/ninja_idle_######.obj", 40);
+    movPunch = meshPuppet.loadMeshAnim("blender/punch/ninja_punching_######.obj", 35);
+    movKick = meshPuppet.loadMeshAnim("blender/kick/ninja_kick_######.obj", 35);
+    movDance = meshPuppet.loadMeshAnim("blender/dance/ninja_dance_######.obj", 90);
+    meshPuppet.loadTexture("blender/Ch24_1001_Diffuse.bmp");
 
-    // meshPuppet.drawInit(movIdle);
+    meshPuppet.drawInit(movIdle);
 }
 
 GLfloat Puppet::getWidth()
