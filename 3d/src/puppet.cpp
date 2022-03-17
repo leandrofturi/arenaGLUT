@@ -130,8 +130,9 @@ int walkStep = 0; // 5 steps of motion
 
 void Puppet::walk(double inc)
 {
-    if ((gZ > 0.0) || (gZ < -ArenaWidth) ||
-        (gX < -ArenaHeight / 4.0) || (gX > ArenaHeight / 4.0))
+    if (((gZ > 0.0) || (gZ < -ArenaWidth) ||
+         (gX < -ArenaHeight / 4.0) || (gX > ArenaHeight / 4.0)) &&
+        !ghost)
         inc *= -1;
 
     // printf("%.2lf\t%.2lf\t%.2lf\t%.2lf\n", gX, gY, gZ, gCamXYAngle);
