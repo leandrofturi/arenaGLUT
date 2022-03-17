@@ -22,6 +22,9 @@ const GLint ViewingHeight = 500;
 // Identificadores de textura
 GLuint texturePlane;
 
+int ghost = 1;
+int endGame = 0;
+
 // Camera controls
 double camDist = 50;
 double camXYAngle = 0;
@@ -177,9 +180,14 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
+    if (endGame)
+        PrintText(0.1, 0.1, "Voce perdeu", 0, 1, 0);
     if (toggleCam == 0)
     {
-        PrintText(0.1, 0.1, "Movable Camera", 0, 1, 0);
+        if (endGame)
+            PrintText(0.1, 0.1, "Voce perdeu", 0, 1, 0);
+        else
+            PrintText(0.1, 0.1, "Movable Camera", 0, 1, 0);
         glTranslatef(0.0, -puppet.getHeight(), -camDist);
         glRotatef(camXZAngle, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
@@ -187,14 +195,20 @@ void display(void)
     }
     else if (toggleCam == 1)
     {
-        PrintText(0.1, 0.1, "Static Camera at a Distance", 0, 1, 0);
+        if (endGame)
+            PrintText(0.1, 0.1, "Voce perdeu", 0, 1, 0);
+        else
+            PrintText(0.1, 0.1, "Static Camera at a Distance", 0, 1, 0);
         gluLookAt(arena.getHeight() / 2.0 + camDist * 2.0, arena.getHeight() * 1.5, puppet.getZ(),
                   arena.getHeight() / 2.0, arena.getHeight() * 1.5, puppet.getZ(),
                   0, 1, 0);
     }
     else if (toggleCam == 2)
     {
-        PrintText(0.1, 0.1, "Puppet Camera", 0, 1, 0);
+        if (endGame)
+            PrintText(0.1, 0.1, "Voce perdeu", 0, 1, 0);
+        else
+            PrintText(0.1, 0.1, "Puppet Camera", 0, 1, 0);
         glTranslatef(0.0, -puppet.getHeight(), puppet.getDepth());
         glRotatef(camXZAngle, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
@@ -329,6 +343,12 @@ void passiveMouseMotion(int x, int y)
 
 void idle()
 {
+    if (!puppet.isAlive() && !ghost)
+    {
+        endGame = 1;
+        return;
+    }
+
     double inc = INC_KEYIDLE;
 
     bool bump = Collision::collision(&puppet, &arena);
@@ -343,7 +363,7 @@ void idle()
         camXYAngle += (int)inc % 360;
         puppet.rotate(inc);
     }
-    if (puppet.isElevated())
+    if (puppet.isElevated() && !puppet.bumpOpponent())
     {
         if (keyStatus[(int)('w')])
         {
@@ -388,6 +408,10 @@ void keyboard(unsigned char key, int x, int y)
     static bool smoothEnebled = true;
     switch (key)
     {
+    case 'G':
+        ghost = !ghost;
+        puppet.ghost(ghost);
+        break;
     case '1':
         toggleCam = 0;
         break;
@@ -497,13 +521,15 @@ void keyup(unsigned char key, int x, int y)
 void opponentShot(int time)
 {
     arena.opponentShot(&puppet);
-    glutTimerFunc(500, opponentShot, 0.0);
+    if (!endGame)
+        glutTimerFunc(500, opponentShot, 0.0);
 }
 
 void opponentMove(int time)
 {
     arena.opponentMove();
-    glutTimerFunc(100, opponentMove, 0.0);
+    if (!endGame)
+        glutTimerFunc(100, opponentMove, 0.0);
 }
 
 int main(int argc, char **argv)

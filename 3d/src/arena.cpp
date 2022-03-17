@@ -197,6 +197,9 @@ void Arena::load(Puppet *puppet)
     }
   }
 
+  puppet->setArenaWidth(ArenaWidth);
+  puppet->setArenaHeight(ArenaHeight);
+
   // loading
   for (std::list<Item *>::iterator it = items.begin(); it != items.end(); it++)
   {

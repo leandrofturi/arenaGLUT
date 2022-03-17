@@ -130,6 +130,10 @@ int walkStep = 0; // 5 steps of motion
 
 void Puppet::walk(double inc)
 {
+    if ((gZ > 0.0) || (gZ < -ArenaWidth) ||
+        (gX < -ArenaHeight / 4.0) || (gX > ArenaHeight / 4.0))
+        inc *= -1;
+
     // printf("%.2lf\t%.2lf\t%.2lf\t%.2lf\n", gX, gY, gZ, gCamXYAngle);
     if (inc < 0)
         walkDirection = 1;
@@ -339,7 +343,7 @@ GLfloat Puppet::getArmX()
     GLfloat posShotX = gZ;
 
     if (walkDirection < 0)
-        posShotX += 2.0 * armWidth;        
+        posShotX += 2.0 * armWidth;
     posShotX -= armWidth * cos(gArmAngle * 0.0174533);
     return posShotX;
 }

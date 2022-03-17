@@ -137,6 +137,8 @@ bool Collision::bump(Opponent *opponent, Gunshot *gunshot)
     bool collisionY = y1 + h1 >= y2 - h2 && y1 <= y2;
     bool collisionZ = z1 - d1 <= z2 && z2 - d2 < z1 + d1;
 
+    // printf("%.2f")
+
     return collisionX && collisionY && collisionZ;
 }
 
@@ -155,25 +157,33 @@ bool Collision::bump(Puppet *puppet, std::list<Gunshot *> gunshots, std::list<Op
             if (bump((*it), (*jt)))
             {
                 (*it)->bump();
-                return true;
             }
         }
 
-        for (std::list<Opponent *>::iterator jt = opponnets.begin(); jt != opponnets.end(); ++jt)
+        for (std::list<Opponent *>::iterator jt = opponnets.begin(); jt != opponnets.end();)
         {
             if (bump(puppet, (*jt)))
             {
                 (*jt)->setDirection(-(*jt)->getWalkDir());
+                puppet->bumpOpponent(true);
+                puppet->elevate(true);
                 return true;
             }
 
             if (bump((*jt), (*it)))
             {
                 (*it)->bump();
-                (*jt)->kill();
-                return true;
+                jt = opponnets.erase(jt);
+                // (*jt)->kill();
+                // return true;
+            }
+            else
+            {
+                ++jt;
             }
         }
+        puppet->bumpOpponent(false);
+        puppet->elevate(false);
     }
 
     return false;

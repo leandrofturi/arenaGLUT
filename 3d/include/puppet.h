@@ -19,6 +19,9 @@ class Puppet
     GLfloat gY0 = 0.0;
     GLfloat gYCollided = 0.0;
 
+    GLfloat ArenaHeight = 0.0;
+    GLfloat ArenaWidth = 0.0;
+
     GLfloat gLegHeight;
     GLfloat gThighHeight;
     GLfloat thetaLeg[2] = {0.0, 0.0};
@@ -29,6 +32,7 @@ class Puppet
     GLuint texturePuppet;
     meshes meshPuppet;
     int walkDirection = 1; // -1: back, 1: front
+    int gBumpOpponent = 0;
 
     bool animated = false;
 
@@ -43,6 +47,9 @@ class Puppet
     int punching = 0;
     int dancing = 0;
     int acting = 0;
+
+    int alive = 1;
+    int gGhost = 1;
 
 public:
     void init();
@@ -111,11 +118,21 @@ public:
     {
         gZ = z;
     }
+    void setArenaWidth(GLfloat arenaWidth)
+    {
+        ArenaWidth = arenaWidth;
+    }
+    void setArenaHeight(GLfloat arenaHeight)
+    {
+        ArenaHeight = arenaHeight;
+    }
     void elevate(bool c)
     {
         gYCollided = 0.0;
         if (c)
             gYCollided = gY;
+        if (gBumpOpponent)
+            gYCollided = gY + getHeight();
     }
     bool isElevated()
     {
@@ -123,8 +140,17 @@ public:
     }
     void kill()
     {
-        printf("MORREU\n");
+        if (!gGhost)
+            alive = 0;
     };
+    bool isAlive()
+    {
+        return alive;
+    };
+    void ghost(bool c)
+    {
+        gGhost = c;
+    }
     bool isActing()
     {
         return acting;
@@ -144,6 +170,16 @@ public:
     void animate()
     {
         animated = !animated;
+    }
+    void bumpOpponent(bool c)
+    {
+        gBumpOpponent = 0;
+        if (c)
+            gBumpOpponent = 1;
+    }
+    bool bumpOpponent()
+    {
+        return gBumpOpponent;
     }
 };
 
