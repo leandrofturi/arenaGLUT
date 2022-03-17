@@ -408,38 +408,38 @@ void keyboard(unsigned char key, int x, int y)
     static bool smoothEnebled = true;
     switch (key)
     {
-    case 'G':
+    case 'G': // modo fatasma: n morre e n tem limite
         ghost = !ghost;
         puppet.ghost(ghost);
         break;
-    case '1':
+    case '1': // camera
         toggleCam = 0;
         break;
-    case '2':
+    case '2': // camera
         toggleCam = 1;
         break;
-    case '3':
+    case '3': // camera
         toggleCam = 2;
         break;
-    case '4':
+    case '4': // camera
         toggleCam = 3;
         break;
-    case 'a':
+    case 'a': // moviment
         keyStatus[(int)('a')] = 1;
         break;
-    case 'd':
+    case 'd': // moviment
         keyStatus[(int)('d')] = 1;
         break;
-    case 'w':
+    case 'w': // moviment
         keyStatus[(int)('w')] = 1;
         break;
-    case 's':
+    case 's': // moviment
         keyStatus[(int)('s')] = 1;
         break;
-    case ' ':
+    case ' ': // junp
         keyStatus[(int)(' ')] = 1;
         break;
-    case 't':
+    case 't': // texture
         if (textureEnebled)
         {
             glDisable(GL_TEXTURE_2D);
@@ -450,7 +450,7 @@ void keyboard(unsigned char key, int x, int y)
         }
         textureEnebled = !textureEnebled;
         break;
-    case 'l':
+    case 'l': // light
         if (lightingEnebled)
         {
             glDisable(GL_LIGHTING);
@@ -461,7 +461,7 @@ void keyboard(unsigned char key, int x, int y)
         }
         lightingEnebled = !lightingEnebled;
         break;
-    case 'S':
+    case 'S': // smooth
         if (smoothEnebled)
         {
             glShadeModel(GL_FLAT);
@@ -472,7 +472,7 @@ void keyboard(unsigned char key, int x, int y)
         }
         smoothEnebled = !smoothEnebled;
         break;
-    case '+':
+    case '+': // zoom
     {
         int inc = camAngle >= 180 ? 0 : 1;
         camAngle += inc;
@@ -481,29 +481,29 @@ void keyboard(unsigned char key, int x, int y)
                      glutGet(GLUT_WINDOW_HEIGHT));
         break;
     }
-    case '-':
+    case '-': // zoom
     {
         int inc = camAngle <= 5 ? 0 : 1;
         camAngle -= inc;
         changeCamera(camAngle, glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
         break;
     }
-    case 'A':
+    case 'A': // animação
         if (puppet.isActing())
             break;
         puppet.kick();
         break;
-    case 'P':
+    case 'P': // animação
         if (puppet.isActing())
             break;
         puppet.punch();
         break;
-    case 'D':
+    case 'D': // animação
         if (puppet.isActing())
             break;
         puppet.dance();
         break;
-    case '0':
+    case '0': // habilitar animação
         puppet.animate();
         break;
     case 27:
