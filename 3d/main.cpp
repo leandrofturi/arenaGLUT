@@ -229,19 +229,20 @@ void display(void)
             0.0, 1.0, 0.0);
     }
 
-    GLfloat light_position[] = {puppet.getX() - puppet.getDepth(), puppet.getY(), puppet.getZ() + puppet.getDepth(), 1.0};
+    GLfloat light_position[] = {puppet.getX(), puppet.getY() + puppet.getHeight(), puppet.getZ(), 1.0};
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
     glPushMatrix();
     glTranslatef(0.0, arena.getHeight(), 0.0);
     glScalef(arena.getHeight() / 2.0, 1.0, arena.getWidth());
-    DisplayPlane(texturePlane);
+    // DisplayPlane(texturePlane);
     glPopMatrix();
 
-    DrawAxes();
+    // DrawAxes();
     glPushMatrix();
     puppet.draw();
     glPopMatrix();
+
     glPushMatrix();
     arena.draw();
     glPopMatrix();

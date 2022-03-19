@@ -263,6 +263,8 @@ void Arena::load(Puppet *puppet)
       blocks.push_back(block);
     }
   }
+
+  lava.init(ArenaHeight / 2.0, ArenaHeight, ArenaWidth);
 }
 
 void Arena::draw()
@@ -280,6 +282,7 @@ void Arena::draw()
   {
     (*it)->draw();
   }
+
   glPopMatrix();
 
   for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
@@ -288,6 +291,10 @@ void Arena::draw()
     (*it)->draw();
     glPopMatrix();
   }
+
+  glPushMatrix();
+  lava.draw();
+  glPopMatrix();
 }
 
 void Arena::move()

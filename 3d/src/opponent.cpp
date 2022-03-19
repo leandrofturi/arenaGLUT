@@ -268,7 +268,7 @@ Gunshot *Opponent::shoot()
     posShotX -= armWidth * cos(gArmAngle * 0.0174533);
     posShotY += armWidth * sin(gArmAngle * 0.0174533);
 
-    Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0);
+    Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0, 1);
     return shot;
 }
 

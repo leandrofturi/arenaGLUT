@@ -9,6 +9,7 @@
 #include "block.h"
 #include "opponent.h"
 #include "gunshot.h"
+#include "lava.h"
 
 enum GeomType
 {
@@ -78,6 +79,8 @@ public:
   std::list<Block *> blocks;
   std::list<Opponent *> opponents;
   std::list<Gunshot *> gunshots;
+
+  Lava lava;
 
 public:
   Arena(){};

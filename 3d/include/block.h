@@ -12,6 +12,9 @@ class Block
     GLfloat gHeight;
     GLfloat gDepth;
 
+    GLuint floorTexture;
+    GLuint displayList;
+
 public:
     Block(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height, GLfloat depth)
     {
@@ -21,8 +24,11 @@ public:
         gWidth = width;
         gHeight = height;
         gDepth = depth;
+        
+        init();
     };
 
+    void init();
     void draw();
     GLfloat getX()
     {

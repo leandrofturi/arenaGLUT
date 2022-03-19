@@ -22,19 +22,14 @@ void Puppet::init()
     head = Geometries::CreateSphere(radiusHead, 10);
     texturePuppet = Loader::LoadTextureRAW("img/sun1.bmp");
 
-    glShadeModel(GL_SMOOTH);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_DEPTH_TEST);
-
     //Carrega as meshes dos arquivos
-    movIdle = meshPuppet.loadMeshAnim("blender/idle/ninja_idle_######.obj", 40);
-    movPunch = meshPuppet.loadMeshAnim("blender/punch/ninja_punching_######.obj", 35);
-    movKick = meshPuppet.loadMeshAnim("blender/kick/ninja_kick_######.obj", 35);
-    movDance = meshPuppet.loadMeshAnim("blender/dance/ninja_dance_######.obj", 90);
-    meshPuppet.loadTexture("blender/Ch24_1001_Diffuse.bmp");
+    // movIdle = meshPuppet.loadMeshAnim("blender/idle/ninja_idle_######.obj", 40);
+    // movPunch = meshPuppet.loadMeshAnim("blender/punch/ninja_punching_######.obj", 35);
+    // movKick = meshPuppet.loadMeshAnim("blender/kick/ninja_kick_######.obj", 35);
+    // movDance = meshPuppet.loadMeshAnim("blender/dance/ninja_dance_######.obj", 90);
+    // meshPuppet.loadTexture("blender/Ch24_1001_Diffuse.bmp");
 
-    meshPuppet.drawInit(movIdle);
+    // meshPuppet.drawInit(movIdle);
 }
 
 GLfloat Puppet::getWidth()
@@ -183,7 +178,8 @@ void Puppet::walk(double inc)
 
 void Puppet::jump(double inc)
 {
-    gY = gY + gSpeed * inc;
+    if (alive || gGhost)
+        gY = gY + gSpeed * inc;
 }
 
 void Puppet::rotate(double inc)
@@ -292,12 +288,7 @@ void Puppet::drawHead()
     GLfloat materialColor[] = {1.0, 1.0, 0.0, 1};
     GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1};
     GLfloat mat_shininess[] = {50.0};
-    GLfloat color_r[] = {1.0, 0.0, 0.0, 1.0};
-    GLfloat color_g[] = {0.0, 1.0, 0.0, 1.0};
-    GLfloat color_b[] = {0.0, 0.0, 1.0, 1.0};
-
-    glPushMatrix();
-    glColor3f(1, 0, 0);
+    glColor3f(1, 1, 0);
 
     glMaterialfv(GL_FRONT, GL_EMISSION, materialEmission);
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, materialColor);
@@ -316,7 +307,6 @@ void Puppet::drawHead()
         glVertex3f(head->vtx[i].X, head->vtx[i].Y, head->vtx[i].Z);
     }
     glEnd();
-    glPopMatrix();
 }
 
 Gunshot *Puppet::shoot()
@@ -335,7 +325,7 @@ Gunshot *Puppet::shoot()
     posShotX -= armWidth * cos(gArmAngle * 0.0174533);
     posShotY += armWidth * sin(gArmAngle * 0.0174533);
 
-    Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0);
+    Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0, 0);
     return shot;
 }
 

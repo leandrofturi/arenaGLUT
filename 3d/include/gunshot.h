@@ -27,8 +27,10 @@ class Gunshot
 
     OBJ *head;
 
+    int gType = 0;
+
 public:
-    Gunshot(GLfloat x, GLfloat y, GLfloat z, GLfloat angleXZ, GLfloat angleY, GLfloat speed)
+    Gunshot(GLfloat x, GLfloat y, GLfloat z, GLfloat angleXZ, GLfloat angleY, GLfloat speed, int type)
     {
         gXInit = x;
         gYInit = y;
@@ -43,11 +45,16 @@ public:
         gG = ((double)rand() / (RAND_MAX));
         gB = ((double)rand() / (RAND_MAX));
 
+        gType = type;
+
         GLfloat ViewingWidth = 500.0;
         GLfloat ViewingHeight = 500.0;
 
         head = Geometries::CreateSphere(radiusGunshot, 10);
-        textureGunshot = Loader::LoadTextureRAW("img/sun1.bmp");
+        if (type == 0)
+            textureGunshot = Loader::LoadTextureRAW("img/sun1.bmp");
+        else
+            textureGunshot = Loader::LoadTextureRAW("img/earth.bmp");
     };
     void draw();
     void move();
