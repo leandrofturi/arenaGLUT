@@ -197,6 +197,7 @@ void Opponent::drawArm()
     glPushMatrix();
 
     glRotatef(gArmAngle * sgnOp(walkDirection), 1, 0, 0);
+    glRotatef(-gCamXYAngle, 0, 1, 0);
 
     glTranslatef(2.0 * bodyWidth / 3.0 - armDepth, 0.0, -armWidth / 2.0);
     glRotatef(90, 0, 1, 0);

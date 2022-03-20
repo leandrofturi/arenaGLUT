@@ -81,6 +81,7 @@ public:
   std::list<Gunshot *> gunshots;
 
   Lava lava;
+  int cam = 0;
 
 public:
   Arena(){};

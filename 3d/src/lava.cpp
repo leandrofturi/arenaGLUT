@@ -55,8 +55,8 @@ void Lava::init(double w, double h, double d)
 // display the lava
 void Lava::draw(void)
 {
-	glPushAttrib(GL_ENABLE_BIT);
-	glEnable(GL_LIGHTING);
+	// glPushAttrib(GL_ENABLE_BIT);
+	// glEnable(GL_LIGHTING);
 
 	glDepthMask(GL_FALSE);
 	glPushMatrix();
@@ -65,7 +65,7 @@ void Lava::draw(void)
 	glPopMatrix();
 	glDepthMask(GL_TRUE);
 
-	glPopAttrib();
+	// glPopAttrib();
 }
 
 /** return the lava height */

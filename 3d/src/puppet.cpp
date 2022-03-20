@@ -1,6 +1,7 @@
 #include "../include/puppet.h"
 #include <math.h>
 #include <cstdio>
+#include <unistd.h>
 
 #define legHeight 3.2
 #define legWidth 1.2
@@ -22,14 +23,18 @@ void Puppet::init()
     head = Geometries::CreateSphere(radiusHead, 10);
     texturePuppet = Loader::LoadTextureRAW("img/sun1.bmp");
 
-    //Carrega as meshes dos arquivos
-    // movIdle = meshPuppet.loadMeshAnim("blender/idle/ninja_idle_######.obj", 40);
-    // movPunch = meshPuppet.loadMeshAnim("blender/punch/ninja_punching_######.obj", 35);
-    // movKick = meshPuppet.loadMeshAnim("blender/kick/ninja_kick_######.obj", 35);
-    // movDance = meshPuppet.loadMeshAnim("blender/dance/ninja_dance_######.obj", 90);
-    // meshPuppet.loadTexture("blender/Ch24_1001_Diffuse.bmp");
+    if (access("blender/idle/ninja_idle_000001.obj", F_OK) == 0)
+    {
+        canAnimate = 1;
+        // Carrega as meshes dos arquivos
+        movIdle = meshPuppet.loadMeshAnim("blender/idle/ninja_idle_######.obj", 40);
+        movPunch = meshPuppet.loadMeshAnim("blender/punch/ninja_punching_######.obj", 35);
+        movKick = meshPuppet.loadMeshAnim("blender/kick/ninja_kick_######.obj", 35);
+        movDance = meshPuppet.loadMeshAnim("blender/dance/ninja_dance_######.obj", 90);
+        meshPuppet.loadTexture("blender/Ch24_1001_Diffuse.bmp");
 
-    // meshPuppet.drawInit(movIdle);
+        meshPuppet.drawInit(movIdle);
+    }
 }
 
 GLfloat Puppet::getWidth()
@@ -178,13 +183,24 @@ void Puppet::walk(double inc)
 
 void Puppet::jump(double inc)
 {
+    if (gY + gSpeed * inc >= gY0 + ArenaHeight && !gGhost)
+        gY = gY - gSpeed * inc;
+    else if (gY + gSpeed * inc >= gY0 + 3 * getHeight() && !gGhost)
+        gY = gY - gSpeed * inc;
+
     if (alive || gGhost)
         gY = gY + gSpeed * inc;
+}
+
+int sgn(GLfloat x)
+{
+    return (x > 0) - (x < 0);
 }
 
 void Puppet::rotate(double inc)
 {
     gCamXYAngle = (int)(gCamXYAngle + inc) % 360;
+    gCamXYAngle = fabs(gCamXYAngle) > 45 ? 45 * sgn(gCamXYAngle) : gCamXYAngle;
 }
 
 void Puppet::handleGravity()
@@ -193,11 +209,6 @@ void Puppet::handleGravity()
     {
         gY = gY - gSpeed;
     }
-}
-
-int sgn(GLfloat x)
-{
-    return (x > 0) - (x < 0);
 }
 
 void Puppet::rotateArm(double inc)
@@ -261,6 +272,7 @@ void Puppet::drawArm()
     glPushMatrix();
 
     glRotatef(gArmAngle * sgn(walkDirection), 1, 0, 0);
+    glRotatef(-gCamXYAngle, 0, 1, 0);
 
     glTranslatef(2.0 * bodyWidth / 3.0 - armDepth, 0.0, -armWidth / 2.0);
     glRotatef(90, 0, 1, 0);
@@ -325,17 +337,23 @@ Gunshot *Puppet::shoot()
     posShotX -= armWidth * cos(gArmAngle * 0.0174533);
     posShotY += armWidth * sin(gArmAngle * 0.0174533);
 
-    Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0, 0);
+    posShotZ -= (getWidth() / 2.0) + armWidth * sin(gCamXYAngle * 0.0174533);
+
+    Gunshot *shot = new Gunshot(posShotX, posShotY, posShotZ, angleXZ, gArmAngle, gSpeed * 3.0, 0.0);
     return shot;
 }
 
 GLfloat Puppet::getArmX()
 {
     GLfloat posShotX = gZ;
-
-    if (walkDirection < 0)
+    GLfloat angleXZ = gCamXYAngle;
+    if (walkDirection > 0)
+        angleXZ = gCamXYAngle + 180;
+    else
         posShotX += 2.0 * armWidth;
+
     posShotX -= armWidth * cos(gArmAngle * 0.0174533);
+
     return posShotX;
 }
 
@@ -352,5 +370,7 @@ GLfloat Puppet::getArmY()
 GLfloat Puppet::getArmZ()
 {
     GLfloat posShotZ = -gX;
+
+    posShotZ -= (getWidth() / 2.0) + armWidth * sin(gCamXYAngle * 0.0174533);
     return posShotZ;
 }

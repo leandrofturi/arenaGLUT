@@ -125,8 +125,7 @@ public:
     }
     void kill()
     {
-        alive = false;
-        printf("MORREU\n");
+        alive = 0;
     };
     bool isAlive()
     {

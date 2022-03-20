@@ -52,6 +52,8 @@ class Puppet
     int gGhost = 1;
 
 public:
+    int canAnimate = 0;
+
     void init();
     void draw();
     void walk(double inc);

@@ -288,13 +288,17 @@ void Arena::draw()
   for (std::list<Opponent *>::iterator it = opponents.begin(); it != opponents.end(); ++it)
   {
     glPushMatrix();
-    (*it)->draw();
+    if ((*it)->isAlive())
+      (*it)->draw();
     glPopMatrix();
   }
 
-  glPushMatrix();
-  lava.draw();
-  glPopMatrix();
+  if (cam != 1)
+  {
+    glPushMatrix();
+    lava.draw();
+    glPopMatrix();
+  }
 }
 
 void Arena::move()

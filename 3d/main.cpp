@@ -22,6 +22,7 @@ const GLint ViewingHeight = 500;
 // Identificadores de textura
 GLuint texturePlane;
 
+int nigth = 0;
 int ghost = 1;
 int endGame = 0;
 
@@ -35,9 +36,13 @@ int lastX = 0;
 int lastY = 0;
 int buttonDown = 0;
 
+int sign(GLfloat x)
+{
+    return (x > 0) - (x < 0);
+}
+
 GLuint LoadTextureRAW(const char *filename)
 {
-
     GLuint texture;
 
     Image *image = loadBMP(filename);
@@ -208,9 +213,9 @@ void display(void)
         if (endGame)
             PrintText(0.1, 0.1, "Voce perdeu", 0, 1, 0);
         else
-            PrintText(0.1, 0.1, "Puppet Camera", 0, 1, 0);
-        glTranslatef(0.0, -puppet.getHeight(), puppet.getDepth());
-        glRotatef(camXZAngle, 1, 0, 0);
+            PrintText(0.1, 0.1, "Eye Camera", 0, 1, 0);
+        glTranslatef(-1.0, -puppet.getHeight() * 0.8, -puppet.getDepth() / 2.0);
+        glRotatef(camXZAngle + 8.0, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
         gluLookAt(
             puppet.getX(), puppet.getY(), puppet.getZ(),
@@ -219,18 +224,34 @@ void display(void)
     }
     else if (toggleCam == 3)
     {
-        PrintText(0.1, 0.1, "Arm Camera", 0, 1, 0);
-        glTranslatef(0.0, -puppet.getHeight() * 0.5, puppet.getDepth());
-        glRotatef(camXZAngle, 1, 0, 0);
+        if (endGame)
+            PrintText(0.1, 0.1, "Voce perdeu", 0, 1, 0);
+        else
+            PrintText(0.1, 0.1, "Arm Camera", 0, 1, 0);
+        glTranslatef(-4.0 * puppet.getWidth(), -puppet.getHeight() * 0.8, -puppet.getDepth() / 2.0);
+        glRotatef(camXZAngle + 8.0, 1, 0, 0);
         glRotatef(camXYAngle, 0, 1, 0);
         gluLookAt(
-            puppet.getArmX(), puppet.getArmY(), puppet.getArmZ(),
-            puppet.getArmX(), puppet.getArmY(), puppet.getArmZ() - camDist,
+            puppet.getArmZ(), puppet.getArmY(), puppet.getArmX(),
+            puppet.getArmZ(), puppet.getArmY(), puppet.getArmX() - camDist,
             0.0, 1.0, 0.0);
     }
 
-    GLfloat light_position[] = {puppet.getX(), puppet.getY() + puppet.getHeight(), puppet.getZ(), 1.0};
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    if (!nigth)
+    {
+        GLfloat light_position[] = {puppet.getX(), puppet.getY() + puppet.getHeight(), puppet.getZ(), 1.0};
+        glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    }
+    else
+    {
+        GLfloat light_position[] = {puppet.getX(), puppet.getY() + puppet.getHeight(), puppet.getZ(), 1.0};
+        glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+        GLfloat light_direction[] = {0.0, -1.0, 0.0, 1.0};
+        glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light_direction);
+        GLfloat cutoff = 50.0;
+        glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, &cutoff);
+    }
+    glEnable(GL_LIGHT0);
 
     glPushMatrix();
     glTranslatef(0.0, arena.getHeight(), 0.0);
@@ -249,7 +270,7 @@ void display(void)
 
     glutSwapBuffers();
 }
-void init(void)
+void init(char *pathArena)
 {
     // Initialize keyStatus
     for (int i = 0; i < 256; i++)
@@ -264,7 +285,7 @@ void init(void)
 
     texturePlane = LoadTextureRAW("img/stars1.bmp");
 
-    arena.init("input/arena_teste.svg");
+    arena.init(pathArena);
     puppet.init();
     arena.load(&puppet);
 
@@ -326,6 +347,9 @@ void mouseMotion(int x, int y)
     camXYAngle = (int)camXYAngle % 360;
     camXZAngle = (int)camXZAngle % 360;
 
+    camXYAngle = fabs(camXYAngle) > 45 ? 45 * sign(camXYAngle) : camXYAngle;
+    camXZAngle = fabs(camXZAngle) > 45 ? 45 * sign(camXZAngle) : camXZAngle;
+
     lastX = x;
     lastY = y;
 }
@@ -357,11 +381,13 @@ void idle()
     if (keyStatus[(int)('a')])
     {
         camXYAngle -= (int)inc % 360;
+        camXYAngle = fabs(camXYAngle) > 45 ? 45 * sign(camXYAngle) : camXYAngle;
         puppet.rotate(-inc);
     }
     if (keyStatus[(int)('d')])
     {
         camXYAngle += (int)inc % 360;
+        camXYAngle = fabs(camXYAngle) > 45 ? 45 * sign(camXYAngle) : camXYAngle;
         puppet.rotate(inc);
     }
     if (puppet.isElevated() && !puppet.bumpOpponent())
@@ -415,15 +441,19 @@ void keyboard(unsigned char key, int x, int y)
         break;
     case '1': // camera
         toggleCam = 0;
+        arena.cam = 0;
         break;
     case '2': // camera
         toggleCam = 1;
+        arena.cam = 1;
         break;
     case '3': // camera
         toggleCam = 2;
+        arena.cam = 2;
         break;
     case '4': // camera
         toggleCam = 3;
+        arena.cam = 3;
         break;
     case 'a': // moviment
         keyStatus[(int)('a')] = 1;
@@ -444,10 +474,12 @@ void keyboard(unsigned char key, int x, int y)
         if (textureEnebled)
         {
             glDisable(GL_TEXTURE_2D);
+            arena.cam = 1;
         }
         else
         {
             glEnable(GL_TEXTURE_2D);
+            arena.cam = toggleCam;
         }
         textureEnebled = !textureEnebled;
         break;
@@ -473,6 +505,9 @@ void keyboard(unsigned char key, int x, int y)
         }
         smoothEnebled = !smoothEnebled;
         break;
+    case 'N':
+        nigth = !nigth;
+        break;
     case '+': // zoom
     {
         int inc = camAngle >= 180 ? 0 : 1;
@@ -490,22 +525,32 @@ void keyboard(unsigned char key, int x, int y)
         break;
     }
     case 'A': // animação
-        if (puppet.isActing())
-            break;
-        puppet.kick();
+        if (puppet.canAnimate)
+        {
+            if (puppet.isActing())
+                break;
+            puppet.kick();
+        }
         break;
     case 'P': // animação
-        if (puppet.isActing())
-            break;
-        puppet.punch();
+        if (puppet.canAnimate)
+        {
+            if (puppet.isActing())
+                break;
+            puppet.punch();
+        }
         break;
     case 'D': // animação
-        if (puppet.isActing())
-            break;
-        puppet.dance();
+        if (puppet.canAnimate)
+        {
+            if (puppet.isActing())
+                break;
+            puppet.dance();
+        }
         break;
     case '0': // habilitar animação
-        puppet.animate();
+        if (puppet.canAnimate)
+            puppet.animate();
         break;
     case 27:
         exit(0);
@@ -535,6 +580,8 @@ void opponentMove(int time)
 
 int main(int argc, char **argv)
 {
+    char *pathArena = (char *)malloc(256);
+    strcpy(pathArena, argv[1]);
 
     glutInit(&argc, argv);
 
@@ -546,7 +593,7 @@ int main(int argc, char **argv)
 
     glutCreateWindow("Arena Glut");
 
-    init();
+    init(pathArena);
 
     glutDisplayFunc(idle);
 

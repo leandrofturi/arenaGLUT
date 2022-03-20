@@ -160,7 +160,7 @@ bool Collision::bump(Puppet *puppet, std::list<Gunshot *> gunshots, std::list<Op
             }
         }
 
-        for (std::list<Opponent *>::iterator jt = opponnets.begin(); jt != opponnets.end();)
+        for (std::list<Opponent *>::iterator jt = opponnets.begin(); jt != opponnets.end(); ++jt)
         {
             if (bump(puppet, (*jt)))
             {
@@ -169,17 +169,14 @@ bool Collision::bump(Puppet *puppet, std::list<Gunshot *> gunshots, std::list<Op
                 puppet->elevate(true);
                 return true;
             }
+        }
 
+        for (std::list<Opponent *>::iterator jt = opponnets.begin(); jt != opponnets.end(); ++jt)
+        {
             if (bump((*jt), (*it)))
             {
                 (*it)->bump();
-                jt = opponnets.erase(jt);
-                // (*jt)->kill();
-                // return true;
-            }
-            else
-            {
-                ++jt;
+                (*jt)->kill();
             }
         }
         puppet->bumpOpponent(false);
